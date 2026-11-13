@@ -1,7 +1,7 @@
 /**
- * API contract types for the research API. In this app every call is served by the
- * bundled mock server (src/mocks/mockServer.ts). Where the contract leaves a shape
- * open, the type is marked ASSUMPTION and the client normalizes both possible shapes.
+ * API contract types for the research backend (calls in client.ts and live.ts).
+ * Where the contract leaves a shape open, the type is marked ASSUMPTION and the
+ * client normalizes both possible shapes.
  */
 
 // ── Enums ────────────────────────────────────────────────────────────
@@ -122,7 +122,7 @@ export type Citation = {
   title: string
   url: string | null
   location: string
-  /** not in contract; mock-only marker so synthetic data is always labeled */
+  /** not in contract; 'fixture' marks synthetic sources so they are always labeled */
   source_type?: SourceType
   /** which investigation the passage belongs to (used to group Notes) */
   investigation_id?: string
