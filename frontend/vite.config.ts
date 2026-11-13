@@ -29,7 +29,7 @@ export default defineConfig(({ mode }) => {
   }
   // Only the research endpoints the app uses are forwarded.
   const routes = {
-    '^/research-gateway/(?:api/v1/(?:audiences|research/(?:filters|relevance)|investigations(?:/[A-Za-z0-9_/-]+)?|rank|interpret)|scenario/(?:fields|options|rank|interpret)|learning/materials)(?:\\?|$)': proxy,
+    '^/research-gateway/(?:api/v1/(?:audiences|earth|research/(?:filters|relevance)|investigations(?:/[A-Za-z0-9_/-]+)?|rank|interpret)|scenario/(?:fields|options|rank|interpret)|learning/materials)(?:\\?|$)': proxy,
   }
   return {
     plugins: [react(), tailwindcss()],

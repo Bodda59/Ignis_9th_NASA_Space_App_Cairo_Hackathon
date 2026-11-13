@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { AppShell } from '@/components/layout/AppShell'
 import { ComparePage } from '@/pages/ComparePage'
+import { EarthPage } from '@/pages/EarthPage'
 import { ExplorePage } from '@/pages/ExplorePage'
 import { HomePage } from '@/pages/HomePage'
 import { AskPage } from '@/pages/AskPage'
@@ -19,6 +20,7 @@ const router = createBrowserRouter([
       { path: '/compare', element: <ComparePage /> },
       { path: '/rank', element: <RankPage /> },
       { path: '/ask', element: <AskPage /> },
+      { path: '/earth', element: <EarthPage /> },
       { path: '/mission', element: <MissionPage /> },
       { path: '*', element: <PlaceholderPage title="Lost in orbit" note="This page doesn’t exist." /> },
     ],

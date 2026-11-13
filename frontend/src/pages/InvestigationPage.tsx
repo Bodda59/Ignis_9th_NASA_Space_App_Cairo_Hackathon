@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { TriangleAlert } from 'lucide-react'
-import { useMemo, type ReactNode } from 'react'
+import { useEffect, useMemo, type ReactNode } from 'react'
 import { useParams } from 'react-router-dom'
 import { api } from '@/api/client'
 import type { CitedText, InvestigationResponse } from '@/api/types'
@@ -10,6 +10,7 @@ import { CitationCtx, indexCitations, isSynthetic } from '@/components/ui/citati
 import { EvidenceBadge, NotReported } from '@/components/ui/Evidence'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { StateMessage } from '@/components/ui/StateMessage'
+import { EarthSection } from '@/features/earth/EarthSection'
 import { EquipmentLinks } from '@/features/equipment/EquipmentLinks'
 import { ExperimentTables } from '@/features/export/ExperimentTables'
 import { LearningPanel } from '@/features/learning/LearningPanel'
@@ -18,6 +19,7 @@ import { DetailSection, SectionNav, type SectionDef } from '@/features/summarize
 import { SourcesList } from '@/features/summarize/SourcesList'
 import { TestConditions } from '@/features/summarize/TestConditions'
 import { useAsync } from '@/hooks/useAsync'
+import { scrollToEl } from '@/lib/scroll'
 
 export function InvestigationPage() {
   const { id = '' } = useParams()
@@ -54,11 +56,18 @@ function Detail({ data }: { data: InvestigationResponse }) {
       { id: 'findings', title: 'Findings', count: data.findings.length },
       { id: 'limitations', title: 'Limitations', count: s.limitations.length },
       { id: 'equipment', title: 'Safety design links', count: data.equipment_links.length },
+      { id: 'earth', title: 'On Earth', count: data.earth?.themes.length ?? 0 },
       { id: 'data', title: 'Data for modeling', count: data.data_availability.numeric_test_count },
       { id: 'sources', title: 'Sources', count: data.citations.length },
     ],
     [data, s.limitations.length],
   )
+
+  // Links such as /investigations/PSI-25#earth land on the section once the study has loaded.
+  useEffect(() => {
+    const target = window.location.hash && document.getElementById(window.location.hash.slice(1))
+    if (target) scrollToEl(target)
+  }, [inv.id])
 
   return (
     <CitationCtx.Provider value={idx}>
@@ -141,11 +150,15 @@ function Detail({ data }: { data: InvestigationResponse }) {
             <EquipmentLinks links={data.equipment_links} findings={data.findings} />
           </DetailSection>
 
-          <DetailSection id="data" n={6} title="Data for modeling">
+          <DetailSection id="earth" n={6} title="On Earth">
+            <EarthSection earth={data.earth} />
+          </DetailSection>
+
+          <DetailSection id="data" n={7} title="Data for modeling">
             <ExperimentTables key={inv.id} id={inv.id} />
           </DetailSection>
 
-          <DetailSection id="sources" n={7} title="Sources">
+          <DetailSection id="sources" n={8} title="Sources">
             <SourcesList citations={data.citations} />
           </DetailSection>
         </div>

@@ -10,6 +10,7 @@ import type {
   ApiWarning,
   ComparabilityNote,
   CompareResponse,
+  EarthResponse,
   ExperimentPage,
   ExperimentTable,
   FiltersResponse,
@@ -91,6 +92,11 @@ export const api = {
 
   investigation(id: string, signal?: AbortSignal): Promise<InvestigationResponse> {
     return http<InvestigationResponse>(`/api/v1/investigations/${encodeURIComponent(id)}/detail`, { signal })
+  },
+
+  /** Earth applications stated in the PSI records, grouped by theme. */
+  earth(signal?: AbortSignal): Promise<EarthResponse> {
+    return http<EarthResponse>('/api/v1/earth', { signal })
   },
 
   rankQuestion(question: string, ids: string[], audience?: Audience, signal?: AbortSignal): Promise<{ status: string; message: string | null; investigations: RankedStudy[] }> {

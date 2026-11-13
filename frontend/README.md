@@ -39,7 +39,7 @@ The browser only ever calls its own origin at `/research-gateway/...`. The Vite 
 
 - **Target:** `RAG_BACKEND_URL`, default `http://127.0.0.1:8000`.
 - **API key:** the proxy adds `X-API-Key` on the server side, so the key is never in the browser or the built bundle. It uses `RAG_API_KEY` from `frontend/.env`, then `backend/.env`, then the repository root `.env`. Usually the backend's `.env` is enough and nothing needs setting here. See `.env.example`.
-- **Allowlist:** only the research endpoints the app uses are forwarded: filters, relevance, investigations, rank, interpret, scenario, learning materials and audiences. Admin routes are not.
+- **Allowlist:** only the research endpoints the app uses are forwarded: filters, relevance, investigations, Earth applications, rank, interpret, scenario, learning materials and audiences. Admin routes are not.
 - **Audience:** every request carries `X-Audience-Type` from the research lens picker.
 
 `npm run build` output contains no proxy. To deploy, put a reverse proxy in front of `dist/` that does the same thing: forward `/research-gateway/*` to the backend with the prefix stripped, and add the API key.
@@ -52,10 +52,11 @@ Code map: `src/api/client.ts` is the one adapter the views call. `live.ts` resha
 |---|---|
 | `/` | Landing page: flame hero, 3D experiment journey, search, ISS racks, habitats, gravity, oxygen map, timeline |
 | `/explore` | Search with filters, habitat context and ranked result cards |
-| `/investigations/:id` | Study detail (e.g. `/investigations/PSI-25` for BASS-II): summary, test conditions, findings, safety design links, experiment tables, learning materials, sources |
+| `/investigations/:id` | Study detail (e.g. `/investigations/PSI-25` for BASS-II): summary, test conditions, findings, safety design links, Earth benefits, experiment tables, learning materials, sources, DOI |
 | `/compare?ids=a,b` | Side-by-side comparison of 2–3 studies |
 | `/rank` | Rank evidence by question, test-condition scenario or crew environment |
 | `/ask` | Source-grounded Q&A chat with citations |
+| `/earth` | Fire safety on Earth: NASA spin-offs in use, and studies grouped by the Earth benefit their PSI record states |
 
 Study ids are the catalog ids from `backend/data_pipeline/sources/investigations.json` (`PSI-25` BASS-II, `PSI-69` FLEX, …).
 
@@ -69,7 +70,7 @@ src/
   pages/        one component per route
   features/     page building blocks, grouped by feature
     landing/ station/ habitat/ search/ rank/ compare/ summarize/
-    equipment/ export/ learning/ interpret/ audience/ onboarding/
+    equipment/ export/ learning/ interpret/ audience/ onboarding/ earth/
   components/
     ui/         Button, Chip, Panel, StateMessage, citation chips, evidence badges…
     fx/         Starfield, RevealText, CountUp
