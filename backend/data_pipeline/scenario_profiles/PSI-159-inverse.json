@@ -1,0 +1,21 @@
+{
+  "id_column": "Test",
+  "record_kind": "reported_test",
+  "columns": {
+    "Flame Type": {
+      "key": "flame_type",
+      "label": "Reported flame type",
+      "kind": "category",
+      "note": ""
+    },
+    "approx p (bar)": {
+      "key": "pressure_kpa",
+      "label": "Ambient pressure",
+      "kind": "number",
+      "unit": "kPa",
+      "minimum": 0,
+      "scale": 100,
+      "note": "Source column is approximate pressure in bar. Converted to kPa."
+    }
+  }
+}

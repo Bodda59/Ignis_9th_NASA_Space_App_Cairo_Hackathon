@@ -1,0 +1,47 @@
+{
+  "id_column": "SAME Test #",
+  "record_kind": "source_record",
+  "columns": {
+    "Sample Type": {
+      "key": "material",
+      "label": "Reported material",
+      "kind": "category"
+    },
+    "Inlet velocity (cm/s)": {
+      "key": "inlet_velocity_cm_s",
+      "label": "Reported inlet velocity",
+      "kind": "number",
+      "unit": "cm/s",
+      "minimum": 0,
+      "scale": 1,
+      "note": "Keep smoke apparatus inlet velocity distinct from duct air flow."
+    },
+    "Primary aging time (sec)": {
+      "key": "primary_aging_time_s",
+      "label": "Primary aging time",
+      "kind": "number",
+      "unit": "s",
+      "minimum": 0,
+      "scale": 1,
+      "note": ""
+    },
+    "Primary mixing time (sec)": {
+      "key": "primary_mixing_time_s",
+      "label": "Primary mixing time",
+      "kind": "number",
+      "unit": "s",
+      "minimum": 0,
+      "scale": 1,
+      "note": ""
+    },
+    "Duration (sec)": {
+      "key": "reported_duration_s",
+      "label": "Reported test duration",
+      "kind": "number",
+      "unit": "s",
+      "minimum": 0,
+      "scale": 1,
+      "note": ""
+    }
+  }
+}

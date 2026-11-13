@@ -1,0 +1,28 @@
+{
+  "id_column": null,
+  "record_kind": "source_record",
+  "columns": {
+    "Burner Size (mm)": {
+      "key": "burner_diameter_mm",
+      "label": "Reported burner size",
+      "kind": "number",
+      "unit": "mm",
+      "minimum": 0
+    },
+    "Fuel Bottle": {
+      "key": "fuel_bottle",
+      "label": "Reported fuel bottle composition",
+      "kind": "category",
+      "note": "The bottle composition can differ from the diluted test fuel."
+    },
+    "Oxygen Conc (percent)": {
+      "key": "oxygen_percent",
+      "label": "Reported oxygen concentration",
+      "kind": "number",
+      "unit": "%",
+      "minimum": 0,
+      "maximum": 100,
+      "note": "Day summary. Lists of oxygen values remain ambiguous and are never paired with other values as individual tests."
+    }
+  }
+}

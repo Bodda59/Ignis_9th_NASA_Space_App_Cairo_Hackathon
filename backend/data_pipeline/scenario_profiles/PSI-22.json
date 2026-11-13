@@ -1,0 +1,18 @@
+{
+  "id_column": "Test Day",
+  "record_kind": "source_record",
+  "columns": {
+    "Fuel Bottle": {
+      "key": "fuel_bottle",
+      "label": "Reported fuel bottle composition",
+      "kind": "category",
+      "note": "The bottle composition can differ from the diluted test fuel."
+    },
+    "Mesh Polarity": {
+      "key": "mesh_polarity",
+      "label": "Reported mesh polarity",
+      "kind": "category",
+      "note": ""
+    }
+  }
+}

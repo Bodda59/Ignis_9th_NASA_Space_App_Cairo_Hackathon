@@ -1,0 +1,24 @@
+{
+  "id_column": "Session Name",
+  "record_kind": "source_record",
+  "columns": {
+    "Sampled Location": {
+      "key": "sampled_location",
+      "label": "Reported sampling location",
+      "kind": "category",
+      "note": ""
+    },
+    "Sample Material": {
+      "key": "sample_description",
+      "label": "Reported sample description",
+      "kind": "category",
+      "note": ""
+    },
+    "Hardware Description": {
+      "key": "hardware_description",
+      "label": "Reported hardware description",
+      "kind": "category",
+      "note": ""
+    }
+  }
+}

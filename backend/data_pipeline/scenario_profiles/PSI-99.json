@@ -1,0 +1,75 @@
+{
+  "id_column": "Sample Number",
+  "record_kind": "source_record",
+  "columns": {
+    "Material": {
+      "key": "material",
+      "label": "Reported material",
+      "kind": "category",
+      "excluded_values": [
+        "Pre-test flow visulation data for sample 2-1",
+        "Pre-test flow visulation data for sample 2-2"
+      ],
+      "note": "Pre-test flow visualization descriptions are not material observations."
+    },
+    "Air Flow (cm/s)": {
+      "key": "airflow_cm_s",
+      "label": "Reported air flow speed",
+      "kind": "number",
+      "unit": "cm/s",
+      "minimum": 0,
+      "scale": 1,
+      "note": "CSV cells explicitly include cm/s; the suffix is removed for numeric comparison.",
+      "source_unit_suffix": "cm/s"
+    },
+    "Sample Length ": {
+      "key": "sample_length_mm",
+      "label": "Sample length",
+      "kind": "number",
+      "unit": "mm",
+      "minimum": 0,
+      "scale": 10,
+      "note": "CSV explicitly reports cm. Converted to mm.",
+      "source_unit_suffix": "cm"
+    },
+    "Sample Width (cm)": {
+      "key": "sample_width_mm",
+      "label": "Sample width",
+      "kind": "number",
+      "unit": "mm",
+      "minimum": 0,
+      "scale": 10,
+      "note": "CSV explicitly reports cm. Converted to mm.",
+      "source_unit_suffix": "cm"
+    },
+    "Ignition Power (W)": {
+      "key": "ignition_power_w",
+      "label": "Ignition power",
+      "kind": "number",
+      "unit": "W",
+      "minimum": 0,
+      "scale": 1,
+      "note": "",
+      "source_unit_suffix": "W"
+    },
+    "Ignition Time (s)": {
+      "key": "ignition_time_s",
+      "label": "Ignition time",
+      "kind": "number",
+      "unit": "s",
+      "minimum": 0,
+      "scale": 1,
+      "note": "",
+      "source_unit_suffix": "s"
+    },
+    "Percent O2 (Note 1)": {
+      "key": "oxygen_percent",
+      "label": "Reported oxygen concentration",
+      "kind": "number",
+      "unit": "%",
+      "minimum": 0,
+      "maximum": 100,
+      "note": "Approximate values and descending pairs are preserved as reported, without treating them as exact points or ordered ranges."
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id_column": "Test Day*",
+  "record_kind": "source_record",
+  "columns": {
+    "Fuel Bottle": {
+      "key": "fuel_bottle",
+      "label": "Reported fuel bottle composition",
+      "kind": "category",
+      "note": "The bottle composition can differ from the diluted test fuel."
+    },
+    "Atmosphere*": {
+      "key": "reported_day_atmosphere",
+      "label": "Reported test-day atmosphere",
+      "kind": "category",
+      "note": "Approximate day-level composition as written in the CSV. A day can list multiple oxygen levels."
+    },
+    "Test Type": {
+      "key": "sflame_test_series",
+      "label": "s-Flame test series",
+      "kind": "category",
+      "note": ""
+    }
+  }
+}

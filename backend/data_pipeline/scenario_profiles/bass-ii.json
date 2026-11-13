@@ -1,0 +1,14 @@
+{
+  "id_column": "Test #",
+  "record_kind": "reported_test",
+  "columns": {
+    "Air display": {
+      "key": "airflow_display_cm_s",
+      "label": "Displayed duct air flow speed (slow response)",
+      "kind": "number",
+      "unit": "cm/s",
+      "minimum": 0,
+      "note": "BASS-II data FAQ.txt, line 39: Air display is measured duct flow speed in cm/s; response is about one minute. This display reading does not establish instantaneous steady flow. Fan display is voltage, not air flow."
+    }
+  }
+}
