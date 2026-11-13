@@ -4,7 +4,7 @@ import { CSV_COLUMNS, type DataRow } from '@/api/types'
  * Export CSV rules: fixed column order, empty numeric cell = missing (never zero),
  * escape quotes/commas/newlines, neutralise formula-like text.
  */
-function cell(v: unknown): string {
+export function cell(v: unknown): string {
   if (v === null || v === undefined) return ''
   if (typeof v === 'number') return Number.isFinite(v) ? String(v) : ''
   let s = String(v)
