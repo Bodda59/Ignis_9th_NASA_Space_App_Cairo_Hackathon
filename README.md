@@ -8,6 +8,7 @@ Flame in Freefall is Team Ignis’s NASA Space Apps Cairo hackathon project. It 
 - **Ask questions with citations.** Rank relevant investigations by keyword and semantic similarity. Ask a question to get a cited answer or an explanation that the available evidence is insufficient.
 - **Explore experimental conditions.** Filter by reported material, oxygen concentration, or airflow where available. The Evidence Map shows which conditions were reported together in a single record, which were reported separately, and where evidence is missing.
 - **Review crew-environment relevance.** See which investigations are relevant to a selected habitat or fire-safety concern, with matching test records and gaps in coverage.
+- **See the Earth applications.** Each investigation page shows NASA's stated research impacts and Earth benefits, with its DOI. The Earth page groups the studies by the Earth fire-safety problem they name and lists the NASA spin-offs already in use.
 - **Export learning materials.** Generate lecture slides in PowerPoint and study materials in Word or PDF.
 - **Index NASA source files.** The data pipeline reads PDF, TXT, and CSV files, stores searchable passages and normalized test conditions in PostgreSQL with pgvector, and publishes the investigation catalog.
 

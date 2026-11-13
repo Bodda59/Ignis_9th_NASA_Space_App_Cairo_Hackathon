@@ -145,7 +145,40 @@ export type Investigation = {
   source_ids: string[]
   /** ASSUMPTION: not listed in contract; shown when present */
   hardware?: string
+  /** PSI persistent identifier; PSI asks users to cite each investigation by DOI */
+  citation?: { doi: string | null; doi_url: string | null; psi_url: string | null }
 }
+
+// ── Earth applications (GET /api/v1/earth and the study detail) ─────
+export type EarthThemeId = 'confined_spaces' | 'smoke_detection' | 'suppression' | 'fire_modeling' | 'test_methods' | 'cleaner_combustion'
+
+/** A theme tag on one study. `quote` is copied from NASA's impact text. */
+export type EarthTag = { id: EarthThemeId; label: string; fire_safety: boolean; quote: string }
+
+export type StudyEarth = {
+  /** NASA's "Research Impacts / Earth Benefits" text, as published in PSI */
+  text: string
+  themes: EarthTag[]
+  note: string | null
+  source_title: string
+  source_url: string | null
+}
+
+export type EarthStudy = { id: string; acronym: string; name: string; quote: string; source_url: string | null }
+
+export type EarthTheme = { id: EarthThemeId; label: string; description: string; fire_safety: boolean; studies: EarthStudy[] }
+
+export type Spinoff = {
+  id: string
+  title: string
+  era: string
+  text: string
+  source_title: string
+  url: string | null
+  related_theme: EarthThemeId | null
+}
+
+export type EarthResponse = { themes: EarthTheme[]; spinoffs: Spinoff[]; caveat: string; study_count: number }
 
 export type Test = {
   id: string
@@ -189,6 +222,8 @@ export type InvestigationResponse = {
   equipment_links: EquipmentLink[]
   citations: Citation[]
   data_availability: { numeric_test_count: number; unavailable_reason: string | null }
+  /** null when the PSI record states no research impacts */
+  earth?: StudyEarth | null
 }
 
 // ── POST /api/data/preview + /api/data/export ───────────────────────

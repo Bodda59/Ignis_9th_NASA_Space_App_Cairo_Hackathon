@@ -1,6 +1,7 @@
 """Investigation detail and crew-environment dashboard routes."""
 from fastapi import Depends, Request
 
+from dashboard.earth import citation, earth_catalogue, study_earth
 from dashboard.service import CatalogError
 from data_pipeline.reviewed import REVIEWED
 from data_pipeline.source_metadata import source_details
@@ -105,12 +106,14 @@ def study_details(catalog, sid, audience):
                              'measurement_types': [item['text'] for item in measurements],
                              'limitations': facts['limitations'], 'source_ids': [doc['id'] for doc in documents],
                              'hardware': study['metadata'].get('hardware'),
+                             'citation': citation(sid),
                              **source_details(study)},
             'summary_sections': {'objectives': objectives, 'materials': sections('sample_properties'),
                                  'conditions': sections('test_parameters') + sections('source_record_parameters', True),
                                  'measurements': measurements, 'findings': findings,
                                  'limitations': [cited(text) for text in facts['limitations']]},
             'tests': tests, 'findings': findings, 'equipment_links': equipment_links, 'citations': list(citations.values()),
+            'earth': study_earth(sid),
             'data_availability': {'numeric_test_count': sum(any(test[key] is not None for key in CONDITIONS) for test in tests),
                                   'unavailable_reason': None if tests else 'This source table contains grouped or planned records.'}}
 
@@ -123,6 +126,11 @@ def register_dashboard(router, service, read, audience, respond):
     @router.post('/research/relevance', dependencies=[Depends(read)])
     def relevance(body: ResearchRequest, request: Request, audience_type=Depends(audience)):
         return respond(request, find_research(service().store, body), audience_type)
+
+    @router.get('/earth', dependencies=[Depends(read)])
+    def earth(request: Request, audience_type=Depends(audience)):
+        """Earth applications stated in the PSI records, grouped by theme. Needs no database."""
+        return respond(request, earth_catalogue(), audience_type)
 
     @router.get('/investigations/{study}/detail', dependencies=[Depends(read)])
     def detail(study: str, request: Request, audience_type=Depends(audience)):

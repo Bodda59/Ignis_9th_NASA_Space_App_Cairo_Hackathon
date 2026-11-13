@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { ArrowLeft, Check, MessageSquareText, Plus } from 'lucide-react'
+import { ArrowLeft, Check, ExternalLink, MessageSquareText, Plus } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import type { InvestigationResponse } from '@/api/types'
 import { CountUp } from '@/components/fx/CountUp'
@@ -82,6 +82,24 @@ export function DetailHero({ data, synthetic }: { data: InvestigationResponse; s
             </motion.p>
             {inv.hardware && (
               <p className="label mt-3">{inv.hardware}</p>
+            )}
+            {inv.citation?.doi && (
+              <p className="label mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
+                <span>
+                  DOI{' '}
+                  <a href={inv.citation.doi_url ?? undefined} target="_blank" rel="noreferrer"
+                    className="normal-case tracking-normal text-[var(--color-ink-dim)] hover:text-[var(--color-flame)] hover:underline">
+                    {inv.citation.doi}<span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                </span>
+                {inv.citation.psi_url && (
+                  <a href={inv.citation.psi_url} target="_blank" rel="noreferrer"
+                    className="inline-flex items-center gap-1 text-[var(--color-flame)] hover:underline">
+                    Cite this study on PSI <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                    <span className="sr-only">(opens in a new tab)</span>
+                  </a>
+                )}
+              </p>
             )}
           </div>
 
