@@ -7,6 +7,7 @@ import { HomePage } from '@/pages/HomePage'
 import { AskPage } from '@/pages/AskPage'
 import { InvestigationPage } from '@/pages/InvestigationPage'
 import { MissionPage } from '@/pages/MissionPage'
+import { MoonwalkPage } from '@/pages/MoonwalkPage'
 import { RankPage } from '@/pages/RankPage'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
 
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
       { path: '/ask', element: <AskPage /> },
       { path: '/earth', element: <EarthPage /> },
       { path: '/mission', element: <MissionPage /> },
+      { path: '/moonwalk', element: <MoonwalkPage /> },
       { path: '*', element: <PlaceholderPage title="Lost in orbit" note="This page doesn’t exist." /> },
     ],
   },
