@@ -1,11 +1,14 @@
 /**
- * The ONE API adapter. Views call `api.*` and never talk to the mock server
- * directly. Every call is served by the bundled mock server (src/mocks/), so the
- * app runs fully offline with no backend.
+ * The ONE API adapter. Views call `api.*` and never talk to the backend directly.
+ * Every call goes to the research backend through the dev-server proxy
+ * (/research-gateway, see vite.config.ts and transport.ts).
  */
 import type { Audience } from '@/features/audience/audience'
-import * as mock from '@/mocks/mockServer'
+import * as live from './live'
+import { http, post } from './transport'
 import type {
+  ApiWarning,
+  ComparabilityNote,
   CompareResponse,
   ExperimentPage,
   ExperimentTable,
@@ -14,6 +17,7 @@ import type {
   InterpretResponse,
   InvestigationResponse,
   RankedStudy,
+  RelevanceNote,
   ScenarioCondition,
   ScenarioField,
   ScenarioRanking,
@@ -27,75 +31,96 @@ type Download = { blob: Blob; filename: string }
 type LearningAudience = 'professor' | 'graduate' | 'undergraduate'
 type InterpretOptions = { audience?: Audience; conditions?: ScenarioCondition[]; evidenceOnly?: boolean }
 
+// ── normalizers for shapes the contract hasn't frozen ───────────────
+const note = (n: RelevanceNote | string): RelevanceNote => (typeof n === 'string' ? { text: n } : n)
+const warning = (w: ApiWarning | string): ApiWarning => (typeof w === 'string' ? { code: 'WARNING', message: w } : w)
+
+function normalizeSearch(r: SearchResponse): SearchResponse {
+  return {
+    ...r,
+    warnings: (r.warnings ?? []).map(warning),
+    items: r.items.map((it) => ({
+      ...it,
+      material_labels: it.material_labels ?? [],
+      relevance: {
+        reasons: (it.relevance?.reasons ?? []).map(note),
+        mismatches: (it.relevance?.mismatches ?? []).map(note),
+      },
+    })),
+  }
+}
+
 export const api = {
   filters(signal?: AbortSignal): Promise<FiltersResponse> {
-    return mock.mockFilters(signal)
+    return http<FiltersResponse>('/api/v1/research/filters', { signal })
   },
 
-  search(req: SearchRequest, signal?: AbortSignal): Promise<SearchResponse> {
-    return mock.mockSearch(req, signal)
+  async search(req: SearchRequest, signal?: AbortSignal): Promise<SearchResponse> {
+    return normalizeSearch(await http<SearchResponse>('/api/v1/research/relevance', post(req, signal)))
   },
 
   autocomplete(query: string, limit = 4, signal?: AbortSignal): Promise<{ items: { text: string }[] }> {
-    return mock.mockAutocomplete(query, limit, signal)
+    const params = new URLSearchParams({ q: query, limit: String(limit) })
+    return http<{ items: { text: string }[] }>(`/api/v1/investigations/autocomplete?${params}`, { signal })
   },
 
-  compare(ids: string[], signal?: AbortSignal): Promise<CompareResponse> {
-    return mock.mockCompare(ids, signal)
+  async compare(ids: string[], signal?: AbortSignal): Promise<CompareResponse> {
+    const raw = await live.compare(ids, signal)
+    return {
+      ...raw,
+      comparability_notes: (raw.comparability_notes ?? []).map((n: ComparabilityNote | string) => (typeof n === 'string' ? { text: n } : n)),
+    }
   },
 
   /**
    * Answers a question. With `evidenceOnly` it skips the answer and returns the
-   * ranked evidence alone; with scenario `conditions` the answer carries the
-   * scenario ranking and evidence map.
+   * ranked evidence alone; with scenario `conditions` it answers from records
+   * that confirm them and carries the scenario ranking and evidence map.
    */
   async interpret(req: InterpretRequest, signal?: AbortSignal, options?: InterpretOptions): Promise<InterpretResponse> {
-    const ids = req.investigation_ids ?? []
-    const conditions = options?.conditions?.length ? options.conditions : undefined
-    if (options?.evidenceOnly) {
-      const scenario = conditions ? await mock.mockRankScenario(req.question, ids, conditions, options.audience, signal) : undefined
-      const general = scenario ? undefined : await mock.mockRankQuestion(req.question, ids, options.audience, signal)
-      return {
-        status: 'insufficient_evidence', findings: [], interpretations: [], gaps: [], related_investigation_ids: [], citations: [],
-        scenario, ranked: general?.investigations, evidence_only: true,
-        evidence_message: scenario?.message ?? general?.message ?? undefined,
-      }
+    const raw = await live.interpret(req, signal, options)
+    return {
+      ...raw,
+      findings: raw.findings ?? [],
+      interpretations: raw.interpretations ?? [],
+      gaps: (raw.gaps ?? []).map((g: { text: string } | string) => (typeof g === 'string' ? { text: g } : g)),
+      related_investigation_ids: raw.related_investigation_ids ?? [],
+      citations: raw.citations ?? [],
     }
-    const answer = await mock.mockInterpret(req, signal)
-    if (!conditions) return answer
-    return { ...answer, scenario: await mock.mockRankScenario(req.question, ids, conditions, options?.audience, signal) }
   },
 
   investigation(id: string, signal?: AbortSignal): Promise<InvestigationResponse> {
-    return mock.mockInvestigation(id, signal)
+    return http<InvestigationResponse>(`/api/v1/investigations/${encodeURIComponent(id)}/detail`, { signal })
   },
 
   rankQuestion(question: string, ids: string[], audience?: Audience, signal?: AbortSignal): Promise<{ status: string; message: string | null; investigations: RankedStudy[] }> {
-    return mock.mockRankQuestion(question, ids, audience, signal)
+    return live.rankQuestion(question, ids, audience, signal)
   },
 
   rankScenario(question: string, ids: string[], conditions: ScenarioCondition[], audience?: Audience, signal?: AbortSignal): Promise<ScenarioRanking> {
-    return mock.mockRankScenario(question, ids, conditions, audience, signal)
+    return live.rankScenario(question, ids, conditions, audience, signal)
   },
 
-  scenarioOptions(ids: string[], conditions: ScenarioCondition[], audience?: Audience, signal?: AbortSignal): Promise<ScenarioField[]> {
-    return mock.mockScenarioOptions(ids, conditions, audience, signal)
+  async scenarioOptions(ids: string[], conditions: ScenarioCondition[], audience?: Audience, signal?: AbortSignal): Promise<ScenarioField[]> {
+    const result = await http<{ fields: ScenarioField[] }>('/scenario/options',
+      post({ investigation_ids: ids, conditions, audience }, signal))
+    return result.fields
   },
 
   experimentTables(id: string, signal?: AbortSignal): Promise<{ items: ExperimentTable[] }> {
-    return mock.mockExperimentTables(id, signal)
+    return live.experimentTables(id, signal)
   },
 
   experimentRows(id: string, table: string, cursor: string | null, columns: string[], signal?: AbortSignal): Promise<ExperimentPage> {
-    return mock.mockExperimentRows(id, table, cursor, columns, signal)
+    return live.experimentRows(id, table, cursor, columns, signal)
   },
 
   exportTable(id: string, table: string, format: 'csv' | 'json', columns: string[]): Promise<Download> {
-    return mock.mockExportTable(id, table, format, columns)
+    return live.exportTable(id, table, format, columns)
   },
 
   learning(id: string, audience: LearningAudience, format: 'pdf' | 'pptx' | 'docx', notes: string, topic: string): Promise<Download> {
-    return mock.mockLearning(id, audience, format, notes, topic)
+    return live.learning(id, audience, format, notes, topic)
   },
 }
 
