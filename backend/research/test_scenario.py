@@ -4,7 +4,7 @@ from unittest.mock import Mock
 from fastapi.testclient import TestClient
 
 from main import create_app
-from rag.scenario import ConditionRequest, compare_condition
+from research.scenario import ConditionRequest, compare_condition
 from research.service import RAGService
 
 

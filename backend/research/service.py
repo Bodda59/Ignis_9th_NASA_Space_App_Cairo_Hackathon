@@ -2,9 +2,9 @@ import json
 import re
 
 from dashboard.audience import PROFILES, AudiencePreferences, audience_context, prioritize_conditions
-from rag.models import Answer, Evidence, validate_answer
+from research.models import Answer, Evidence, validate_answer
 from research.providers import get_embeddings, get_llm
-from rag.retreiver import hybrid_search, rank_investigations
+from research.retrieval import hybrid_search, rank_investigations
 
 
 NO_CONTEXT_MESSAGE = 'I do not know, there is no context support this question'
@@ -146,19 +146,19 @@ report the requested outcome or explanation. Cite the original passage_id for ev
         return answer
 
     def scenario_fields(self, query):
-        from rag.scenario import ScenarioSearch
+        from research.scenario import ScenarioSearch
         return prioritize_conditions(ScenarioSearch(self.store, self.embeddings_factory, self.model_name).catalogue(query), query)
 
     def scenario_options(self, query):
-        from rag.scenario import ScenarioSearch
+        from research.scenario import ScenarioSearch
         return prioritize_conditions(ScenarioSearch(self.store, self.embeddings_factory, self.model_name).options(query), query)
 
     def scenario_rank(self, query):
-        from rag.scenario import ScenarioSearch
+        from research.scenario import ScenarioSearch
         return dict(ScenarioSearch(self.store, self.embeddings_factory, self.model_name).rank(query), audience_context=audience_context(query))
 
     def scenario_compare(self, query):
-        from rag.scenario import ScenarioSearch
+        from research.scenario import ScenarioSearch
         result = ScenarioSearch(self.store, self.embeddings_factory, self.model_name).compare(query)
         result['before']['audience_context'] = audience_context(query.before)
         result['after']['audience_context'] = audience_context(query.after)

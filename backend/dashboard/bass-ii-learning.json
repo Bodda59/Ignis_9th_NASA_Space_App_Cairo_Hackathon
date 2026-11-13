@@ -1,0 +1,77 @@
+{
+  "findings": [
+    {
+      "text": "BASS-II used a small flow duct inside the Microgravity Science Glovebox aboard the International Space Station to burn small solid samples.",
+      "citation_ids": [
+        "bass-report-p9"
+      ]
+    },
+    {
+      "text": "An astronaut operated ignition and fan controls while the principal investigator team monitored the experiment from the ground. Video and still cameras recorded combustion events.",
+      "citation_ids": [
+        "bass-report-p9"
+      ]
+    },
+    {
+      "text": "The main variables were ambient oxygen concentration, ventilation flow velocity, fuel type, thickness and geometry.",
+      "citation_ids": [
+        "bass-report-p11"
+      ]
+    },
+    {
+      "text": "Gaseous nitrogen reduced the oxygen concentration in the glovebox working volume. Oxygen, carbon monoxide and carbon dioxide sensors helped evaluate combustion completeness.",
+      "citation_ids": [
+        "bass-report-p11"
+      ]
+    },
+    {
+      "text": "The summary report states that 126 BASS-II tests were conducted. This exceeded the planned 103 tests because some samples were burned more than once.",
+      "citation_ids": [
+        "bass-report-p11"
+      ]
+    },
+    {
+      "text": "BASS-II tested a hypothesis about microgravity burning with adequate ventilation compared with normal gravity. Identifying the worst case for spacecraft flammability and comparing it with terrestrial screening was an objective, not a universal result.",
+      "citation_ids": [
+        "bass-report-p11"
+      ]
+    }
+  ],
+  "interpretations": [],
+  "limitations": [
+    "The reported comparison with terrestrial flammability screening is a study objective and hypothesis; it does not establish a universal rule for every material or spacecraft."
+  ],
+  "citations": [
+    {
+      "id": "bass-report-p9",
+      "investigation_id": "PSI-25",
+      "document_id": "TM-20210011385",
+      "title": "BASS-II Summary Report NASA TM 20210011385",
+      "location": {
+        "pdf_page": 9,
+        "printed_page": 1
+      },
+      "source_url": "https://ntrs.nasa.gov/citations/20210011385",
+      "content_hash": "5ffa911fd9b6356f204646003fb9342e341810dcdfdf5cb15756e7f01ec5f770",
+      "quote": "NASA/TM-20210011385 1 \nBurning and Suppression of Solids\u2014II (BASS\u2013II) \nSummary Report \nS\nandra L. Olson \nNational Aeronautics and Space Administration \nGlenn Research Center \nCleveland, Ohio 44135 \nP\naul V. Ferkul \nUniversities Space Research Association \nCleveland, Ohio 44135 \nS\nubrata Bhattacharjee and Fletcher J. Miller \nSan Diego State University \nSan Diego, California 92182 \nC\narlos Fernandez-Pello and Shmuel Link \nUniversity of California, Berkeley \nBerkeley, California 94720 \nJam\nes S. T\u2019ien \nCase Western Reserve University \nCleveland, Ohio 44106 \nI\nndrek Wichman \nMichigan State University \nEast Lansing, Michigan 48824 \nSummary \nThe Burning and Suppression of Solids (BASS) experiment hardware is a small flow duct that \nprovides containment for small scale burning of solid samples within the Microgravity Science Glovebox \n(MSG) aboard the International Space Station (ISS). A video camera with a data overlay and a 35-mm \nstill camera record the combustion events. The controls (ignition, fan speed, etc.) are operated by an \nastronaut while the principal investigator team monitors the experiment from the ground and \ncommunicates directly with the astronaut. For the first time on ISS, BASS\u2013II utilized MSG working \nvolume dilution with gaseous N2. We developed a perfectly stirred reactor model to determine the N2 flow \ntime and flow rate to obtain the desired reduced O2 concentration in the working volume for each test. We \ncalibrated the model with the Compound Specific Analyzer-Combustion Products (CSA-CP) O2 readings \noffset using the Major Constituents Analyzer reading of the ISS ambient atmosphere data for that day. \nThis worked out extremely well for operations, and added a new vital variable, ambient O2 level, to our \ntest matrices. The main variables tested in BASS\u2013II were ambient O2 concentration, ventilation flow \nvelocity, and fuel type, thickness, and geometry. BASS\u2013II also utilized the onboard CSA-CP for O2 and \nCO readings, and the Carbon Dioxide Monitor for CO2 readings before and after each test. Readings from \nthese sensors allow us to evaluate the completeness of the combustion. The O2 and CO2 readings before "
+    },
+    {
+      "id": "bass-report-p11",
+      "investigation_id": "PSI-25",
+      "document_id": "TM-20210011385",
+      "title": "BASS-II Summary Report NASA TM 20210011385",
+      "location": {
+        "pdf_page": 11,
+        "printed_page": 3
+      },
+      "source_url": "https://ntrs.nasa.gov/citations/20210011385",
+      "content_hash": "5ffa911fd9b6356f204646003fb9342e341810dcdfdf5cb15756e7f01ec5f770",
+      "quote": " \nNASA/TM-20210011385 3 \n1.0 Summary of Burning and Suppression of Solids\u2014II Experiments \nThe first section of the report provides an overview of the experiment operations and results. Each of \nthe five principal investigators (PIs) for Burning and Suppression of Solids\u2014II (BASS\u2013II), in \nalphabetical order, have summarized their research in separate sections of this report. Appendix A \nincludes test matrices from each PI, Appendix B describes the dilution model and verification testing, \nAppendix C describes the anomalies encountered, Appendix D describes a thermal analysis, while \nAppendix E contains the BASS and BASS\u2013II current papers and presentations created through the \nsummer of 2020. \n1.1 Background \nBASS\u2013II tests the hypothesis that materials in microgravity, with adequate ventilation, burn as well if \nnot better than the same material in normal gravity with other conditions being identical (pressure, O2 \nconcentration, temperature, etc.). NASA tests and controls materials from a flammability perspective \nusing an upward burning test in normal gravity, which is considered to be the worst-case geometry for \nflammability of the material on Earth. However, it may not be conservative for flammability in space.   \nOne objective of the BASS\u2013II tests is to identify what is the worst case for material flammability in \nspacecraft environments, and how does that compare to the terrestrial upward burning used to screen the \nmaterials for safe use aboard spacecraft. \nDetailed combustion models can be validated by data obtained in the simpler flow environment in \nmicrogravity. Once validated, they can be used to build more complex combustion models needed to \ncapture the important details of flames burning in normal gravity. These models have wide applicability \nto the general understanding of many terrestrial combustion problems. \nThe main variables tested were the effects of ambient O2 concentration, ventilation flow velocity, and \nfuel type, thickness, and geometry. Many of the tests focused on finding a minimum O2 concentration or \nflow velocity where a material will burn in space, to compare with the Earth-based limits. Flame growth \nrates are also of interest, to determine how quickly a fire in space can grow and if the flames reach a finite \nsize or continue to grow. This has implications for firefighting strategies in spacecraft. \nBASS\u2013II utilized the gaseous nitrogen (GN2) available on International Space Station (ISS) to vitiate \nthe atmosphere in the Microgravity Science Glovebox (MSG) from standard ISS \u201cair\u201d down to the low O2 \nflammability limits. BASS\u2013II also utilized onboard O2, CO, and CO2 sensors to evaluate the completeness \nof the combustion. \nA total of 126 tests were conducted as part of BASS\u2013II. This is more than the planned 103 tests, since \nsome samples were burned more than once. There are some samples that could be burned further, should \nfuture operational time become available.  \nFor the first time on ISS, BASS\u2013II utilized MSG working volume vitiation with GN2. We developed \na perfectly stirred reactor model to determine the GN2 flow time and flow rate to obtain the desired \nreduced O2 concentration in the working volume for the tests. This worked out extremely well for \noperations, and added a new vital variable, ambient O2 level, to our test matrices. \n1.2 Experiment Description  \nThe MSG in the Destiny Lab of the ISS provides a contained atmosphere in which fire safety \nexperiments can be conducted (Ref. 9). The MSG, shown in Figure 1.1, has a set of filter banks that \ncapture particulates and convert the CO to CO2 using an ambient temperature catalyst. The BASS\u2013II \nhardware is shown inside the MSG working volume in Figure 1.1.   "
+    }
+  ],
+  "quality": {
+    "method": "manually_reviewed_example",
+    "source": "NASA TM 20210011385 physical PDF pages 9 and 11",
+    "faithfulness": null
+  }
+}

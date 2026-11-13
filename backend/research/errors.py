@@ -10,7 +10,7 @@ from openai import (
 )
 
 from research.groq_budget import GroqBudgetExceeded
-from rag.scenario import ScenarioInputError
+from research.scenario import ScenarioInputError
 
 
 def retry_after_headers(error):

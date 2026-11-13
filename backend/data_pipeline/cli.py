@@ -3,9 +3,10 @@ import argparse
 import json
 from pathlib import Path
 
-from dashboard.audience import PROFILES, get_service
+from dashboard.audience import PROFILES
+from data_pipeline.ingest import ingest_document
+from research.dependencies import get_service
 from research.models import Query
-from research.service import InvalidAnswer
 
 
 def run(app):
@@ -45,7 +46,9 @@ def run(app):
             result = service.store.health()
         elif args.command == 'ingest':
             profile = json.loads(args.condition_profile.read_text()) if args.condition_profile else None
-            result = service.ingest(args.path, args.investigation_id, args.name, args.source_url, args.document_id, profile)
+            result = ingest_document(service.store, service.embeddings_factory, service.model_name,
+                                     args.path, args.investigation_id, args.name, args.source_url,
+                                     args.document_id, profile)
         elif args.command == 'index-conditions':
             from data_pipeline.scenario_storage import backfill
             profile = json.loads(args.condition_profile.read_text()) if args.condition_profile else None
@@ -56,6 +59,6 @@ def run(app):
             result = service.rank(query) if args.command == 'rank' else service.interpret(query)
         print(json.dumps(result, indent=2, ensure_ascii=False))
     except Exception as error:
-        if isinstance(error, ValueError) and not isinstance(error, InvalidAnswer):
+        if isinstance(error, ValueError):
             parser.exit(1, 'Error: ' + str(error) + '\n')
         parser.exit(1, 'Error: operation failed. Check the input file, database settings, and provider access.\n')

@@ -4,7 +4,7 @@ from types import SimpleNamespace
 from unittest.mock import Mock
 
 from research.groq_budget import BudgetedChatGroq
-from rag.models import Evidence
+from research.models import Evidence
 from research.service import RAGService
 
 

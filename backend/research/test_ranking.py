@@ -1,11 +1,11 @@
 import unittest
 
-from rag.models import Evidence
+from research.models import Evidence
 
 
 class RetrievalRelevanceRegressionTest(unittest.TestCase):
     def test_unrelated_query_rejects_weak_similarity_and_incidental_tokens(self):
-        from rag.retreiver import hybrid_search
+        from research.retrieval import hybrid_search
 
         evidence = Evidence(id='a', investigation_id='PSI-39', investigation_name='Combustion experiment',
                             document_id='doc', title='Experiment notes', text='I used a cup in 1978 to measure the order of the samples.',
@@ -15,7 +15,7 @@ class RetrievalRelevanceRegressionTest(unittest.TestCase):
         self.assertEqual(hybrid_search('Where can I order a pizza?', [evidence], [('a', .553)]), [])
 
     def test_exact_identifier_and_high_confidence_paraphrase_still_rank(self):
-        from rag.retreiver import hybrid_search
+        from research.retrieval import hybrid_search
 
         evidence = Evidence(id='a', investigation_id='PSI-25', investigation_name='BASS-II',
                             document_id='doc', title='Experiment notes', text='Smoke detector response in test B10.',

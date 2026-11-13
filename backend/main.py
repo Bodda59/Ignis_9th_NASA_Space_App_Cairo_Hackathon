@@ -12,6 +12,9 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from dashboard.api import create_router
+from dashboard.extra_routes import register_dashboard_extras
+from data_pipeline.cli import run
 from research.dependencies import get_service
 from research.errors import execute as execute_operation
 from research.providers import load_settings
@@ -33,6 +36,9 @@ def create_app(service=None, api_key=None):
             raise HTTPException(503, 'Set RAG_API_KEY before using the API.')
         if x_api_key is None or not hmac.compare_digest(x_api_key, expected_key):
             raise HTTPException(401, 'Invalid API key.')
+        limit_query_requests()
+
+    def limit_query_requests():
         with lock:
             now = time.monotonic()
             while requests and requests[0] < now - 60:
@@ -59,7 +65,8 @@ def create_app(service=None, api_key=None):
         request._body = b''.join(body)
         request.state.request_id = uuid.uuid4().hex
         response = await call_next(request)
-        response.headers['X-Request-ID'] = request.state.request_id
+        if 'X-Request-ID' not in response.headers:
+            response.headers['X-Request-ID'] = request.state.request_id
         response.headers['X-Content-Type-Options'] = 'nosniff'
         response.headers['Cache-Control'] = 'no-store'
         return response
@@ -75,7 +82,18 @@ def create_app(service=None, api_key=None):
 
     execute = partial(execute_operation, engine)
     register_routes(app, execute, authorize)
+    register_dashboard_extras(app, engine, execute, authorize)
+    app.include_router(create_router(engine, execute, api_key, limit_query_requests))
     return app
 
 
 app = create_app()
+
+
+
+def main():
+    run(app)
+
+
+if __name__ == '__main__':
+    main()
