@@ -23,7 +23,7 @@ export function KidsExperiment() {
 
   if (detail.status === 'error' && !detail.data) {
     return detail.error.status === 404
-      ? <KidError onRetry={detail.retry} text="Orbi could not find that experiment. Try picking one from Explore." />
+      ? <KidError onRetry={detail.retry} text="That experiment could not be found. Try picking one from Explore." />
       : <KidError onRetry={detail.retry} />
   }
   if (!detail.data || detail.data.investigation.id !== id) return <KidLoading />

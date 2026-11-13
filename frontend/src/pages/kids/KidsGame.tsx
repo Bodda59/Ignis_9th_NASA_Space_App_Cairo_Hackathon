@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { cn } from '@/lib/cn'
 import { Burst } from '@/features/kids/Burst'
-import { Guide, Orbi } from '@/features/kids/Mascot'
+import { Guide, GuideAvatar } from '@/features/kids/Mascot'
 import { reward, useKidsProgress, type BadgeId } from '@/features/kids/progress'
 import { sfx } from '@/features/kids/sfx'
 
@@ -193,7 +193,7 @@ export function KidsGame() {
               <motion.div initial={{ scale: 0.6, rotate: -6 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: 'spring', stiffness: 260, damping: 15 }}
                 className="toon relative w-full max-w-sm rounded-[2rem] bg-white p-6 text-center text-[#1b1740]">
                 {phase === 'over' && result && <Burst fire={1} count={result.stars ? 24 : 0} />}
-                <div className="mx-auto w-fit"><Orbi size={90} mood={phase === 'over' ? 'wow' : 'happy'} /></div>
+                <div className="mx-auto w-fit"><GuideAvatar size={90} mood={phase === 'over' ? 'wow' : 'happy'} /></div>
                 {phase === 'ready' ? (
                   <>
                     <h2 className="mt-2 font-display text-3xl">Ready, patroller?</h2>

@@ -1,44 +1,60 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { sfx, useSoundOn } from './sfx'
 
-/** Bright, friendly voices first; the browser decides which ones exist. */
-const PREFERRED = [/aria/i, /jenny/i, /zira/i, /samantha/i, /google uk english female/i, /google us english/i, /female/i]
+/**
+ * Orbi's voice: a warm, lively cartoon-teacher voice. Natural neural voices
+ * (Edge) are tried first; the browser decides which ones exist.
+ */
+const TEACHER_VOICES = [/ana.*natural/i, /ava.*natural/i, /aria.*natural/i, /jenny.*natural/i, /emma.*natural/i, /michelle.*natural/i,
+  /google uk english female/i, /samantha/i, /zira/i, /female/i]
+const PITCH = 1.25
+const RATE = 1.12
 
-function cartoonVoice() {
+function teacherVoice() {
   const voices = window.speechSynthesis.getVoices().filter((v) => v.lang.toLowerCase().startsWith('en'))
-  for (const re of PREFERRED) {
+  for (const re of TEACHER_VOICES) {
     const hit = voices.find((v) => re.test(v.name))
     if (hit) return hit
   }
-  return voices[0] ?? null
+  return voices.find((v) => /natural/i.test(v.name)) ?? voices[0] ?? null
 }
 
-/**
- * Orbi's cartoon voice: the browser's speech voice pitched up and a little
- * faster, after a robot chirp. Silent when the Kids Lab sound is off.
- */
+/** Reads text aloud in one go (no gaps between sentences). Silent when the Kids Lab sound is off. */
 export function useSpeech() {
   const soundOn = useSoundOn()
   const supported = typeof window !== 'undefined' && 'speechSynthesis' in window && soundOn
-  const [talking, setSpeaking] = useState(false)
+  const [talking, setTalking] = useState(false)
+  const run = useRef(0)
   const speaking = talking && soundOn
 
-  useEffect(() => () => { if ('speechSynthesis' in window) window.speechSynthesis.cancel() }, [])
+  // Voices load late in some browsers; asking once wakes the list up.
+  useEffect(() => {
+    if (!('speechSynthesis' in window)) return
+    window.speechSynthesis.getVoices()
+    const wake = () => window.speechSynthesis.getVoices()
+    window.speechSynthesis.addEventListener?.('voiceschanged', wake)
+    return () => {
+      window.speechSynthesis.removeEventListener?.('voiceschanged', wake)
+      window.speechSynthesis.cancel()
+    }
+  }, [])
 
   const speak = (text: string) => {
     if (!supported) return
     window.speechSynthesis.cancel()
-    if (speaking) { setSpeaking(false); return }
+    const id = ++run.current
+    if (speaking) { setTalking(false); return }
     sfx.chirp()
     const u = new SpeechSynthesisUtterance(text)
-    const voice = cartoonVoice()
+    const voice = teacherVoice()
     if (voice) u.voice = voice
-    u.pitch = 1.9
-    u.rate = 1.08
-    u.onend = () => setSpeaking(false)
-    u.onerror = () => setSpeaking(false)
-    setSpeaking(true)
-    setTimeout(() => window.speechSynthesis.speak(u), 180)
+    u.pitch = PITCH
+    u.rate = RATE
+    u.onend = () => { if (run.current === id) setTalking(false) }
+    u.onerror = () => { if (run.current === id) setTalking(false) }
+    setTalking(true)
+    window.speechSynthesis.speak(u)
   }
+
   return { supported, speaking, speak }
 }

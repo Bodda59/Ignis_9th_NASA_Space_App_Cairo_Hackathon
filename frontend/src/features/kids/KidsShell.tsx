@@ -7,7 +7,7 @@ import { cn } from '@/lib/cn'
 import { Medal3D } from './Art'
 import { BADGE_ART, RANK_ART } from './badgeArt'
 import { Burst } from './Burst'
-import { Orbi } from './Mascot'
+import { GuideAvatar } from './Mascot'
 import { BADGE_EVENT, BADGES, LEVEL_EVENT, RANKS, rankOf, useKidsProgress, type BadgeId } from './progress'
 import { setSound, sfx, useSoundOn } from './sfx'
 
@@ -149,7 +149,7 @@ export function KidsShell() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <Burst fire={1} count={28} />
-                <div className="mx-auto flex w-fit items-end gap-2"><Orbi size={110} mood="wow" /><Medal3D icon={RANK_ART[levelUp].icon} color={RANK_ART[levelUp].color} size={72} /></div>
+                <div className="mx-auto flex w-fit items-end gap-2"><GuideAvatar size={110} mood="wow" /><Medal3D icon={RANK_ART[levelUp].icon} color={RANK_ART[levelUp].color} size={72} /></div>
                 <p className="mt-2 text-sm font-bold uppercase tracking-widest text-[#7a5cf0]">Level up!</p>
                 <h2 id="levelup-title" className="font-display text-3xl">{RANKS[levelUp].title}</h2>
                 <p className="mt-2 text-[#4b4870]">You are now level {levelUp + 1}. Keep collecting stars!</p>

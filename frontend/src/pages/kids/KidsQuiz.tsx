@@ -31,7 +31,7 @@ export function KidsQuiz() {
   const [round, setRound] = useState(0)
 
   if (data.status === 'error' && !data.data) return <KidError onRetry={data.retry} />
-  if (!data.data || data.status === 'loading') return <KidLoading text="Orbi is writing your quiz…" />
+  if (!data.data || data.status === 'loading') return <KidLoading text="is writing your quiz…" />
   return <Round key={round} stories={data.data.stories} cards={data.data.cards} onAgain={() => setRound((r) => r + 1)} />
 }
 

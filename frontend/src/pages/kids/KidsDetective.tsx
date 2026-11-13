@@ -113,7 +113,7 @@ function Game({ named, onAgain }: { named: SearchItem[]; onAgain: () => void }) 
       {current.status === 'error' && !current.data ? (
         <KidError onRetry={current.retry} />
       ) : current.status === 'loading' || !current.data ? (
-        <KidLoading text="Orbi is opening a new case file…" />
+        <KidLoading text="is opening a new case file…" />
       ) : (
         <CaseBoard
           key={caseNo}
