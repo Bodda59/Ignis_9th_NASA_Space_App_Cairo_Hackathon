@@ -1,8 +1,8 @@
 import json
 import re
 
-from dashboard.audience import PROFILES, AudiencePreferences, audience_context
-from rag.models import Answer, validate_answer
+from dashboard.audience import PROFILES, AudiencePreferences, audience_context, prioritize_conditions
+from rag.models import Answer, Evidence, validate_answer
 from research.providers import get_embeddings, get_llm
 from rag.retreiver import hybrid_search, rank_investigations
 
@@ -144,3 +144,48 @@ report the requested outcome or explanation. Cite the original passage_id for ev
                                 'source_url': x.source_url, 'location': x.location,
                                 'content_hash': x.content_hash, 'quote': x.text} for x in selected if x.id in used]
         return answer
+
+    def scenario_fields(self, query):
+        from rag.scenario import ScenarioSearch
+        return prioritize_conditions(ScenarioSearch(self.store, self.embeddings_factory, self.model_name).catalogue(query), query)
+
+    def scenario_options(self, query):
+        from rag.scenario import ScenarioSearch
+        return prioritize_conditions(ScenarioSearch(self.store, self.embeddings_factory, self.model_name).options(query), query)
+
+    def scenario_rank(self, query):
+        from rag.scenario import ScenarioSearch
+        return dict(ScenarioSearch(self.store, self.embeddings_factory, self.model_name).rank(query), audience_context=audience_context(query))
+
+    def scenario_compare(self, query):
+        from rag.scenario import ScenarioSearch
+        result = ScenarioSearch(self.store, self.embeddings_factory, self.model_name).compare(query)
+        result['before']['audience_context'] = audience_context(query.before)
+        result['after']['audience_context'] = audience_context(query.after)
+        return result
+
+    def scenario_interpret(self, query):
+        ranking = self.scenario_rank(query)
+        selected, records = [], []
+        for study in ranking['investigations']:
+            for record in study['records']:
+                if record['category'] != 'reported_conditions_match':
+                    continue
+                source = record['source']
+                selected.append(Evidence(id=source['passage_id'], investigation_id=study['investigation_id'],
+                    investigation_name=study['name'], document_id=source['document_id'], title=source['title'],
+                    text=source['text'], location=source['location'], source_url=source['source_url'],
+                    content_hash=source['content_hash']))
+                records.append({'passage_id': source['passage_id'], 'test_id': record['test_id'],
+                    'record_kind': record['record_kind'], 'reported_conditions': record['reported_conditions']})
+                if len(selected) == 12:
+                    break
+            if len(selected) == 12:
+                break
+        if not selected:
+            answer = abstain('insufficient_evidence',
+                             'No source record confirms all requested scenario conditions. ' + ranking.get('message', ''))
+        else:
+            answer = self._answer(query.question, selected, {
+                'conditions': [c.model_dump(exclude_none=True) for c in query.conditions], 'records': records}, audience_preferences=query)
+        return dict(answer, scenario=ranking, audience_context=audience_context(query))

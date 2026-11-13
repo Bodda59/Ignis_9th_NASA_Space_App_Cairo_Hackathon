@@ -10,6 +10,7 @@ from openai import (
 )
 
 from research.groq_budget import GroqBudgetExceeded
+from rag.scenario import ScenarioInputError
 
 
 def retry_after_headers(error):
@@ -52,6 +53,8 @@ def execute(engine, operation, query):
         raise HTTPException(503, 'Groq could not complete the model request.') from None
     except APIConnectionError:
         raise HTTPException(503, 'Could not connect to Groq.') from None
+    except ScenarioInputError as error:
+        raise HTTPException(400, str(error)) from None
     except ValueError as error:
         # These errors are our own configuration/validation messages, not database/provider payloads.
         message = str(error)
