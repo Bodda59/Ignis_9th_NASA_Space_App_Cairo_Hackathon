@@ -4,6 +4,7 @@ import { ComparePage } from '@/pages/ComparePage'
 import { EarthPage } from '@/pages/EarthPage'
 import { ExplorePage } from '@/pages/ExplorePage'
 import { HomePage } from '@/pages/HomePage'
+import { ArticlePage } from '@/pages/ArticlePage'
 import { AskPage } from '@/pages/AskPage'
 import { InvestigationPage } from '@/pages/InvestigationPage'
 import { MissionPage } from '@/pages/MissionPage'
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
       { path: '/compare', element: <ComparePage /> },
       { path: '/rank', element: <RankPage /> },
       { path: '/ask', element: <AskPage /> },
+      { path: '/article', element: <ArticlePage /> },
       { path: '/earth', element: <EarthPage /> },
       { path: '/mission', element: <MissionPage /> },
       { path: '/moonwalk', element: <MoonwalkPage /> },
