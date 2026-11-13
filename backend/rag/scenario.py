@@ -1,7 +1,7 @@
 from pydantic import BaseModel, ConfigDict, Field, FiniteFloat, field_validator, model_validator
 from psycopg.types.json import Jsonb
-from research.models import Query
-from dashboard.audiences import AudiencePreferences
+from rag.models import Query
+from dashboard.audience import AudiencePreferences
 from data_pipeline.storage import vector_literal
 
 

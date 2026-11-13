@@ -8,7 +8,7 @@ from pgvector.psycopg import register_vector
 from psycopg.rows import dict_row
 from psycopg.types.json import Jsonb
 
-from research.models import Evidence
+from rag.models import Evidence
 
 
 MAX_CORPUS_PASSAGES = 25_000
