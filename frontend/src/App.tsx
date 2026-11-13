@@ -5,6 +5,7 @@ import { ExplorePage } from '@/pages/ExplorePage'
 import { HomePage } from '@/pages/HomePage'
 import { AskPage } from '@/pages/AskPage'
 import { InvestigationPage } from '@/pages/InvestigationPage'
+import { MissionPage } from '@/pages/MissionPage'
 import { RankPage } from '@/pages/RankPage'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
 
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
       { path: '/compare', element: <ComparePage /> },
       { path: '/rank', element: <RankPage /> },
       { path: '/ask', element: <AskPage /> },
+      { path: '/mission', element: <MissionPage /> },
       { path: '*', element: <PlaceholderPage title="Lost in orbit" note="This page doesn’t exist." /> },
     ],
   },

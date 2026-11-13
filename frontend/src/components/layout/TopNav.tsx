@@ -10,6 +10,7 @@ const LINKS = [
   { to: '/compare', label: 'Compare' },
   { to: '/rank', label: 'Rank' },
   { to: '/ask', label: 'Ask' },
+  { to: '/mission', label: 'Moon' },
 ]
 
 
