@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { AppShell } from '@/components/layout/AppShell'
+import { ExplorePage } from '@/pages/ExplorePage'
 import { HomePage } from '@/pages/HomePage'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
 
@@ -9,7 +10,7 @@ const router = createBrowserRouter([
     element: <AppShell />,
     children: [
       { path: '/', element: <HomePage /> },
-      { path: '/explore', element: <PlaceholderPage title="Explore" note="Search and filter the combustion studies." /> },
+      { path: '/explore', element: <ExplorePage /> },
       { path: '/investigations/:id', element: <PlaceholderPage title="Investigation" note="Study details, findings and data." /> },
       { path: '/compare', element: <PlaceholderPage title="Compare" note="Line up two or three studies side by side." /> },
       { path: '/rank', element: <PlaceholderPage title="Rank" note="Rank research evidence for a question or scenario." /> },
