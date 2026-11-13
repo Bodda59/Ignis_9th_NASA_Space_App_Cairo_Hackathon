@@ -63,13 +63,6 @@ export function TopNav({ tourOpen }: { tourOpen: boolean }) {
             </NavLink>
           ))}
           <AudiencePicker />
-          <span
-            title="Showing contract-shaped sample data, not the live research collection"
-            className="ml-2 hidden items-center gap-1.5 rounded-full border border-[var(--color-ember)]/40 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--color-ember)] sm:flex"
-          >
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--color-ember)]" />
-            Mock data
-          </span>
         </div>
       </nav>
     </motion.header>

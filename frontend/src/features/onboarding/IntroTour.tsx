@@ -7,9 +7,9 @@ import { scrollToEl } from '@/lib/scroll'
 
 export const TOUR_STORAGE_KEY = 'flame-in-freefall:tour:v2'
 
-// study ids from the bundled mock data
-const study = 'bass-ii'
-const otherStudy = 'flex'
+// research catalog ids: BASS-II and FLEX
+const study = 'PSI-25'
+const otherStudy = 'PSI-69'
 const question = encodeURIComponent('What materials did BASS-II test?')
 const homeChapters = ['#journey-title', '#journey-hardware h3', '#journey-flame h3']
 
@@ -21,15 +21,15 @@ const steps = [
   { key: 'explore', path: '/explore?q=BASS-II', title: 'Explore the investigation catalog',
     detail: 'Use the search box to submit BASS-II or try another keyword. You can narrow results with the catalog filters.' },
   { key: 'study', path: `/investigations/${study}`, title: 'Open an investigation',
-    detail: 'Read the objective and findings, then scroll to Data for modeling. In this offline sample, only the synthetic DEMO study has an experiment table to preview or export.' },
+    detail: 'Read the objective and findings, then scroll to Data for modeling to preview or export an experiment table. Use Learning materials for notes or slides when your lens supports them.' },
   { key: 'compare', path: `/compare?ids=${study},${otherStudy}`, title: 'Compare BASS-II and FLEX',
     detail: 'Review the two studies side by side. Toggle Differences only to see where their materials, conditions, and measurements differ.' },
-  { key: 'rank', path: '/rank?mode=scenario&ids=fixture-demo&example=demo', title: 'Rank a scenario',
+  { key: 'rank', path: `/rank?mode=scenario&ids=${study}&example=bass-ii`, title: 'Rank a scenario',
     detail: 'Select Rank investigations. When the Evidence Map appears, select View source to see a test behind the match. Question mode ranks evidence from a question alone.' },
   { key: 'habitat', path: '/rank?mode=habitat', title: 'Find research for a crew environment',
     detail: 'Choose a habitat, such as a lunar base or a space station, then select Rank investigations. Look for the reasons each study matched.' },
   { key: 'ask', path: `/ask?ids=${study}&q=${question}`, title: 'Ask a question with sources',
-    detail: 'Send the prefilled question for a cited explanation. You can also select Find evidence to see ranked sources.' },
+    detail: 'Send the prefilled question for a cited explanation. You can also select Find evidence to see ranked sources, or switch to Scenario question to add test conditions.' },
 ]
 
 export function IntroTour({ onDismiss }: { onDismiss: () => void }) {

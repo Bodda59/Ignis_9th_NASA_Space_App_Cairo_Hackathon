@@ -26,11 +26,10 @@ export function RankPage() {
   const [question, setQuestion] = useState(search.query)
   const [scope, setScope] = useState(() => [...new Set((search.params.get('ids') ?? '').split(',')
     .map((id) => id.trim()).filter(Boolean))].slice(0, 5).map((id) => ({ id, acronym: id })))
-  // guided example: the synthetic DEMO study is the only one with test-level records offline
-  const demoExample = mode === 'scenario' && search.params.get('ids') === 'fixture-demo' &&
-    search.params.get('example') === 'demo'
+  const bassExample = mode === 'scenario' && search.params.get('ids') === 'PSI-25' &&
+    search.params.get('example') === 'bass-ii'
   const [conditions, setConditions] = useState<ScenarioCondition[]>(() =>
-    demoExample ? [{ key: 'material', value: 'Synthetic sample' }] : [])
+    bassExample ? [{ key: 'material', value: '0.5" black rod' }] : [])
   const [submission, setSubmission] = useState<{ key: string; attempt: number }>()
   const ids = scope.map(({ id }) => id)
   const text = question.trim()
@@ -62,8 +61,8 @@ export function RankPage() {
         <p className="mt-3 max-w-xl text-sm text-[var(--color-ink-dim)]">See which investigations rank highest and review the source material behind each match.</p>
       </header>
 
-      {demoExample && <p className="mb-5 rounded-xl border border-[var(--color-flame)]/25 bg-[var(--color-flame)]/5 p-3 text-sm text-[var(--color-ink-dim)]">
-        The synthetic DEMO example is prefilled. Select <strong className="text-[var(--color-ink)]">Rank investigations</strong>, then look for the Evidence Map and open a source.
+      {bassExample && <p className="mb-5 rounded-xl border border-[var(--color-flame)]/25 bg-[var(--color-flame)]/5 p-3 text-sm text-[var(--color-ink-dim)]">
+        The BASS-II example is prefilled. Select <strong className="text-[var(--color-ink)]">Rank investigations</strong>, then look for the Evidence Map and open a source.
       </p>}
       <>
         <div className="space-y-4" role="group" aria-label="Rank research">
