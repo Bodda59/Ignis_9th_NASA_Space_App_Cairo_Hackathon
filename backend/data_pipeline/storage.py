@@ -47,7 +47,7 @@ class PostgresStore:
         return {'status': 'ok', 'passages': count}
 
     def save_document(self, study_id, name, document_id, title, file_name, source_url,
-                      content_hash, signature, model, chunks, vectors, condition_profile=None):
+                      content_hash, signature, model, chunks, vectors, condition_profile=None, source_type=None):
         from data_pipeline.scenario_storage import save_conditions
         if not chunks or len(chunks) != len(vectors):
             raise ValueError('A document needs matching, nonempty chunks and vectors.')
@@ -55,7 +55,7 @@ class PostgresStore:
             validate_vector(vector)
         with self.connect() as connection:
             connection.execute('SELECT pg_advisory_xact_lock(hashtextextended(%s, 0))', (study_id,))
-            old = connection.execute('SELECT investigation_id, index_signature FROM rag_documents WHERE id=%s', (document_id,)).fetchone()
+            old = connection.execute('SELECT investigation_id, index_signature, source_type FROM rag_documents WHERE id=%s', (document_id,)).fetchone()
             if old and old['investigation_id'] != study_id:
                 raise ValueError('Document ID already belongs to another investigation.')
             duplicate = connection.execute('''SELECT id FROM rag_documents
@@ -65,6 +65,10 @@ class PostgresStore:
                 return {'status': 'duplicate', 'document_id': duplicate['id']}
             connection.execute('INSERT INTO rag_investigations(id,name) VALUES (%s,%s) ON CONFLICT(id) DO UPDATE SET name=excluded.name', (study_id, name))
             if old and old['index_signature'] == signature:
+                if source_type is not None:
+                    connection.execute(
+                        'UPDATE rag_documents SET source_type=%s WHERE id=%s AND source_type<>%s',
+                        (source_type, document_id, source_type))
                 rows = connection.execute('SELECT id,text,location,row_data FROM rag_passages WHERE document_id=%s ORDER BY id', (document_id,)).fetchall()
                 if any(r['row_data'] and isinstance(r['row_data'], dict) for r in rows):
                     from data_pipeline.loaders import SourceUnit
@@ -74,12 +78,12 @@ class PostgresStore:
                                     [r['id'] for r in rows], active)
                 return {'status': 'unchanged', 'document_id': document_id}
             connection.execute('''INSERT INTO rag_documents
-                (id,investigation_id,title,file_name,source_url,content_hash,index_signature,embedding_model)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
+                (id,investigation_id,title,file_name,source_url,content_hash,index_signature,embedding_model,source_type)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
                 ON CONFLICT(id) DO UPDATE SET title=excluded.title,file_name=excluded.file_name,
                 source_url=excluded.source_url,content_hash=excluded.content_hash,
-                index_signature=excluded.index_signature,embedding_model=excluded.embedding_model,updated_at=now()''',
-                (document_id, study_id, title, file_name, source_url, content_hash, signature, model))
+                index_signature=excluded.index_signature,embedding_model=excluded.embedding_model,source_type=excluded.source_type,updated_at=now()''',
+                (document_id, study_id, title, file_name, source_url, content_hash, signature, model, source_type or (old['source_type'] if old else 'Other Sources')))
             previous = connection.execute('SELECT profile FROM rag_scenario_profiles WHERE document_id=%s', (document_id,)).fetchone()
             active = condition_profile if condition_profile is not None else (previous['profile'] if previous else {})
             connection.execute('DELETE FROM rag_passages WHERE document_id=%s', (document_id,))
@@ -99,27 +103,37 @@ class PostgresStore:
             diagnostics = save_conditions(connection, document_id, chunks, passage_ids, active)
         return {'status': 'indexed', 'document_id': document_id, 'chunks': len(chunks), 'scenario': diagnostics}
 
-    def corpus(self, selected, model):
+    def source_coverage(self, selected, model):
         with self.connect() as connection:
-            if selected:
-                found = connection.execute('SELECT id FROM rag_investigations WHERE id=ANY(%s)', (selected,)).fetchall()
-                if set(selected) != {x['id'] for x in found}:
-                    raise ValueError('One or more selected investigation IDs do not exist.')
-            different = connection.execute('''SELECT 1 FROM rag_documents WHERE embedding_model<>%s
-                AND (%s::text[] IS NULL OR investigation_id=ANY(%s)) LIMIT 1''',
-                (model, selected or None, selected or None)).fetchone()
-            if different:
-                raise ValueError('The selected corpus uses a different embedding model. Reindex it before searching.')
+            rows = connection.execute('''SELECT i.id,i.name,d.source_type,count(d.id) AS documents,
+                    bool_or(d.embedding_model<>%s) AS different_model
+                FROM rag_investigations i LEFT JOIN rag_documents d ON d.investigation_id=i.id
+                    AND EXISTS (SELECT 1 FROM rag_passages p WHERE p.document_id=d.id)
+                WHERE (%s::text[] IS NULL OR i.id=ANY(%s))
+                GROUP BY i.id,i.name,d.source_type ORDER BY i.id,d.source_type''',
+                (model, selected or None, selected or None)).fetchall()
+        if selected and set(selected) != {row['id'] for row in rows}:
+            raise ValueError('One or more selected investigation IDs do not exist.')
+        if any(row['different_model'] for row in rows):
+            raise ValueError('The selected corpus uses a different embedding model. Reindex it before searching.')
+        return rows
+
+    def search_collection(self, vector, selected, model, source_type):
+        literal = vector_literal(vector)
+        with self.connect() as connection:
             rows = connection.execute('''SELECT p.id,p.document_id,p.text,p.location,p.row_data,
-                d.investigation_id,i.name AS investigation_name,d.title,d.source_url,d.content_hash
+                d.investigation_id,i.name AS investigation_name,d.title,d.source_url,d.content_hash,d.source_type,
+                1-(p.embedding <=> %s::vector) AS similarity
                 FROM rag_passages p JOIN rag_documents d ON d.id=p.document_id
                 JOIN rag_investigations i ON i.id=d.investigation_id
-                WHERE (%s::text[] IS NULL OR d.investigation_id=ANY(%s)) ORDER BY p.id LIMIT %s''',
-                (selected or None, selected or None, MAX_CORPUS_PASSAGES + 1)).fetchall()
+                WHERE d.source_type=%s AND d.embedding_model=%s
+                    AND (%s::text[] IS NULL OR d.investigation_id=ANY(%s))
+                ORDER BY p.id LIMIT %s''',
+                (literal, source_type, model, selected or None, selected or None, MAX_CORPUS_PASSAGES+1)).fetchall()
         if len(rows) > MAX_CORPUS_PASSAGES:
-            raise ValueError(f'Scope this query to fewer studies; the in-memory lexical index supports '
-                             f'{MAX_CORPUS_PASSAGES:,} passages per query.')
-        return [Evidence(**row) for row in rows]
+            raise ValueError(f'Scope this query to fewer studies. The {source_type} collection exceeds '
+                             f'{MAX_CORPUS_PASSAGES:,} passages.')
+        return [(Evidence(**row), row['similarity']) for row in rows]
 
     def objective_evidence(self, ids):
         with self.connect() as conn:
@@ -133,16 +147,7 @@ class PostgresStore:
                 by_id[sid] = Evidence(id=f'{sid}-published-objective', investigation_id=sid,
                     investigation_name=row['name'], document_id=ref.get('document_id') or f'{sid}-metadata',
                     title='NASA investigation metadata · published objective', text=row['objective'],
+                    source_type='Investigation Metadata Files',
                     source_url=ref['source_url'], location={'section': ref.get('field', 'Objective')},
                     content_hash=ref['source_hash'])
         return [by_id[sid] for sid in ids if sid in by_id]
-
-    def semantic(self, vector, selected, model, limit):
-        literal = vector_literal(vector)
-        with self.connect() as connection:
-            rows = connection.execute('''SELECT p.id,1-(p.embedding <=> %s::vector) AS similarity
-                FROM rag_passages p JOIN rag_documents d ON d.id=p.document_id
-                WHERE d.embedding_model=%s AND (%s::text[] IS NULL OR d.investigation_id=ANY(%s))
-                ORDER BY p.embedding <=> %s::vector,p.id LIMIT %s''',
-                (literal, model, selected or None, selected or None, literal, limit)).fetchall()
-        return [(x['id'], float(x['similarity'])) for x in rows]

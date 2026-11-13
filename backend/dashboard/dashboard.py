@@ -1,4 +1,6 @@
 """Investigation detail and crew-environment dashboard routes."""
+from collections import Counter
+
 from fastapi import Depends, Request
 
 from dashboard.service import CatalogError
@@ -17,8 +19,9 @@ def study_details(catalog, sid, audience):
         raise CatalogError(503, 'SUMMARY_PENDING', 'The investigation summary is still being prepared.')
     with catalog.store.connect() as conn:
         studies, grouped = catalog_data(conn, [sid])
-        documents = conn.execute('SELECT id,title,source_url FROM rag_documents WHERE investigation_id=%s ORDER BY title,id',
+        documents = conn.execute('SELECT d.id,d.title,d.source_url,d.source_type,EXISTS (SELECT 1 FROM rag_passages p WHERE p.document_id=d.id) AS indexed FROM rag_documents d WHERE d.investigation_id=%s ORDER BY d.title,d.id',
                                  (sid,)).fetchall()
+    source_counts = Counter(doc['source_type'] for doc in documents if doc['indexed'])
     study = studies[0]
     rows = grouped[sid]
     facts = summary['facts']
@@ -105,6 +108,8 @@ def study_details(catalog, sid, audience):
                              'measurement_types': [item['text'] for item in measurements],
                              'limitations': facts['limitations'], 'source_ids': [doc['id'] for doc in documents],
                              'hardware': study['metadata'].get('hardware'),
+                             'indexed_source_types': [dict(source_type=label, document_count=count)
+                                                      for label, count in sorted(source_counts.items())],
                              **source_details(study)},
             'summary_sections': {'objectives': objectives, 'materials': sections('sample_properties'),
                                  'conditions': sections('test_parameters') + sections('source_record_parameters', True),

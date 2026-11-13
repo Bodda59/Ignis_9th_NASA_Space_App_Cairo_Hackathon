@@ -2,6 +2,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from dashboard.audience import AudiencePreferences
+from data_pipeline.source_types import SOURCE_TYPES
 
 class Query(AudiencePreferences):
     model_config = ConfigDict(extra='forbid', str_strip_whitespace=True)
@@ -9,6 +10,14 @@ class Query(AudiencePreferences):
     investigation_ids: list[str] = Field(default_factory=list, max_length=20,
         description='One ID for an investigation page; omit or send [] to search all indexed investigations. No fallback outside a selected scope.')
     limit: int = Field(default=5, ge=1, le=20)
+    source_types: list[str] = Field(default_factory=list, max_length=len(SOURCE_TYPES))
+
+    @field_validator("source_types")
+    @classmethod
+    def valid_source_types(cls, values):
+        if any(value not in SOURCE_TYPES for value in values):
+            raise ValueError("Unknown source type.")
+        return list(dict.fromkeys(values))
 
     @field_validator('investigation_ids')
     @classmethod
@@ -29,6 +38,7 @@ class Evidence(BaseModel):
     source_url: str | None = None
     content_hash: str
     row_data: dict | None = None
+    source_type: str | None = None
 
 
 class Claim(BaseModel):

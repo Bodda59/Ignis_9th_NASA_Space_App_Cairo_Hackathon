@@ -7,13 +7,19 @@ from urllib.parse import urlparse
 from data_pipeline.chunking import semantic_chunks
 from data_pipeline.conditions import ConditionProfile, extract_records
 from data_pipeline.loaders import load_file
+from data_pipeline.source_types import SOURCE_TYPES, infer_source_type
 
 
 def ingest_document(store, embeddings_factory, model_name, path, study_id, name,
-                    source_url=None, document_id=None, condition_profile=None):
+                    source_url=None, document_id=None, condition_profile=None, source_type=None):
     if condition_profile is not None:
         condition_profile = ConditionProfile.model_validate(condition_profile).model_dump()
     path = Path(path)
+    inferred = infer_source_type(path)
+    if source_type is None and inferred != 'Other Sources':
+        source_type = inferred
+    if source_type is not None and source_type not in SOURCE_TYPES:
+        raise ValueError("Unknown source type.")
     if not study_id.strip() or len(study_id) > 100 or not name.strip() or len(name) > 300:
         raise ValueError('Provide a study ID (1–100 characters) and name (1–300 characters).')
     if source_url and (urlparse(source_url).scheme not in {'http', 'https'} or not urlparse(source_url).netloc):
@@ -33,5 +39,5 @@ def ingest_document(store, embeddings_factory, model_name, path, study_id, name,
     vectors = embeddings.embed_documents([x.text for x in chunks])
     kwargs = {'condition_profile': condition_profile} if condition_profile is not None else {}
     result = store.save_document(study_id.strip(), name.strip(), id, path.stem, path.name,
-                                       source_url, digest, signature, model_name, chunks, vectors, **kwargs)
+                                       source_url, digest, signature, model_name, chunks, vectors, source_type=source_type, **kwargs)
     return dict(result, warnings=loaded.warnings)

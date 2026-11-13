@@ -8,7 +8,7 @@ import { ApiError } from './errors'
 import { download, http, post } from './transport'
 import type {
   Citation, CompareField, CompareResponse, ExperimentPage, ExperimentTable, InterpretRequest, InterpretResponse,
-  RankedStudy, ScenarioCondition, ScenarioRanking, SearchResponse, Source,
+  RankResponse, ScenarioCondition, ScenarioRanking, SearchResponse, Source,
 } from './types'
 
 type FactRef = Partial<Source> & { csv_record?: number; page?: number; field?: string }
@@ -88,10 +88,8 @@ export async function compare(ids: string[], signal?: AbortSignal): Promise<Comp
     comparability_notes: facts.limitations.map((text) => ({ text })), citations: [...citations.values()] }
 }
 
-type RankResponse = { status: string; message: string | null; investigations: RankedStudy[] }
-
-export function rankQuestion(question: string, ids: string[], audience?: Audience, signal?: AbortSignal) {
-  return http<RankResponse>('/api/v1/rank', post({ question, investigation_ids: ids }, signal), audience)
+export function rankQuestion(question: string, ids: string[], audience?: Audience, signal?: AbortSignal, sourceType?: string) {
+  return http<RankResponse>('/api/v1/rank', post({ question, investigation_ids: ids, ...(sourceType && { source_types: [sourceType] }) }, signal), audience)
 }
 
 export function rankScenario(question: string, ids: string[], conditions: ScenarioCondition[], audience?: Audience, signal?: AbortSignal) {

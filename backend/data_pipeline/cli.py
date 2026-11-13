@@ -5,6 +5,7 @@ from pathlib import Path
 
 from dashboard.audience import PROFILES
 from data_pipeline.ingest import ingest_document
+from data_pipeline.source_types import SOURCE_TYPES
 from research.dependencies import get_service
 from research.models import Query
 
@@ -20,6 +21,7 @@ def run(app):
     ingest.add_argument('--source-url')
     ingest.add_argument('--document-id')
     ingest.add_argument('--condition-profile', type=Path, help='Reviewed JSON column mapping for this document.')
+    ingest.add_argument('--source-type', choices=SOURCE_TYPES, help='Override the NASA folder inferred from the file path.')
     index = commands.add_parser('index-conditions', help='Index persisted CSV rows without recomputing embeddings.')
     index.add_argument('--investigation-id', action='append', default=[])
     index.add_argument('--document-id')
@@ -48,7 +50,7 @@ def run(app):
             profile = json.loads(args.condition_profile.read_text()) if args.condition_profile else None
             result = ingest_document(service.store, service.embeddings_factory, service.model_name,
                                      args.path, args.investigation_id, args.name, args.source_url,
-                                     args.document_id, profile)
+                                     args.document_id, profile, source_type=args.source_type)
         elif args.command == 'index-conditions':
             from data_pipeline.scenario_storage import backfill
             profile = json.loads(args.condition_profile.read_text()) if args.condition_profile else None

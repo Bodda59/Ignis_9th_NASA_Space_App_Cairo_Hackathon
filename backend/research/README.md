@@ -43,3 +43,23 @@ Try `{"question":"BASS-II","investigation_ids":["PSI-25"]}` at `/rank` and
 at `/scenario/rank`. The response includes the source location for each
 matching record. The scores describe relevance to reported evidence. Crew
 environment gaps remain visible alongside any matching test conditions.
+
+Question ranking searches the indexed NASA source types in parallel using a single
+query embedding. Each type has its own keyword and vector ranking. The overall
+rank uses the investigation's strongest matching passage. Collection relevance
+scores are reciprocal rank fusion scores, not percentages.
+
+Both rank routes return `source_relevance` for ranked investigations and
+`source_coverage` for every investigation in scope, even when none match. Each
+entry reports the source type, indexed document count, match status, score, and
+best matching passage when available. An investigation detail response lists its
+`indexed_source_types`.
+
+Pass `source_types: ["Reports"]` with `investigation_ids: ["PSI-25"]` to
+`/rank` or `/interpret` to limit evidence to that source and study. Omit
+`source_types` to search all available source types.
+
+Apply `data_pipeline/migrations/004_source_collections.sql` before running this
+version against an existing database. Ingestion infers the category from the
+source folder or NASA filename. Use `ingest --source-type "Engineering Documents"`
+for renamed or converted files whose folder is unavailable.

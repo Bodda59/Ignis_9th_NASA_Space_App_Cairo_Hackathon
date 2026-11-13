@@ -17,7 +17,7 @@ def tokens(text):
     return [x for x in re.findall(r'[a-z0-9]+(?:[-_][a-z0-9]+)*', text.casefold()) if x not in STOPWORDS]
 
 
-def hybrid_search(question, corpus, semantic_results, min_similarity=.5, limit=30):
+def hybrid_search(question, corpus, semantic_results, min_similarity=.5, limit=30, per_study=False):
     if not corpus:
         return []
     # Repeated exports must not gain extra votes in either ranking branch.
@@ -56,10 +56,22 @@ def hybrid_search(question, corpus, semantic_results, min_similarity=.5, limit=3
             similarities[id] = similarity
             used.add(id)
     fused = defaultdict(float)
-    for branch in [lexical[:limit], semantic[:limit]]:
-        for rank, id in enumerate(branch, 1):
+    for branch in [lexical, semantic]:
+        counts = defaultdict(int)
+        if per_study:
+            candidates = []
+            for id in branch:
+                study = by_id[id].investigation_id
+                if counts[study] < 3:
+                    candidates.append(id)
+                    counts[study] += 1
+        else:
+            candidates = branch[:limit]
+        for rank, id in enumerate(candidates, 1):
             fused[id] += 1 / (60 + rank)
-    ordered = sorted(fused, key=lambda id: (-int(exact[id]), -fused[id], id))[:limit]
+    ordered = sorted(fused, key=lambda id: (-int(exact[id]), -fused[id], id))
+    if not per_study:
+        ordered = ordered[:limit]
     return [{'evidence': by_id[id], 'score': fused[id], 'exact_match': exact[id],
              'matched_terms': sorted(matched_terms[id]),
              'semantic_similarity': similarities.get(id)} for id in ordered]

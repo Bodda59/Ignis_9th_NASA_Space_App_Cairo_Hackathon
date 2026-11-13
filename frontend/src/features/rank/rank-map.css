@@ -1,0 +1,29 @@
+@media (prefers-reduced-motion: no-preference) {
+  .rank-arm {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 760ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .rank-arm-tip {
+    opacity: 0;
+    transition: opacity 180ms ease 480ms;
+  }
+
+  [data-revealed='true'] > .rank-arm {
+    stroke-dashoffset: 0;
+  }
+
+  [data-revealed='true'] > .rank-arm-tip {
+    opacity: 1;
+  }
+
+  .rank-collection {
+    transition: box-shadow 220ms ease;
+  }
+
+  .rank-collection[data-revealed='true']:hover,
+  .rank-collection:focus-within {
+    box-shadow: 0 0 24px rgb(108 200 255 / 12%);
+  }
+}
