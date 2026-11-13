@@ -6,6 +6,7 @@ import { api } from '@/api/client'
 import type { EarthResponse, EarthTheme, Spinoff } from '@/api/types'
 import { CountUp } from '@/components/fx/CountUp'
 import { RevealText } from '@/components/fx/RevealText'
+import { EarthGlobe } from '@/components/three/EarthGlobe'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { StateMessage } from '@/components/ui/StateMessage'
 import { EARTH_THEME, excerpt } from '@/features/earth/themes'
@@ -40,13 +41,17 @@ export function EarthPage() {
             PSI combustion study says it could offer.
           </p>
         </div>
-        {data && (
-          <dl className="grid grid-cols-3 gap-8 border-t border-[var(--color-line)] pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
-            <Stat label="Studies" value={data.study_count} />
-            <Stat label="Fire-safety themes" value={data.themes.filter((theme) => theme.fire_safety).length} />
-            <Stat label="Spin-offs" value={data.spinoffs.length} />
-          </dl>
-        )}
+        {/* Globe centred above the stats; positioned out of flow so it adds no height to the header */}
+        <div className="relative">
+          <EarthGlobe interactive className="pointer-events-none absolute bottom-full left-1/2 hidden size-[clamp(280px,23vw,360px)] -translate-x-1/2 translate-y-[22%] lg:block" />
+          {data && (
+            <dl className="relative z-10 grid w-full grid-cols-3 gap-8 border-t border-[var(--color-line)] pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+              <Stat label="Studies" value={data.study_count} />
+              <Stat label="Fire-safety themes" value={data.themes.filter((theme) => theme.fire_safety).length} />
+              <Stat label="Spin-offs" value={data.spinoffs.length} />
+            </dl>
+          )}
+        </div>
       </header>
 
       {res.status === 'error' && !data && (

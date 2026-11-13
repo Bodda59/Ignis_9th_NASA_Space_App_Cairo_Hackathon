@@ -78,7 +78,7 @@ function Detail({ data }: { data: InvestigationResponse }) {
           <SectionNav sections={sections} />
         </aside>
 
-        <div className="min-w-0 max-w-5xl">
+        <div className="min-w-0 max-w-5xl" data-notebook-scope>
           <LearningPanel id={inv.id} />
           <DetailSection id="overview" n={1} title="Overview">
             <div className="grid gap-10 xl:grid-cols-[1.4fr_1fr]">

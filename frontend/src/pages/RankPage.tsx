@@ -3,6 +3,7 @@ import { ArrowUpRight, ListOrdered, Loader2, X } from 'lucide-react'
 import { useState } from 'react'
 import { api } from '@/api/client'
 import type { ScenarioCondition } from '@/api/types'
+import { RevealText } from '@/components/fx/RevealText'
 import { Button, ButtonLink } from '@/components/ui/Button'
 import { Chip } from '@/components/ui/Chip'
 import { useAudience } from '@/features/audience/audience'
@@ -56,13 +57,18 @@ export function RankPage() {
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-      className="mx-auto min-h-[80svh] w-full px-4 pb-24 pt-28 sm:px-8 xl:px-12">
-      <header className="mb-7">
-        <div className="mb-3 flex items-center gap-2 text-[var(--color-flame)]">
-          <ListOrdered className="size-5" aria-hidden="true" /> <span className="label">Rank only</span>
+      className="mx-auto min-h-[80svh] max-w-[1440px] px-6 pb-40 pt-28 lg:px-10">
+      <header className="mb-10 flex flex-wrap items-end justify-between gap-6">
+        <div>
+          <p className="label mb-4">Question · Scenario · Crew environment</p>
+          <RevealText
+            lines={['Rank']}
+            className="font-display text-[clamp(2.8rem,6vw,5.5rem)] font-semibold uppercase leading-none tracking-[-0.04em]"
+          />
+          <p className="mt-6 max-w-2xl text-[15px] leading-relaxed text-[var(--color-ink-dim)]">
+            See which investigations rank highest and review the source material behind each match.
+          </p>
         </div>
-        <h1 className="font-display text-[clamp(1.8rem,4vw,2.6rem)] leading-tight">Rank research evidence</h1>
-        <p className="mt-3 max-w-xl text-sm text-[var(--color-ink-dim)]">See which investigations rank highest and review the source material behind each match.</p>
       </header>
 
       {bassExample && <p className="mb-5 rounded-xl border border-[var(--color-flame)]/25 bg-[var(--color-flame)]/5 p-3 text-sm text-[var(--color-ink-dim)]">
