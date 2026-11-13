@@ -4,6 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, FiniteFloat, model_validator
 
+from dashboard.gravity import EARTH_COMPARISON_IDS
 from research.catalog_search import rank_candidates, search_candidates, query_words
 
 Topic = Literal['prevention', 'detection', 'suppression']
@@ -130,8 +131,8 @@ def study_gravities(study):
     gravity = set(study['metadata'].get('gravity_environments', []))
     if study['id'] in ORBITAL_STUDIES | SAFFIRE:
         gravity.add('microgravity')
-    if study['id'] in {'PSI-25', 'PSI-99', 'PSI-107'}:
-        gravity.add('normal_gravity')  # Earth-gravity comparison evidence
+    if study['id'] in EARTH_COMPARISON_IDS:
+        gravity.add('normal_gravity')  # Earth-gravity comparison evidence (see dashboard/gravity.py)
     if study['id'] == 'PSI-22':
         gravity.add('simulated_effect')
     return gravity or {'unknown'}

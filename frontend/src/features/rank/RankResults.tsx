@@ -155,7 +155,10 @@ export function RankResults({ result }: { result: Ranking }) {
       {count ? count + (count === 1 ? ' investigation shown' : ' investigations shown') : 'No investigations matched.'}
     </p>
     {result.mode === 'habitat' ? <div className="space-y-3">
-      {result.data.warnings.map((warning) => <p key={warning.code} className="text-sm text-[var(--color-ember)]">{warning.message}</p>)}
+      {result.data.warnings.map((warning) => <p key={warning.code} className="text-sm text-[var(--color-ember)]">
+        {warning.message}
+        {warning.code === 'GRAVITY_GAP' && <> <Link to="/gravity" className="text-[var(--color-flame)] hover:underline">See the partial-gravity evidence</Link></>}
+      </p>)}
       <ol className="space-y-3">{result.data.items.map((study, index) => <StudyCard key={study.id} id={study.id} rank={index + 1} name={study.name}>
         {study.relevance.reasons.length > 0 && <ul className="list-disc space-y-1 pl-4">{study.relevance.reasons.map((reason) =>
           <li key={reason.text}>{reason.text}{reason.source && <> · <CatalogSource source={reason.source} /></>}</li>)}</ul>}

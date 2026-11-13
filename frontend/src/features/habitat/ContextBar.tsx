@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronDown, Orbit, X } from 'lucide-react'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { HABITAT_IDS, SAFETY_TOPICS, type HabitatId, type SafetyTopic } from '@/api/types'
 import { Chip } from '@/components/ui/Chip'
 import { NumberField } from '@/components/ui/NumberField'
@@ -105,7 +106,8 @@ export function ContextBar({ s }: { s: S }) {
                       >
                         {hab.gravityLabel} · {hab.gravityG} g.{' '}
                         {hab.partialGravity
-                          ? 'Microgravity experiments offer comparison evidence. Look for tests at the selected gravity.'
+                          ? <>No PSI test ran at this gravity; microgravity and Earth results are reference points.{' '}
+                            <Link to="/gravity" className="text-[var(--color-flame)] hover:underline">See the partial-gravity evidence</Link>.</>
                           : 'Same gravity regime as most PSI combustion tests.'}{' '}
                         No atmospheric values are assumed — add them below if known.
                       </motion.p>

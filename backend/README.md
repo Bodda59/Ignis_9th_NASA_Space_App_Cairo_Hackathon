@@ -22,7 +22,8 @@ catalog jobs. The health endpoint is `/health`.
 
 The dashboard API provides investigation search, metadata, details, comparisons,
 table previews and exports, and crew-environment filters and relevance.
-`/api/v1/earth` lists the Earth applications stated in the PSI records. It reads
-`data_pipeline/sources/investigations.json`, so it works without the database.
+`/api/v1/gravity` returns the partial-gravity evidence, and `/api/v1/earth` lists the
+Earth applications stated in the PSI records. Both read
+`data_pipeline/sources/investigations.json`, so they work without the database.
 `/learning/materials` provides PDF, Word, and PowerPoint exports.
 See [research setup](research/README.md) for ranking, cited answers, and scenarios.

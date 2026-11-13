@@ -101,7 +101,10 @@ export function HabitatOrbit() {
                 exit={{ opacity: 0, x: -8 }}
               >
                 <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--color-ember)]" />
-                The PSI collection primarily covers microgravity. Earth and ISS results provide reference points for surface research.
+                <span>
+                  The PSI collection primarily covers microgravity. Earth and ISS results provide reference points for surface research.{' '}
+                  <Link to="/gravity" className="text-[var(--color-flame)] hover:underline">See the partial-gravity evidence</Link>
+                </span>
               </motion.p>
             )}
           </AnimatePresence>
