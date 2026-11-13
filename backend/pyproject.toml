@@ -5,5 +5,8 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "pgvector>=0.5.1",
+    "psycopg>=3.3.9",
     "pydantic>=2.14.3",
+    "rank-bm25>=0.2.2",
 ]
