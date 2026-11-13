@@ -1,13 +1,14 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { AppShell } from '@/components/layout/AppShell'
+import { HomePage } from '@/pages/HomePage'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
 
-// Every view is a placeholder for now; the real pages replace these one by one.
+// Views still marked PlaceholderPage are replaced by their real pages one by one.
 const router = createBrowserRouter([
   {
     element: <AppShell />,
     children: [
-      { path: '/', element: <PlaceholderPage title="Flame in Freefall" note="The landing page is on its way." /> },
+      { path: '/', element: <HomePage /> },
       { path: '/explore', element: <PlaceholderPage title="Explore" note="Search and filter the combustion studies." /> },
       { path: '/investigations/:id', element: <PlaceholderPage title="Investigation" note="Study details, findings and data." /> },
       { path: '/compare', element: <PlaceholderPage title="Compare" note="Line up two or three studies side by side." /> },
