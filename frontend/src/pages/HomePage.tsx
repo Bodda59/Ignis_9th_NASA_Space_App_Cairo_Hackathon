@@ -1,18 +1,33 @@
-import { motion } from 'framer-motion'
+import { motion, useMotionValueEvent, useScroll } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import { HabitatOrbit } from '@/features/habitat/HabitatOrbit'
 import { GravityStrip } from '@/features/landing/GravityStrip'
 import { OxygenMap } from '@/features/landing/OxygenMap'
 import { Timeline } from '@/features/landing/Timeline'
 import { StationSection } from '@/features/station/StationSection'
 import { Hero } from '@/features/landing/Hero'
+import { IntroFilm } from '@/features/landing/IntroFilm'
 import { ExperimentJourney } from '@/features/landing/ExperimentJourney'
 import { SafetyDomains } from '@/features/landing/SafetyDomains'
 import { SearchCommand } from '@/features/search/SearchCommand'
 
+/**
+ * The hero rises up *behind* the opening film while it zooms away, so the dive reads as
+ * passing through the film into the site. Its entrance animation starts on the first scroll.
+ */
+function HeroGate() {
+  const [show, setShow] = useState(false)
+  const { scrollY } = useScroll()
+  useMotionValueEvent(scrollY, 'change', (v) => { if (v > 8) setShow(true) })
+  useEffect(() => { if (window.scrollY > 8) setShow(true) }, [])
+  return <div className="relative z-0 -mt-[85svh] min-h-[100svh]">{show && <Hero />}</div>
+}
+
 export function HomePage() {
   return (
     <>
-      <Hero />
+      <IntroFilm />
+      <HeroGate />
       <ExperimentJourney />
 
       <section id="search" className="relative scroll-mt-20 border-t border-[var(--color-line)]">
