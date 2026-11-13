@@ -15,4 +15,5 @@ def get_service():
         raise ValueError('MIN_SEMANTIC_SIMILARITY must be between -1 and 1.')
     return RAGService(PostgresStore(os.getenv('DATABASE_URL', '')),
                       model_name=os.getenv('EMBEDDING_MODEL', 'BAAI/bge-small-en-v1.5'),
-                      min_similarity=threshold)
+                      min_similarity=threshold,
+                      max_attempts=int(os.getenv('RAG_MAX_ATTEMPTS', '3')))
