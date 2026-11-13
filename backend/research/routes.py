@@ -1,6 +1,8 @@
 """Original and scenario-based research endpoints."""
-from fastapi import Depends
+from fastapi import Depends, Header, Request
 
+from dashboard.audience import Audience
+from research.crew import ResearchRequest
 from rag.models import Query
 from rag.scenario import ScenarioCompare, ScenarioOptions, ScenarioQuery, ScenarioQuestion, ScenarioScope
 
@@ -46,3 +48,11 @@ def register_routes(app, execute, authorize):
         Missing/conflicting analogue records never enter the LLM context.
         """
         return execute('scenario_interpret', query)
+
+    @app.get('/api/v1/research/filters', dependencies=[Depends(authorize)], tags=['Crew environment'])
+    def crew_filters(request: Request, audience: Audience = Header(alias='X-Audience-Type')):
+        return {'data': execute('crew_filters', None), 'meta': {'audience': audience, 'request_id': request.state.request_id}}
+
+    @app.post('/api/v1/research/relevance', dependencies=[Depends(authorize)], tags=['Crew environment'])
+    def crew_relevance(query: ResearchRequest, request: Request, audience: Audience = Header(alias='X-Audience-Type')):
+        return {'data': execute('crew_relevance', query), 'meta': {'audience': audience, 'request_id': request.state.request_id}}

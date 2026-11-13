@@ -3,6 +3,7 @@ import hmac
 import os
 import threading
 import time
+import uuid
 from collections import deque
 from functools import partial
 
@@ -56,7 +57,9 @@ def create_app(service=None, api_key=None):
                 return JSONResponse(status_code=413, content={'error': {'code': 'BODY_TOO_LARGE', 'message': 'Request body is too large.'}})
             body.append(chunk)
         request._body = b''.join(body)
+        request.state.request_id = uuid.uuid4().hex
         response = await call_next(request)
+        response.headers['X-Request-ID'] = request.state.request_id
         response.headers['X-Content-Type-Options'] = 'nosniff'
         response.headers['Cache-Control'] = 'no-store'
         return response

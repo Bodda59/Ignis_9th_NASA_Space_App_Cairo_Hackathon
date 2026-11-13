@@ -189,3 +189,11 @@ report the requested outcome or explanation. Cite the original passage_id for ev
             answer = self._answer(query.question, selected, {
                 'conditions': [c.model_dump(exclude_none=True) for c in query.conditions], 'records': records}, audience_preferences=query)
         return dict(answer, scenario=ranking, audience_context=audience_context(query))
+
+    def crew_filters(self, _):
+        from research.crew import discover_filters
+        return discover_filters(self.store)
+
+    def crew_relevance(self, query):
+        from research.crew import find_research
+        return find_research(self.store, query)
