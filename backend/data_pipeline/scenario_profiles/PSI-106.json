@@ -1,0 +1,12 @@
+{
+  "id_column": "Test Date",
+  "record_kind": "source_record",
+  "columns": {
+    "Fuel Type": {
+      "key": "fuel_description",
+      "label": "Reported fuel description",
+      "kind": "category",
+      "note": "Day-level summary. Fuel text may include mixtures and calibration notes."
+    }
+  }
+}

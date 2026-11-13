@@ -1,0 +1,26 @@
+{
+  "id_column": "FLEX Test #",
+  "record_kind": "reported_test",
+  "columns": {
+    "O initial ambient composition; mole fraction": {
+      "key": "initial_oxygen_percent",
+      "label": "Initial oxygen concentration",
+      "kind": "number",
+      "unit": "%",
+      "scale": 100,
+      "minimum": 0,
+      "maximum": 100,
+      "note": "Source CSV abbreviates the oxygen column as O. Reviewed against FLEX_Test_Plan.pdf, original PDF pages 2 and 6 (Table 6 uses X_O2 for ambient oxygen mole fraction), and PSI-69 study metadata describing ambient oxygen mole fraction. Multiply source mole fraction by 100 for percent; original CSV header and values remain unchanged. No CO or N species mapping is inferred."
+    },
+    "He initial ambient composition; mole fraction": {
+      "key": "initial_helium_percent",
+      "label": "Initial helium concentration",
+      "kind": "number",
+      "unit": "%",
+      "scale": 100,
+      "minimum": 0,
+      "maximum": 100,
+      "note": "CSV explicitly identifies He initial ambient composition as mole fraction. Multiply by 100 for percent; zero is a reported absence, not a missing value."
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "record_kind": "planned_record",
+  "columns": {
+    "Sample (Fuel Type)": {
+      "key": "fuel",
+      "label": "Fuel",
+      "kind": "category",
+      "note": "This table gives ranges and alternatives, not individual completed tests."
+    }
+  }
+}

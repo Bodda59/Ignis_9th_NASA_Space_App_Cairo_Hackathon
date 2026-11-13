@@ -1,0 +1,12 @@
+{
+  "id_column": "Test Day",
+  "record_kind": "source_record",
+  "columns": {
+    "Fuel Bottle": {
+      "key": "fuel_bottle",
+      "label": "Reported fuel bottle composition",
+      "kind": "category",
+      "note": "The bottle composition can differ from the diluted test fuel."
+    }
+  }
+}

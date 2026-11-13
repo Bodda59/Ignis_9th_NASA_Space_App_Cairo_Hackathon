@@ -1,0 +1,26 @@
+{
+  "record_kind": "source_record",
+  "columns": {
+    "Nozzle (mm)": {
+      "key": "nozzle_diameter_mm",
+      "label": "Nozzle diameter",
+      "kind": "number",
+      "unit": "mm",
+      "minimum": 0
+    },
+    "Air Rate (cm/s)": {
+      "key": "airflow_cm_s",
+      "label": "Reported air flow speed",
+      "kind": "number",
+      "unit": "cm/s",
+      "minimum": 0
+    },
+    "Fuel Rate (sccm)": {
+      "key": "fuel_flow_sccm",
+      "label": "Fuel volumetric flow rate",
+      "kind": "number",
+      "unit": "sccm",
+      "minimum": 0
+    }
+  }
+}

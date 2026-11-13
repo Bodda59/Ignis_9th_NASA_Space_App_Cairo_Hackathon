@@ -1,0 +1,32 @@
+{
+  "id_column": "Flex Number",
+  "record_kind": "reported_test",
+  "columns": {
+    "Pressure": {
+      "key": "pressure_kpa",
+      "label": "Ambient pressure",
+      "kind": "number",
+      "unit": "kPa",
+      "minimum": 0,
+      "source_unit_suffix": "atm",
+      "scale": 101.325,
+      "note": "Source values explicitly end in atm. Converted to kPa."
+    },
+    "Oxygen": {
+      "key": "oxygen_percent",
+      "label": "Reported oxygen concentration",
+      "kind": "number",
+      "unit": "%",
+      "minimum": 0,
+      "scale": 100,
+      "maximum": 100,
+      "note": "The table lists ambient mixture fractions. Multiply by 100 for percent. The header does not specify initial or final phase."
+    },
+    "Fiber": {
+      "key": "fiber_reported",
+      "label": "Fiber reported",
+      "kind": "category",
+      "note": ""
+    }
+  }
+}

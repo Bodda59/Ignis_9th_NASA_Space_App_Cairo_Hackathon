@@ -1,0 +1,19 @@
+{
+  "id_column": "Sample Number ",
+  "record_kind": "source_record",
+  "columns": {
+    "Material": {
+      "key": "material",
+      "label": "Reported material",
+      "kind": "category",
+      "excluded_values": [
+        "Pre-test flow visulation data for sample 1",
+        "Pre-test flow visulation data for sample 2"
+      ],
+      "note": "Pre-test flow visualization descriptions are not material observations."
+    },
+    "Sample Thickness (cm)": null,
+    "Sample Length (cm)": null,
+    "Sample Width (cm)": null
+  }
+}

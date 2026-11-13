@@ -1,0 +1,31 @@
+{
+  "id_column": "Test",
+  "record_kind": "reported_test",
+  "columns": {
+    "Flame Type": {
+      "key": "flame_type",
+      "label": "Reported flame type",
+      "kind": "category",
+      "note": ""
+    },
+    "approx p (bar)": {
+      "key": "pressure_kpa",
+      "label": "Ambient pressure",
+      "kind": "number",
+      "unit": "kPa",
+      "minimum": 0,
+      "scale": 100,
+      "note": "Source column is approximate pressure in bar. Converted to kPa."
+    },
+    " XO2 before test": {
+      "key": "initial_oxygen_percent",
+      "label": "Initial oxygen concentration",
+      "kind": "number",
+      "unit": "%",
+      "minimum": 0,
+      "scale": 100,
+      "maximum": 100,
+      "note": "Source oxygen mole fraction multiplied by 100. Normal-flame table only."
+    }
+  }
+}

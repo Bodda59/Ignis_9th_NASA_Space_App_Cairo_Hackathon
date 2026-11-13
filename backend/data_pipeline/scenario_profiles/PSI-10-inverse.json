@@ -1,0 +1,30 @@
+{
+  "id_column": "Test",
+  "record_kind": "reported_test",
+  "columns": {
+    "Flame Type": {
+      "key": "flame_type",
+      "label": "Reported flame type",
+      "kind": "category",
+      "note": ""
+    },
+    "pinit (atm)": {
+      "key": "initial_pressure_kpa",
+      "label": "Initial reported pressure",
+      "kind": "number",
+      "unit": "kPa",
+      "minimum": 0,
+      "scale": 101.325
+    },
+    "XO2": {
+      "key": "oxidizer_feed_oxygen_percent",
+      "label": "Burner oxidizer feed oxygen",
+      "kind": "number",
+      "unit": "%",
+      "minimum": 0,
+      "scale": 100,
+      "maximum": 100,
+      "note": "Flame Design final report distinguishes burner-supply oxygen in inverse flames from ambient oxygen in normal flames. Mole fraction multiplied by 100."
+    }
+  }
+}

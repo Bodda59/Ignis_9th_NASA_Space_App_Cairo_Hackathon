@@ -1,0 +1,12 @@
+{
+  "id_column": "Sample #",
+  "record_kind": "source_record",
+  "columns": {
+    "Sample Material  ": {
+      "key": "material",
+      "label": "Reported material",
+      "kind": "category",
+      "note": "The source table includes cross-referenced conditions. Blank numeric cells are left missing; no values are propagated."
+    }
+  }
+}
