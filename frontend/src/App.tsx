@@ -3,11 +3,11 @@ import { AppShell } from '@/components/layout/AppShell'
 import { ComparePage } from '@/pages/ComparePage'
 import { ExplorePage } from '@/pages/ExplorePage'
 import { HomePage } from '@/pages/HomePage'
+import { AskPage } from '@/pages/AskPage'
 import { InvestigationPage } from '@/pages/InvestigationPage'
 import { RankPage } from '@/pages/RankPage'
 import { PlaceholderPage } from '@/pages/PlaceholderPage'
 
-// Views still marked PlaceholderPage are replaced by their real pages one by one.
 const router = createBrowserRouter([
   {
     element: <AppShell />,
@@ -17,7 +17,7 @@ const router = createBrowserRouter([
       { path: '/investigations/:id', element: <InvestigationPage /> },
       { path: '/compare', element: <ComparePage /> },
       { path: '/rank', element: <RankPage /> },
-      { path: '/ask', element: <PlaceholderPage title="Ask" note="Ask a question answered from cited sources." /> },
+      { path: '/ask', element: <AskPage /> },
       { path: '*', element: <PlaceholderPage title="Lost in orbit" note="This page doesn’t exist." /> },
     ],
   },
