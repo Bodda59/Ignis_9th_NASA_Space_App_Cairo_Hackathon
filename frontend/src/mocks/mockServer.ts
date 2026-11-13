@@ -16,7 +16,7 @@ import type {
   SearchResponse,
 } from '@/api/types'
 import { STUDIES, type FixtureStudy } from './fixtures'
-import type { CompareResponse, InterpretRequest, InterpretResponse, DataPreviewRequest, DataPreviewResponse, InvestigationResponse } from '@/api/types'
+import type { CompareResponse, InterpretRequest, InterpretResponse, InvestigationResponse } from '@/api/types'
 import type {
   Citation,
   DataRow,
@@ -32,7 +32,7 @@ import type {
   Test,
 } from '@/api/types'
 import type { Audience } from '@/features/audience/audience'
-import { cell, toCsv } from './csv'
+import { cell } from './csv'
 import { buildInvestigation, dataRows, findStudy } from './details'
 import { buildCompare } from './compare'
 import { interpret } from './interpret'
@@ -238,23 +238,6 @@ export async function mockInvestigation(id: string, signal?: AbortSignal): Promi
   const s = findStudy(id)
   if (!s) throw new ApiError(404, { code: 'NOT_FOUND', message: `No investigation with id “${id}” exists in this collection.`, retryable: false })
   return buildInvestigation(s)
-}
-
-export async function mockPreview(req: DataPreviewRequest, signal?: AbortSignal): Promise<DataPreviewResponse> {
-  await delay(350, signal)
-  const all = dataRows(req.investigation_ids)
-  if (!all.length) {
-    return { rows: [], total: 0, page: req.page, page_size: req.page_size, availability: 'unavailable', unavailable_reason: 'No usable test-level numerical records for this selection.' }
-  }
-  const start = (req.page - 1) * req.page_size
-  return { rows: all.slice(start, start + req.page_size), total: all.length, page: req.page, page_size: req.page_size, availability: 'available', unavailable_reason: null }
-}
-
-export async function mockExport(req: Omit<DataPreviewRequest, 'page' | 'page_size'>): Promise<{ blob: Blob; filename: string }> {
-  await delay(600)
-  const rows = dataRows(req.investigation_ids) // ALL matching rows, not just the preview page
-  if (!rows.length) throw new ApiError(422, { code: 'DATA_UNAVAILABLE', message: 'There are no exportable numerical records for this selection.', retryable: false })
-  return { blob: new Blob([toCsv(rows)], { type: 'text/csv;charset=utf-8' }), filename: `flame-in-freefall_${req.investigation_ids.join('-')}_SYNTHETIC.csv` }
 }
 
 export async function mockCompare(ids: string[], signal?: AbortSignal): Promise<CompareResponse> {

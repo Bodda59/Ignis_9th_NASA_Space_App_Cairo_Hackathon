@@ -7,8 +7,6 @@ import type { Audience } from '@/features/audience/audience'
 import * as mock from '@/mocks/mockServer'
 import type {
   CompareResponse,
-  DataPreviewRequest,
-  DataPreviewResponse,
   ExperimentPage,
   ExperimentTable,
   FiltersResponse,
@@ -70,14 +68,6 @@ export const api = {
 
   investigation(id: string, signal?: AbortSignal): Promise<InvestigationResponse> {
     return mock.mockInvestigation(id, signal)
-  },
-
-  dataPreview(req: DataPreviewRequest, signal?: AbortSignal): Promise<DataPreviewResponse> {
-    return mock.mockPreview(req, signal)
-  },
-
-  dataExport(req: Omit<DataPreviewRequest, 'page' | 'page_size'>): Promise<Download> {
-    return mock.mockExport(req)
   },
 
   rankQuestion(question: string, ids: string[], audience?: Audience, signal?: AbortSignal): Promise<{ status: string; message: string | null; investigations: RankedStudy[] }> {
