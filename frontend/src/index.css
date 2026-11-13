@@ -74,6 +74,13 @@
     background-size: 96px 96px;
     mask-image: radial-gradient(ellipse at 50% 40%, black 30%, transparent 75%);
   }
+  /* Slim themed scrollbar for scrolling panels */
+  .scroll-slim {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(157 140 255 / 0.35) transparent;
+    scrollbar-gutter: stable;
+  }
+  .scroll-slim:hover { scrollbar-color: rgb(157 140 255 / 0.6) transparent; }
   .grain::after {
     content: "";
     position: absolute;

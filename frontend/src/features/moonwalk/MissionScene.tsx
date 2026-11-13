@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Flame, Wind } from 'lucide-react'
 import type { ReactNode } from 'react'
+import { EarthGlobe } from '@/components/three/EarthGlobe'
 import { Astronaut3D } from '@/features/interpret/Astronaut3D'
 import { EARTH_PSI, type Finding, type StepId } from './mission'
 
@@ -49,9 +50,10 @@ export function MissionScene({ step, n2, breathing, cabinSpec, findings }: {
         {STARS.map((s, i) => (
           <i key={i} className="absolute size-[2px] rounded-full bg-white" style={{ left: `${s.left}%`, top: `${s.top}%`, opacity: s.o }} />
         ))}
-        <div className="absolute right-[9%] top-[10%] size-16 rounded-full bg-[radial-gradient(circle_at_35%_30%,#bfe6ff_0%,#3b82d6_38%,#0d2b66_70%,#06112b_100%)] shadow-[0_0_40px_-6px_#3b82d6]" />
       </div>
-      <Tag className="right-[4%] top-[calc(10%+4.6rem)] text-right" title="Earth" lines={['14.7 psi · 21% O₂']} />
+      {/* Earth from the Moon: lit from the side, so the terminator and city lights show */}
+      <EarthGlobe className="absolute right-[4%] top-[4%] size-28 sm:size-32" sun={[-0.8, 0.3, 0.75]} longitude={20} spin={0.08} />
+      <Tag className="right-[4%] top-[calc(4%+7.5rem)] text-right sm:top-[calc(4%+8.5rem)]" title="Earth" lines={['14.7 psi · 21% O₂']} />
 
       {/* lunar ground */}
       <div className="absolute inset-x-[-10%] bottom-[-34%] h-[62%] rounded-[50%] bg-[radial-gradient(ellipse_at_50%_0%,#b9bcc7_0%,#6d7080_38%,#2c2e38_75%)]" aria-hidden="true">

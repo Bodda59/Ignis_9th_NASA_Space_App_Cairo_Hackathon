@@ -1,6 +1,10 @@
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, Rocket } from 'lucide-react'
+import { lazy, useRef } from 'react'
+import { RevealText } from '@/components/fx/RevealText'
 import { Button } from '@/components/ui/Button'
+import { SceneFrame } from '@/features/mission/ui'
+import { scrollToEl } from '@/lib/scroll'
 import { AirBars } from '@/features/moonwalk/AirBars'
 import { ChoiceList } from '@/features/moonwalk/ChoiceList'
 import { Debrief } from '@/features/moonwalk/Debrief'
@@ -9,6 +13,8 @@ import { MissionScene } from '@/features/moonwalk/MissionScene'
 import { PrebreathePanel } from '@/features/moonwalk/PrebreathePanel'
 import { byId, CABINS, EARTH_O2, EARTH_PSI, MATERIALS, STEPS, SUITS, type StepId } from '@/features/moonwalk/mission'
 import { useMission } from '@/features/moonwalk/useMission'
+
+const MoonHeroScene = lazy(() => import('@/features/moonwalk/MoonHeroScene'))
 
 const HEADING: Record<StepId, { title: string; ask: string }> = {
   cabin: { title: 'Choose the cabin air', ask: 'What will the crew breathe inside the Moon Base?' },
@@ -21,24 +27,43 @@ const HEADING: Record<StepId, { title: string; ask: string }> = {
 /** Moonwalk mission: a small decision game built on the brief's spacesuit and oxygen facts. */
 export function MoonwalkPage() {
   const m = useMission()
+  const reduced = !!useReducedMotion()
   const { step, state } = m
   const cabin = byId(CABINS, state.cabin)
   const suit = byId(SUITS, state.suit)
   const canContinue = step === 'cabin' ? !!state.cabin : step === 'materials' ? !!state.materials : step === 'suit' ? !!state.suit : true
 
-  return (
-    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto max-w-[1440px] px-6 pt-28 lg:px-10">
-      <header className="mb-8 max-w-2xl">
-        <div className="mb-3 flex items-center gap-2 text-[var(--color-flame)]">
-          <Rocket className="size-5" aria-hidden="true" /> <span className="label">Mission game</span>
-        </div>
-        <h1 className="font-display text-[clamp(1.8rem,4vw,2.6rem)] uppercase leading-tight tracking-[-0.02em]">Moonwalk prep</h1>
-        <p className="mt-3 text-sm leading-relaxed text-[var(--color-ink-dim)]">
-          Get an astronaut from the Moon Base out onto the surface. Four decisions about air, pressure and oxygen decide whether
-          the walk is safe — and how flammable home becomes.
-        </p>
-      </header>
+  const game = useRef<HTMLDivElement>(null)
 
+  return (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      <section className="relative">
+        <SceneFrame bare label="The Moon seen from space, with Earth in the distance"
+          className="h-[72svh] min-h-[460px] border-b border-[var(--color-line)]">
+          <MoonHeroScene reduced={reduced} />
+        </SceneFrame>
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[var(--color-void)] via-[var(--color-void)]/70 to-transparent pt-32">
+          <div className="pointer-events-auto mx-auto max-w-[1440px] px-6 pb-10 lg:px-10">
+            <p className="label mb-4 flex items-center gap-2 !text-[var(--color-flame)]">
+              <Rocket className="size-4" aria-hidden="true" /> Mission game · Moon Base
+            </p>
+            <RevealText lines={['Moonwalk', 'prep']}
+              className="font-display text-[clamp(2.2rem,6.5vw,5.5rem)] font-semibold uppercase leading-[0.95] tracking-[-0.04em]" />
+            <p className="mt-5 max-w-xl text-sm leading-relaxed text-[var(--color-ink-dim)] sm:text-base">
+              Get an astronaut from the Moon Base out onto the surface. Four decisions about air, pressure and oxygen decide whether
+              the walk is safe — and how flammable home becomes.
+            </p>
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <Button variant="accent" onClick={() => game.current && scrollToEl(game.current)} icon={<ArrowRight className="size-4" />}>
+                {m.index ? 'Continue the mission' : 'Start the mission'}
+              </Button>
+              <span className="font-mono text-xs text-[var(--color-ink-faint)]">Step {Math.min(m.index + 1, STEPS.length - 1)} of {STEPS.length - 1}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div ref={game} className="mx-auto max-w-[1440px] scroll-mt-20 px-6 pt-12 lg:px-10">
       <ol className="mb-6 flex flex-wrap gap-x-5 gap-y-2" aria-label="Mission steps">
         {STEPS.map((s, i) => (
           <li key={s.id} aria-current={s.id === step ? 'step' : undefined}
@@ -93,6 +118,11 @@ export function MoonwalkPage() {
       </div>
 
       <FieldNotes />
+      <p className="mb-16 mt-10 max-w-3xl text-xs leading-relaxed text-[var(--color-ink-faint)]">
+        Moon imagery: NASA Scientific Visualization Studio, CGI Moon Kit (LRO LROC colour and LOLA elevation) · Earth: NASA Blue Marble ·
+        “Astronaut” by PW Wu (CC-BY 3.0, via Poly Pizza).
+      </p>
+      </div>
     </motion.div>
   )
 }
