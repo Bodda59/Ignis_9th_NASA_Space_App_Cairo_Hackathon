@@ -181,6 +181,58 @@ export type Spinoff = {
 
 export type EarthResponse = { themes: EarthTheme[]; spinoffs: Spinoff[]; caveat: string; study_count: number }
 
+// ── Partial gravity (GET /api/v1/gravity) ───────────────────────────
+export type SourceLink = { title: string; url: string | null }
+
+export type StudyRef = { id: string; acronym: string; name: string; psi_url: string | null }
+
+/** A study whose PSI record sets microgravity against Earth gravity. `quote` is copied from `field`. */
+export type GravityBracket = StudyRef & {
+  topic: string
+  topic_label: string
+  /** this project's one-line reading of the quote */
+  summary: string
+  field: 'objective' | 'hypothesis' | 'approach'
+  quote: string
+  /** reviewed low-g vs 1 g finding, when one exists */
+  finding: { text: string; source_title: string; source_url: string | null } | null
+}
+
+export type OutsideEvidence = {
+  id: string
+  name: string
+  /** label for the gravity axis */
+  short: string
+  g: number
+  status: 'flown' | 'planned' | 'published'
+  method: string
+  text: string
+  source: SourceLink
+}
+
+export type GravityResponse = {
+  counts: { microgravity_studies: number; earth_comparison_studies: number; partial_gravity_studies: number; outside_psi: number }
+  topics: { id: string; label: string }[]
+  brackets: GravityBracket[]
+  simulated: StudyRef & {
+    brief_quote: string
+    brief_source: SourceLink
+    record_quotes: { field: string; quote: string }[]
+    limit: string
+  }
+  outside: OutsideEvidence[]
+  bounding: {
+    brief_quote: string
+    brief_source: SourceLink
+    caveat_study: StudyRef
+    caveat_quote: string
+    nasa_summary: string
+    nasa_source: SourceLink
+    takeaway: string
+  }
+  limits: string[]
+}
+
 export type Test = {
   id: string
   record_id?: string

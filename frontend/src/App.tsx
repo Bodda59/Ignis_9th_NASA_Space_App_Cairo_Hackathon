@@ -3,6 +3,7 @@ import { AppShell } from '@/components/layout/AppShell'
 import { ComparePage } from '@/pages/ComparePage'
 import { EarthPage } from '@/pages/EarthPage'
 import { ExplorePage } from '@/pages/ExplorePage'
+import { GravityPage } from '@/pages/GravityPage'
 import { HomePage } from '@/pages/HomePage'
 import { ArticlePage } from '@/pages/ArticlePage'
 import { AskPage } from '@/pages/AskPage'
@@ -24,6 +25,7 @@ const router = createBrowserRouter([
       { path: '/ask', element: <AskPage /> },
       { path: '/article', element: <ArticlePage /> },
       { path: '/earth', element: <EarthPage /> },
+      { path: '/gravity', element: <GravityPage /> },
       { path: '/mission', element: <MissionPage /> },
       { path: '/moonwalk', element: <MoonwalkPage /> },
       { path: '*', element: <PlaceholderPage title="Lost in orbit" note="This page doesn’t exist." /> },

@@ -28,7 +28,7 @@ function status(g: number) {
     title: 'Partial-gravity evidence',
     text: nearMoon
       ? 'LUCI reproduced lunar-like acceleration in a rotating rocket. Its NASA report is outside the indexed PSI collection.'
-      : 'Earth and ISS tests provide comparison points. Partial-gravity results can fall outside the range measured at those two points.', 
+      : 'Earth and ISS tests are reference points, but they may not bound this gravity: NASA drop-tower tests found materials that burn more readily below Earth gravity than on Earth.',
   }
 }
 
@@ -167,6 +167,7 @@ export function GravityStrip() {
               {visible && <Suspense><GravityModel gravity={body.g} color={body.color} /></Suspense>}
             </div>
             <div className="flex flex-wrap gap-4 text-sm text-[var(--color-flame)]">
+              <Link to="/gravity" className="font-medium hover:underline">See the partial-gravity evidence</Link>
               {habitat && <Link to={`/explore?habitat=${habitat}`} className="hover:underline">Explore research for {body.label === 'Orbit' ? 'the ISS' : body.label}</Link>}
               {body.id === 'moon' && <a href="https://ntrs.nasa.gov/citations/20250010653" target="_blank" rel="noreferrer" className="hover:underline">Read LUCI results</a>}
               {body.id === 'mars' && <a href="https://ntrs.nasa.gov/citations/20130010991" target="_blank" rel="noreferrer" className="hover:underline">Read Martian-gravity tests</a>}

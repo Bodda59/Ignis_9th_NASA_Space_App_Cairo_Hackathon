@@ -4,6 +4,7 @@ from collections import Counter
 from fastapi import Depends, Request
 
 from dashboard.earth import citation, earth_catalogue, study_earth
+from dashboard.gravity import gravity_catalogue
 from dashboard.service import CatalogError
 from data_pipeline.reviewed import REVIEWED
 from data_pipeline.source_metadata import source_details
@@ -136,6 +137,11 @@ def register_dashboard(router, service, read, audience, respond):
     def earth(request: Request, audience_type=Depends(audience)):
         """Earth applications stated in the PSI records, grouped by theme. Needs no database."""
         return respond(request, earth_catalogue(), audience_type)
+
+    @router.get('/gravity', dependencies=[Depends(read)])
+    def gravity(request: Request, audience_type=Depends(audience)):
+        """Partial-gravity evidence: Earth-comparison studies, simulated effects and NASA tests outside PSI."""
+        return respond(request, gravity_catalogue(), audience_type)
 
     @router.get('/investigations/{study}/detail', dependencies=[Depends(read)])
     def detail(study: str, request: Request, audience_type=Depends(audience)):

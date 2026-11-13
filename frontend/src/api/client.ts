@@ -11,6 +11,7 @@ import type {
   ComparabilityNote,
   CompareResponse,
   EarthResponse,
+  GravityResponse,
   ExperimentPage,
   ExperimentTable,
   FiltersResponse,
@@ -97,6 +98,11 @@ export const api = {
   /** Earth applications stated in the PSI records, grouped by theme. */
   earth(signal?: AbortSignal): Promise<EarthResponse> {
     return http<EarthResponse>('/api/v1/earth', { signal })
+  },
+
+  /** Partial-gravity evidence: Earth-comparison studies, simulated effects and NASA tests outside PSI. */
+  gravity(signal?: AbortSignal): Promise<GravityResponse> {
+    return http<GravityResponse>('/api/v1/gravity', { signal })
   },
 
   rankQuestion(question: string, ids: string[], audience?: Audience, signal?: AbortSignal, sourceType?: string): Promise<RankResponse> {

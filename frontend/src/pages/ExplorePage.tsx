@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { Info, TriangleAlert, X } from 'lucide-react'
 import { useMemo } from 'react'
+import { Link } from 'react-router-dom'
 import { api } from '@/api/client'
 import type { SearchRequest } from '@/api/types'
 import { CountUp } from '@/components/fx/CountUp'
@@ -102,7 +103,10 @@ export function ExplorePage() {
               >
                 <div className="flex items-start gap-3 rounded-xl border border-[var(--color-ember)]/30 bg-[var(--color-ember)]/[0.06] px-4 py-3 text-[13px] text-[var(--color-ink)]">
                   <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-ember)]" />
-                  {w.message}
+                  <span>
+                    {w.message}
+                    {w.code === 'GRAVITY_GAP' && <> <Link to="/gravity" className="text-[var(--color-flame)] hover:underline">See the partial-gravity evidence</Link></>}
+                  </span>
                 </div>
               </motion.div>
             ))}

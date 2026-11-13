@@ -39,7 +39,7 @@ The browser only ever calls its own origin at `/research-gateway/...`. The Vite 
 
 - **Target:** `RAG_BACKEND_URL`, default `http://127.0.0.1:8000`.
 - **API key:** the proxy adds `X-API-Key` on the server side, so the key is never in the browser or the built bundle. It uses `RAG_API_KEY` from `frontend/.env`, then `backend/.env`, then the repository root `.env`. Usually the backend's `.env` is enough and nothing needs setting here. See `.env.example`.
-- **Allowlist:** only the research endpoints the app uses are forwarded: filters, relevance, investigations, Earth applications, rank, interpret, scenario, learning materials and audiences. Admin routes are not.
+- **Allowlist:** only the research endpoints the app uses are forwarded: filters, relevance, investigations, Earth applications, partial gravity, rank, interpret, scenario, learning materials and audiences. Admin routes are not.
 - **Audience:** every request carries `X-Audience-Type` from the research lens picker.
 
 `npm run build` output contains no proxy. To deploy, put a reverse proxy in front of `dist/` that does the same thing: forward `/research-gateway/*` to the backend with the prefix stripped, and add the API key.
@@ -56,6 +56,7 @@ Code map: `src/api/client.ts` is the one adapter the views call. `live.ts` resha
 | `/compare?ids=a,b` | Side-by-side comparison of 2–3 studies |
 | `/rank` | Rank evidence by question, test-condition scenario or crew environment |
 | `/ask` | Source-grounded Q&A chat with citations |
+| `/gravity` | Partial gravity: the orbit-to-Earth gap, studies that compare microgravity with Earth gravity, E-FIELD, and NASA tests outside PSI |
 | `/earth` | Fire safety on Earth: NASA spin-offs in use, and studies grouped by the Earth benefit their PSI record states |
 
 Study ids are the catalog ids from `backend/data_pipeline/sources/investigations.json` (`PSI-25` BASS-II, `PSI-69` FLEX, …).
