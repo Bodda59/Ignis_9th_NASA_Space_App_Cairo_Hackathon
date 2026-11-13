@@ -17,7 +17,7 @@ import type {
   InterpretRequest,
   InterpretResponse,
   InvestigationResponse,
-  RankedStudy,
+  RankResponse,
   RelevanceNote,
   ScenarioCondition,
   ScenarioField,
@@ -99,8 +99,8 @@ export const api = {
     return http<EarthResponse>('/api/v1/earth', { signal })
   },
 
-  rankQuestion(question: string, ids: string[], audience?: Audience, signal?: AbortSignal): Promise<{ status: string; message: string | null; investigations: RankedStudy[] }> {
-    return live.rankQuestion(question, ids, audience, signal)
+  rankQuestion(question: string, ids: string[], audience?: Audience, signal?: AbortSignal, sourceType?: string): Promise<RankResponse> {
+    return live.rankQuestion(question, ids, audience, signal, sourceType)
   },
 
   rankScenario(question: string, ids: string[], conditions: ScenarioCondition[], audience?: Audience, signal?: AbortSignal): Promise<ScenarioRanking> {

@@ -80,6 +80,14 @@ export function DetailHero({ data, synthetic }: { data: InvestigationResponse; s
             >
               {inv.name}
             </motion.p>
+            {!!inv.indexed_source_types?.length && <div className="mt-4">
+              <p className="label mb-2">Indexed source types</p>
+              <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-[var(--color-ink-dim)]">
+                {inv.indexed_source_types.map((source) => <li key={source.source_type}>
+                  {source.source_type} ({source.document_count})
+                </li>)}
+              </ul>
+            </div>}
             {inv.hardware && (
               <p className="label mt-3">{inv.hardware}</p>
             )}

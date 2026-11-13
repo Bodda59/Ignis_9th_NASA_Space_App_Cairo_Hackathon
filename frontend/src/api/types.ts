@@ -143,6 +143,7 @@ export type Investigation = {
   measurement_types: string[]
   limitations: string[]
   source_ids: string[]
+  indexed_source_types?: { source_type: string; document_count: number }[]
   /** ASSUMPTION: not listed in contract; shown when present */
   hardware?: string
   /** PSI persistent identifier; PSI asks users to cite each investigation by DOI */
@@ -367,8 +368,25 @@ export type ScenarioRanking = {
   investigations: { investigation_id: string; name: string; rank: number; records: RankedRecord[] }[]
 }
 
+export type SourceRelevance = {
+  source_type: string
+  document_count: number
+  status: 'matched' | 'no_match' | 'unavailable'
+  relevance_score: number | null
+  semantic_similarity: number | null
+  evidence: (Source & { text: string }) | null
+}
+
+export type StudySourceCoverage = {
+  investigation_id: string; name: string; source_relevance: SourceRelevance[]
+}
+
+export type RankResponse = {
+  status: string; message: string | null; investigations: RankedStudy[]; source_coverage?: StudySourceCoverage[]
+}
+
 export type RankedStudy = {
-  investigation_id: string; name: string; rank: number; match_reasons: string[]; evidence: (Source & { text: string })[]
+  investigation_id: string; name: string; rank: number; match_reasons: string[]; source_relevance?: SourceRelevance[]; evidence: (Source & { text: string })[]
 }
 
 export type ExperimentTable = { id: string; title: string; row_count: number; columns: { key: string; header: string }[] }

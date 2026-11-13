@@ -17,6 +17,9 @@ import { useAsync } from '@/hooks/useAsync'
 const MODES = { question: 'Question', scenario: 'Scenario', habitat: 'Crew environment' } as const
 type Mode = keyof typeof MODES
 const MAX_QUESTION = 2000
+const SOURCE_TYPES = ['Reports', 'Science Documents', 'Engineering Documents', 'Presentations',
+  'Experimental table', 'Analyzed Data', 'Reference Data', 'Calibration', 'Raw Data',
+  'Investigation Metadata Files', 'Other Sources']
 
 export function RankPage() {
   const search = useSearchState()
@@ -24,6 +27,7 @@ export function RankPage() {
   const modeParam = search.params.get('mode')
   const mode: Mode = modeParam === 'scenario' || modeParam === 'habitat' ? modeParam : 'question'
   const [question, setQuestion] = useState(search.query)
+  const [sourceType, setSourceType] = useState('')
   const [scope, setScope] = useState(() => [...new Set((search.params.get('ids') ?? '').split(',')
     .map((id) => id.trim()).filter(Boolean))].slice(0, 5).map((id) => ({ id, acronym: id })))
   const bassExample = mode === 'scenario' && search.params.get('ids') === 'PSI-25' &&
@@ -33,13 +37,13 @@ export function RankPage() {
   const [submission, setSubmission] = useState<{ key: string; attempt: number }>()
   const ids = scope.map(({ id }) => id)
   const text = question.trim()
-  const inputKey = JSON.stringify(mode === 'habitat' ? [mode, search.context] : [mode, text, ids, mode === 'scenario' ? conditions : []])
+  const inputKey = JSON.stringify(mode === 'habitat' ? [mode, search.context] : [mode, text, ids, mode === 'scenario' ? conditions : sourceType])
   const submitted = submission?.key === inputKey
   const result = useAsync<Ranking | null>(async (signal) => {
     if (!submitted) return null
     if (mode === 'scenario') return { mode, data: await api.rankScenario(text, ids, conditions, audience, signal) }
     if (mode === 'habitat') return { mode, data: await api.search({ query: '', filters: {}, context: search.context, page: 1, page_size: 100 }, signal) }
-    return { mode, data: await api.rankQuestion(text, ids, audience, signal) }
+    return { mode, data: await api.rankQuestion(text, ids, audience, signal, sourceType) }
   }, submitted ? JSON.stringify(submission) : '')
   const pending = submitted && result.status === 'loading'
   const ready = mode === 'habitat' ? !!search.context.habitat : question.length <= MAX_QUESTION &&
@@ -52,7 +56,7 @@ export function RankPage() {
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-      className="mx-auto min-h-[80svh] max-w-4xl px-5 pb-24 pt-28 sm:px-6">
+      className="mx-auto min-h-[80svh] w-full px-4 pb-24 pt-28 sm:px-8 xl:px-12">
       <header className="mb-7">
         <div className="mb-3 flex items-center gap-2 text-[var(--color-flame)]">
           <ListOrdered className="size-5" aria-hidden="true" /> <span className="label">Rank only</span>
@@ -65,7 +69,7 @@ export function RankPage() {
         The BASS-II example is prefilled. Select <strong className="text-[var(--color-ink)]">Rank investigations</strong>, then look for the Evidence Map and open a source.
       </p>}
       <>
-        <div className="space-y-4" role="group" aria-label="Rank research">
+        <div className="max-w-5xl space-y-4" role="group" aria-label="Rank research">
           <div className="flex flex-wrap gap-2" role="group" aria-label="Ranking input">
             {Object.entries(MODES).map(([value, label]) => <Chip key={value} selected={mode === value} onToggle={() => {
               if (mode === value) return
@@ -82,6 +86,14 @@ export function RankPage() {
                   onChange={(event) => setQuestion(event.target.value)}
                   className="w-full rounded-xl border border-[var(--color-line)] bg-[var(--color-void)] px-4 py-3 text-sm outline-none focus:border-[var(--color-flame)]" />
               </div>
+              {mode === 'question' && <div className="flex flex-wrap items-center gap-2 px-4 pb-2">
+                <label htmlFor="rank-source-type" className="label">Source type</label>
+                <select id="rank-source-type" value={sourceType} onChange={(event) => setSourceType(event.target.value)}
+                  className="rounded-lg border border-[var(--color-line)] bg-[var(--color-void)] px-2 py-1 text-xs">
+                  <option value="">All indexed source types</option>
+                  {SOURCE_TYPES.map((type) => <option key={type} value={type}>{type}</option>)}
+                </select>
+              </div>}
               {mode === 'scenario' && <ScenarioControls ids={ids} conditions={conditions} onChange={setConditions} allowSeparate />}
               <div className="flex flex-wrap items-center gap-2 px-4 py-3">
                 <span className="label">Scope</span>
