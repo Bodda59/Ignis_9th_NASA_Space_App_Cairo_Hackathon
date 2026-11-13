@@ -11,3 +11,4 @@ data/
 .cache/
 media/
 tests/
+node_modules
