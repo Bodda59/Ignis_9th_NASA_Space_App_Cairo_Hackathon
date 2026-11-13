@@ -12,6 +12,7 @@ const LINKS = [
   { to: '/ask', label: 'Ask' },
   { to: '/earth', label: 'Earth' },
   { to: '/mission', label: 'Mission' },
+  { to: '/mission', label: 'Moon' },
 ]
 
 
