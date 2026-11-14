@@ -1,6 +1,6 @@
 import { Float, Html, OrbitControls, Stars } from '@react-three/drei'
-import { Canvas, useFrame } from '@react-three/fiber'
-import { useMemo, useRef } from 'react'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { createContext, useContext, useEffect, useMemo, useRef, type ReactNode, type RefObject } from 'react'
 import * as THREE from 'three'
 import type { RackId } from './racks'
 
@@ -10,19 +10,65 @@ import type { RackId } from './racks'
  */
 type Props = { selected: RackId | null; onSelect: (id: RackId) => void; reduced: boolean }
 
+/**
+ * Fixed container for the rack labels. Without it, drei's <Html> attaches labels to the
+ * canvas parent and then moves them once pointer events connect; under React 19 that
+ * rebuild can leave a label empty (the CIR label disappeared this way).
+ */
+const LabelLayer = createContext<RefObject<HTMLElement> | null>(null)
+
 export default function StationScene({ selected, onSelect, reduced }: Props) {
+  const labels = useRef<HTMLDivElement>(null!)
   return (
+    <div ref={labels} className="relative h-full w-full">
+    <LabelLayer.Provider value={labels}>
     <Canvas camera={{ position: [5.2, 2.6, 6.2], fov: 38 }} dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>
       <ambientLight intensity={0.35} />
       <directionalLight position={[6, 5, 4]} intensity={2.2} color="#fff1dc" />
       <directionalLight position={[-6, -2, -4]} intensity={0.9} color="#6cc8ff" />
       <Stars radius={60} depth={30} count={1400} factor={2.2} saturation={0} fade speed={reduced ? 0 : 0.4} />
       <Float speed={reduced ? 0 : 1.1} rotationIntensity={reduced ? 0 : 0.15} floatIntensity={reduced ? 0 : 0.4}>
-        <Station selected={selected} onSelect={onSelect} />
+        <FaceSelected selected={selected} reduced={reduced}>
+          <Station selected={selected} onSelect={onSelect} />
+        </FaceSelected>
       </Float>
-      <OrbitControls enableZoom={false} enablePan={false} autoRotate={!reduced} autoRotateSpeed={0.45} enableDamping minPolarAngle={0.6} maxPolarAngle={2.3} />
+      {/* Auto-rotate until a rack is picked, so the picked rack stays in view. */}
+      <OrbitControls enableZoom={false} enablePan={false} autoRotate={!reduced && !selected} autoRotateSpeed={0.45} enableDamping minPolarAngle={0.6} maxPolarAngle={2.3} />
     </Canvas>
+    </LabelLayer.Provider>
+    </div>
   )
+}
+
+/** Hotspot positions around the station's vertical axis (x, z), used to turn a rack toward the viewer. */
+const RACK_XZ: Record<RackId, [number, number]> = { cir: [0, -1.3], msg: [0, 1.25] }
+
+/** When a rack is selected, smoothly turns the station so that rack faces the camera. */
+function FaceSelected({ selected, reduced, children }: { selected: RackId | null; reduced: boolean; children: ReactNode }) {
+  const group = useRef<THREE.Group>(null)
+  const target = useRef<number | null>(null)
+  const { camera } = useThree()
+
+  useEffect(() => {
+    if (!selected || !group.current) return
+    const [x, z] = RACK_XZ[selected]
+    // Rotating by θ moves a point's azimuth from φ to φ + θ; aim it at the camera's azimuth.
+    const want = Math.atan2(camera.position.x, camera.position.z) - Math.atan2(x, z)
+    const now = group.current.rotation.y
+    // Take the shortest way round.
+    target.current = now + Math.atan2(Math.sin(want - now), Math.cos(want - now))
+    if (reduced) group.current.rotation.y = target.current
+  }, [selected, camera, reduced])
+
+  useFrame((_, dt) => {
+    const g = group.current
+    if (!g || target.current === null) return
+    const diff = target.current - g.rotation.y
+    if (Math.abs(diff) < 0.001) { target.current = null; return }
+    g.rotation.y += diff * Math.min(1, dt * 4)
+  })
+
+  return <group ref={group}>{children}</group>
 }
 
 function useSolarTexture() {
@@ -133,13 +179,14 @@ function Module({ z, x = 0, length, sideways }: { z: number; x?: number; length:
 }
 
 function Hotspot({ id, label, position, selected, onSelect }: { id: RackId; label: string; position: [number, number, number]; selected: boolean; onSelect: (id: RackId) => void }) {
+  const layer = useContext(LabelLayer)
   return (
     <group position={position}>
       <mesh>
         <sphereGeometry args={[0.05, 16, 16]} />
         <meshBasicMaterial color={selected ? '#6cc8ff' : '#f5a54a'} />
       </mesh>
-      <Html center distanceFactor={6.5} zIndexRange={[20, 0]}>
+      <Html center distanceFactor={6.5} zIndexRange={[20, 0]} portal={layer ?? undefined}>
         <button
           onClick={() => onSelect(id)}
           aria-pressed={selected}
