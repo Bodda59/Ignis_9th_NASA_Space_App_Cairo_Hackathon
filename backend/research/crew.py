@@ -29,10 +29,10 @@ EQUIPMENT_TOPICS = {
     'PSI-10': 'suppression',
     'PSI-21': 'suppression',
     'PSI-159': 'suppression',
-    'PSI-47': 'smoke_detection', 'PSI-101': 'smoke_detection', 'PSI-102': 'smoke_detection',
-    'PSI-69': 'suppression', 'PSI-20': 'material_controls', 'PSI-25': 'material_controls',
+    'PSI-107': 'smoke_detection', 'PSI-47': 'smoke_detection', 'PSI-101': 'smoke_detection', 'PSI-102': 'smoke_detection',
+    'PSI-142': 'suppression', 'PSI-117': 'suppression', 'PSI-68': 'suppression', 'PSI-39': 'suppression', 'PSI-69': 'suppression', 'PSI-20': 'material_controls', 'PSI-25': 'material_controls',
     'PSI-26': 'material_controls', 'PSI-98': 'material_controls', 'PSI-99': 'material_controls',
-    'PSI-100': 'material_controls',
+    'PSI-100': 'material_controls', 'PSI-62': 'material_controls',
 }
 EQUIPMENT_LABELS = {'smoke_detection': 'Smoke detection', 'suppression': 'Suppression',
                     'material_controls': 'Material controls'}

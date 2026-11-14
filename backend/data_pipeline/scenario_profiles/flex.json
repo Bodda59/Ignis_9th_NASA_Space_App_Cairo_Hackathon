@@ -21,6 +21,18 @@
       "minimum": 0,
       "maximum": 100,
       "note": "CSV explicitly identifies He initial ambient composition as mole fraction. Multiply by 100 for percent; zero is a reported absence, not a missing value."
+    },
+    "Ambient pressure; mmHg": {
+      "key": "pressure_kpa",
+      "label": "Ambient pressure",
+      "kind": "number",
+      "unit": "kPa",
+      "minimum": 0,
+      "scale": 0.13332236842105263,
+      "excluded_values": [
+        "0"
+      ],
+      "note": "Source zero for FLEX-114 is preserved in the table but excluded from pressure comparisons because it is not a usable chamber pressure."
     }
   }
 }

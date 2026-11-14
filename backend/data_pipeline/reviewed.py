@@ -43,6 +43,43 @@ REVIEWED = {
 
 # Descriptions reviewed against the already indexed report, not inferred CSV measurements.
 REPORT_DETAILS = {
+    'PSI-62': {
+        'document_id': '18718dad00de0096f3b591168673a5e4',
+        'content_hash': 'fbbe3e34f381692c62721f4d59a6e85121e90cac852a5846a885da8935edaa16',
+        'conditions_view': 'metadata_only',
+        'record_description': 'NASA released investigation metadata and publication references for PSI-62. The release contains no individual test or simulation run table to browse or export.',
+        'reviewed_limitations_only': True,
+        'overview': [
+            {'text': 'This ground investigation developed a flame spread model and reanalyzed imagery from BASS (PSI-26) and BASS-II (PSI-25). Those experiments supplied the benchmark flight data.', 'field': 'Comment[Approach]'},
+        ],
+        'materials': [
+            {'text': 'NASA lists sheets, spheres and rods of polymethyl methacrylate (PMMA), along with wax cylinders, as modeling configurations.', 'field': 'Comment[Approach]'},
+        ],
+        'conditions': [
+            {'text': 'The modeling study used microgravity benchmarks and compared its approach with a parallel Earth-gravity study. NASA’s metadata does not assign oxygen, pressure or airflow values to individual runs.', 'field': 'Comment[Approach]'},
+        ],
+        'measurements': [
+            {'text': 'The team processed archived DSLR imagery using two-color tomography to reconstruct soot and temperature fields. NASA lists flame shape, temperature, soot volume fraction and spread rate as comparison metrics.', 'field': 'Comment[Approach]'},
+        ],
+        'findings': [
+            {'text': 'A detailed two-dimensional model predicted spread rates the authors considered reasonable against BASS measurements across several oxygen levels. Differences in the simpler flamelet model were associated with interactions at the wall and curved flame structure.',
+             'source_refs': [{'title': 'Radiative flamelet generated manifolds for solid fuel flame spread in microgravity',
+                              'source_url': 'https://doi.org/10.1016/j.combustflame.2023.112939', 'field': 'Abstract'}]},
+            {'text': 'A related theoretical study examined radiative extinction and flame blow-off as two bounds on sustained burning for the modeled thin condensed fuels.',
+             'source_refs': [{'title': 'Theoretical estimates of flammability bounds for thin condensed fuel diffusion flames in microgravity',
+                              'source_url': 'https://doi.org/10.1016/j.combustflame.2023.112910', 'field': 'Abstract'}]},
+            {'text': 'In upward flame spread experiments, accounting for self-absorption improved soot estimates from two-color pyrometry. The authors reported agreement between estimated radiative heat flux and values in the literature.',
+             'source_refs': [{'title': 'Two-color pyrometry based flame to fuel surface radiative heat flux diagnostic using flamelets',
+                              'source_url': 'https://doi.org/10.1016/j.combustflame.2021.111395', 'field': 'Abstract'}]},
+        ],
+        'limitations': [
+            {'text': 'The NASA release provides study-level context and publication links. Per-run measurements, calibration data and reconstructed fields are unavailable in this collection.', 'field': 'STUDY ASSAYS'},
+            {'text': 'The objective is to improve predictive material screening. Using a model for a different material or configuration requires validation against representative tests.', 'field': 'Comment[Objective]'},
+        ],
+        'design_question': 'Which measurements should be used to validate a flame spread model before screening spacecraft materials?',
+        'design_connection': 'Compare predictions with measured spread rates and flame imagery for the materials and flow configurations the model will represent.',
+        'design_limit': 'The cited model comparisons apply to their benchmark configurations. Material qualification requires representative test evidence.',
+    },
     'PSI-20': {
         'document_id': '483b390a60e83b6f30209ebe56eef4ad',
         'content_hash': 'c2f22c914b38d9e6742709688a2d1d81d8306e3c901b47314faf3b6ab43cec60',
@@ -451,4 +488,369 @@ REPORT_DETAILS['PSI-25'] = {
         {'text': 'Model predictions and preflight hardware-temperature estimates are separate from measured flight results. The slab model overpredicted spread rates, and the preflight thermal analysis used assumed worst-case conditions. Such calculated temperatures or heat-release fields must not be reported as CSV measurements.', 'source_refs': [dict(BASS2_REPORT_REF, page=69), dict(BASS2_REPORT_REF, page=71), dict(BASS2_REPORT_REF, page=129), dict(BASS2_REPORT_REF, page=134)]},
         {'text': 'Some source versions disagree on individual details. For example, P22b final CO is 239 ppm in the CSV/worksheet but 236 ppm in the report appendix. The available evidence does not establish a replacement, so the recorded value is retained. A precise value should be checked against the original sensor record before further analysis.', 'source_refs': [{'document_id': BASS2_LOG, 'csv_record': 97}, {'document_id': BASS2_MATRIX, 'field': 'Fernandez-Pello worksheet · cell P25'}, dict(BASS2_REPORT_REF, page=115)]},
     ],
+}
+
+REPORT_DETAILS['PSI-39'] = {
+    'document_id': '96c677cd018328bc15e11e1c9d59434c',
+    'content_hash': 'e15158689180314583917200a071730d3aed9088e1ae689b847bd416674010f9',
+    'supporting_documents': {
+        'b2f861d2213e238cccd79baf4720a2ce': '547f66a7fb1f3a8fa65a4ecc5b885531b73c7e648651ab4c214fa9ddd4c2f860',
+        'a02bb3ea1723476a95aa1741bd025eff': '26058a5d90dc098697f77be7bba64456b9df980f5fb6183d3e4cb822088ef118',
+    },
+    'conditions_view': 'source_tables',
+    'record_label': 'Test log entries',
+    'record_description': 'The CSV has 87 rows covering 79 distinct FLEX identifiers. Eight rows repeat entries for the same FLEX and CIR identifiers. The table preserves them as published and covers only part of the campaign described in the final report. A row does not establish ignition or cool-flame occurrence.',
+    'reviewed_limitations_only': True,
+    'overview': [
+        {'text': 'CFI used the ISS Combustion Integrated Rack and Multi-user Droplet Combustion Apparatus to study liquid droplets. The final report describes more than 200 campaign tests. This is a separate investigation from ACME CFI-G, which used gaseous fuels.', 'page': 6},
+    ],
+    'materials': [
+        {'text': 'The CSV lists n-dodecane and two n-dodecane/iso-dodecane blends. The report also describes tests with farnesane, which has no rows in this CSV.', 'page': 7},
+    ],
+    'conditions': [
+        {'text': 'The CSV lists 0.5–5 atm and oxygen fractions of 0.17 or 0.21. The fiber column identifies support when stated. Nine blank fiber entries leave the support configuration unspecified.',
+         'source_refs': [{'document_id': 'b2f861d2213e238cccd79baf4720a2ce', 'field': 'Pressure, Oxygen and Fiber columns'}]},
+    ],
+    'measurements': [
+        {'text': 'A backlit camera tracked droplet size, a UV-sensitive camera imaged OH emission to characterize flame size, a color camera monitored operations, and narrow- and wide-band radiometers recorded flame radiation.', 'page': 6},
+        {'text': 'The workbook DATA sheet separately lists diameter, burning-rate and radiometer fields, alongside reignition and analysis-status flags. Camera Settings, Igniter and Comments provide instrument settings and operational context.',
+         'source_refs': [{'document_id': 'a02bb3ea1723476a95aa1741bd025eff', 'field': 'DATA, Camera Settings, Igniter and Comments worksheets'}]},
+    ],
+    'findings': [
+        {'text': 'The report describes cool burning after visible hot-flame extinction in n-dodecane and n-dodecane/iso-dodecane tests. The authors reported that adding iso-dodecane reduced the tendency to form cool flames.', 'page': 7},
+        {'text': 'For n-dodecane droplets in air, reignition was common above about 2 atm. The tested support fiber had relatively little effect on the reported extinction diameter.', 'page': 9},
+        {'text': 'In the reported n-dodecane tests, higher helium dilution led to earlier cool-flame extinction, at a larger droplet diameter.', 'page': 9},
+    ],
+    'limitations': [
+        {'text': 'In the CSV, the oxygen, nitrogen and helium fractions for FLEX 1219–1222 sum to 0.97. The balance gas is unspecified. FLEX 1268 is absent from the CSV, and its workbook mixture differs from the mixture printed in the report caption.',
+         'source_refs': [{'document_id': 'b2f861d2213e238cccd79baf4720a2ce', 'field': 'FLEX 1219–1222'},
+                         {'document_id': 'a02bb3ea1723476a95aa1741bd025eff', 'field': 'Master Sheet, FLEX 1268'},
+                         {'document_id': '96c677cd018328bc15e11e1c9d59434c', 'page': 8}]},
+        {'text': 'The stored date for FLEX 1301 and four local times (FLEX 1300, 1338, 1349 and 1386) differ from the NASA CSV. The stored date follows the CIR day code; the stored times follow the surrounding run order. Treat those timestamps as unresolved.',
+         'source_refs': [{'document_id': 'a02bb3ea1723476a95aa1741bd025eff', 'field': 'Master Sheet, Test Date and Local Time'}]},
+        {'text': 'The final report describes preliminary observations and leaves the mechanism behind residual soot at higher pressures unresolved. The CSV contains test conditions rather than measured outcomes.', 'page': 10},
+    ],
+    'design_question': 'Which diagnostics can distinguish visible flame extinction from the end of droplet burning?',
+    'design_connection': 'Compare droplet-size histories with flame imagery and radiation signals when evaluating extinction evidence.',
+    'design_limit': 'The reported results apply to the tested droplets and chamber mixtures.',
+}
+
+REPORT_DETAILS['PSI-47'] = {
+    'document_id': '5782feb7f238353bf5254fd844377577',
+    'content_hash': '6e6008f2d7f0216432f7df5579579264a34c3a29601a9f0688461019d59be1e4',
+    'supporting_documents': {
+        '091d35b9be4d7e45aab4219cb8cfcd62': 'd9d1a436c6e7bbc410b433e04575fe7dedaff763b5237d688089929b7393b5c0',
+        'e0df710a31bb535c8f6f1bcf3694dc9c': '88ccc4ede50f32aba8bdf90fdd635eadb5100711b0eb67b5923ee0244b488129',
+    },
+    'conditions_view': 'source_tables',
+    'record_label': 'Sampling sessions',
+    'record_description': 'The CSV lists the two 2005 sampling sessions, D1 and D2. They cover four test points using both instruments. Later 2006 aerosol work is documented in the reports and has no rows in this CSV.',
+    'reviewed_limitations_only': True,
+    'overview': [
+        {'text': 'DAFT was an ISS feasibility check for using a modified particle counter ahead of the Smoke Aerosol Measurement Experiment (SAME). DustTrak provided a separate instrument reading for comparison.', 'page': 3},
+    ],
+    'materials': [
+        {'text': 'D1 and D2 sampled cabin air and, during D2, dust released by separating Velcro. The CSV describes Arizona Road Dust and nitrogen, which the reports describe as the reference aerosol for the later bag tests.',
+         'source_refs': [{'document_id': '091d35b9be4d7e45aab4219cb8cfcd62', 'field': 'Sample Material and Sampled Location'},
+                         {'document_id': 'e0df710a31bb535c8f6f1bcf3694dc9c', 'field': 'Sessions Table and Results'}]},
+    ],
+    'conditions': [
+        {'text': 'D1 sampled near EXPRESS Rack 4. D2 added the Velcro disturbance and sampled elsewhere in the cabin. The catalog CSV records session, day, hardware, sample description and location.',
+         'source_refs': [{'document_id': '091d35b9be4d7e45aab4219cb8cfcd62', 'csv_record': 1},
+                         {'document_id': '091d35b9be4d7e45aab4219cb8cfcd62', 'csv_record': 2}]},
+    ],
+    'measurements': [
+        {'text': 'P-Trak reported particle number concentration (particles/cm³); DustTrak reported mass concentration (mg/m³). The two readings cannot be compared as the same quantity.', 'page': 3},
+    ],
+    'findings': [
+        {'text': 'Both instruments responded during the Velcro trial. P-Trak recorded several readings above 30,000 particles/cm³, though the team could not match individual peaks to individual separations.', 'page': 8},
+        {'text': 'For the later bag tests, the in-flight count-to-mass ratio was below the ground relationship. The report attributed this in part to larger particles remaining suspended in microgravity.', 'page': 8},
+        {'text': 'The final report concluded that the modified P-Trak operated reliably in microgravity and reduced instrumentation risk for SAME.',
+         'source_refs': [{'document_id': 'e0df710a31bb535c8f6f1bcf3694dc9c', 'field': 'Conclusion'}]},
+    ],
+    'limitations': [
+        {'text': 'The team could not retrieve the later bag-test data electronically during flight and recorded verbal readings. The final report says records recovered from the returned instruments closely matched the verbal readings.',
+         'source_refs': [{'document_id': '5782feb7f238353bf5254fd844377577', 'page': 7},
+                         {'document_id': 'e0df710a31bb535c8f6f1bcf3694dc9c', 'field': 'Completeness/Quality of Data'}]},
+        {'text': 'The planned comparison with an unmodified P-Trak was not performed. These were instrument feasibility checks and did not establish detector performance on fire smoke.', 'page': 14},
+    ],
+    'design_question': 'Can particle instruments operate reliably in microgravity before they are used to characterize smoke?',
+    'design_connection': 'DAFT tested the modified counter and compared its response with a mass-concentration instrument, informing the choice of instrumentation for SAME.',
+    'design_limit': 'Cabin air, Velcro dust and the reference aerosol do not establish fire-detector sensitivity or alarm thresholds.',
+}
+
+REPORT_DETAILS['PSI-117'] = {
+    'document_id': '1269c663acd43a6b29108a7507f4c797',
+    'content_hash': 'f86a1b97fa011cb02c8c52d1e05184840d4f020197cf60462a942654612fb27a',
+    'supporting_documents': {
+        'aa15ac69aca45d6a31523a15a4bd2c67': '2fe2fc85aa8ee3ac99a07495d31c49704f32d42bb83ae2ba2481d47c14407c43',
+        '135f1896a655052ee1d561b09a04bf03': '8e4625bb2b2a8b17bd19854765815a3dd877e5192a9b94bd001aea2e8cccb4b2',
+        'a41a021ee54723bd87b6d671b0c39d63': '99b341840ed423878c622478b3b7817729d0ccf4d772f407f860a91d66972917',
+    },
+    'conditions_view': 'no_indexed_tables',
+    'record_description': 'NASA PSI has analyzed files with simulation series and experimental comparison data. Ignis indexes the metadata, dissertation and presentations, so there is no paginated test table or CSV/JSON export here. Use the NASA link for the original analyzed files.',
+    'reviewed_limitations_only': True,
+    'overview': [
+        {'text': 'This ground investigation used computational fluid dynamics to study cool flames around fuel droplets. The team compared models with earlier ISS FLEX measurements.', 'field': 'Comment[Approach]'},
+    ],
+    'materials': [
+        {'text': 'The extinction comparison covers n-heptane, n-decane and n-dodecane droplets.',
+         'source_refs': [{'document_id': 'aa15ac69aca45d6a31523a15a4bd2c67', 'page': 9}]},
+    ],
+    'conditions': [
+        {'text': 'The metadata describes convection, heating and combined forcing in simulations of millimeter and submillimeter droplets. These conditions describe modeling cases and benchmark comparisons.', 'field': 'Comment[Approach]'},
+    ],
+    'measurements': [
+        {'text': 'Reported comparison quantities include droplet diameter, extinction diameter and stage-specific burning rate. The model also tracks ignition delay, oscillations and flame stand-off.',
+         'source_refs': [{'document_id': 'aa15ac69aca45d6a31523a15a4bd2c67', 'page': 9},
+                         {'document_id': '1269c663acd43a6b29108a7507f4c797', 'field': 'Comment[Approach]'}]},
+    ],
+    'findings': [
+        {'text': 'Near the modeled cool-flame limit, the small-droplet simulations showed pulsing that grew over successive cycles.',
+         'source_refs': [{'document_id': '135f1896a655052ee1d561b09a04bf03', 'page': 13}]},
+        {'text': 'The extinction comparison reported different cool-flame extinction trends for different fuels. A single relationship did not describe all three fuels.',
+         'source_refs': [{'document_id': 'aa15ac69aca45d6a31523a15a4bd2c67', 'page': 16}]},
+        {'text': 'An n-dodecane benchmark exhibited three burning stages, supporting behavior first predicted in n-heptane simulations.',
+         'source_refs': [{'document_id': 'a41a021ee54723bd87b6d671b0c39d63', 'page': 17}]},
+    ],
+    'limitations': [
+        {'text': 'Model predictions and historical flight observations are separate lines of evidence. Their agreement applies to the benchmark cases. Rows in time-history files represent samples along a trajectory.', 'field': 'Comment[Approach]'},
+    ],
+    'design_question': 'What benchmark evidence should support models of burning after a visible flame disappears?',
+    'design_connection': 'Compare model predictions with reported droplet size and extinction behavior for the benchmark fuel and conditions.',
+    'design_limit': 'The modeling comparisons do not establish operating limits for spacecraft fire suppression.',
+}
+
+REPORT_DETAILS['PSI-69'] = {
+    'document_id': 'dad2a885816741390e5f3fc3a6fdb264',
+    'content_hash': 'd50add6cc647f20adc554f599e15b9181aebe0b0fe2f7794f8858a85da1b4c46',
+    'conditions_view': 'source_tables',
+    'record_label': 'Flight test log entries',
+    'record_description': 'The CSV lists 274 numbered flight-test entries: 186 labeled Extinction, 61 Disruption and 27 Completion. Test numbers 70 and 73 share identifier 193F001 and a timestamp, but their measurements differ. Both entries are retained.',
+    'reviewed_limitations_only': True,
+    'replace_measurements': True,
+    'overview': [
+        {'text': 'FLEX studied isolated liquid droplets in microgravity using the Multi-User Droplet Combustion Apparatus inside the ISS Combustion Integrated Rack.',
+         'source_refs': [{'title': 'Detailed Results from the Flame Extinguishment Experiment', 'source_url': 'https://ntrs.nasa.gov/citations/20150023456', 'field': 'Abstract'}]},
+    ],
+    'materials': [
+        {'text': 'The log contains 157 methanol entries and 117 heptane entries.', 'field': 'Fuel column'},
+    ],
+    'conditions': [
+        {'text': 'The CSV records initial gas mole fractions, ambient pressure in mmHg and initial droplet diameter. Reported oxygen spans 0.12–0.34 mole fraction (12–34%). The NASA report expands the abbreviated gas headers to O₂, N₂, CO₂ and He.',
+         'source_refs': [{'document_id': 'dad2a885816741390e5f3fc3a6fdb264', 'field': 'Ambient pressure and mixture columns'},
+                         {'title': 'Detailed Results from the Flame Extinguishment Experiment', 'source_url': 'https://ntrs.nasa.gov/citations/20150023456', 'field': 'Flight test tables, printed pp. 19–27'}]},
+    ],
+    'measurements': [
+        {'text': 'The table records initial droplet diameter, droplet diameter at visible flame extinction, burning rate and burn time. NASA gives burning rate in mm²/s; the CSV abbreviates its unit as mm.',
+         'source_refs': [{'title': 'Detailed Results from the Flame Extinguishment Experiment', 'source_url': 'https://ntrs.nasa.gov/citations/20150023456', 'field': 'Flight test tables'}]},
+    ],
+    'limitations': [
+        {'text': 'FLEX-114 has a source pressure of 0 mmHg in both the CSV and technical report. The original entry is retained, but it does not establish a usable chamber pressure.', 'csv_record': 114},
+        {'text': 'The four reported gas fractions total 0.98 for test numbers 69, 75, 76 and 79–81. The remainder is unspecified. Dashes and blanks in outcome columns indicate unavailable values.', 'field': 'Gas fractions and outcome columns'},
+        {'text': 'Visible flame extinction is an optical observation. It does not establish that droplet burning stopped at that instant.', 'field': 'Visible flame extinction diameter column'},
+    ],
+}
+
+REPORT_DETAILS['PSI-68'] = {
+    'document_id': '1b6b19c7f74a8b74171912ade1cec6d1',
+    'content_hash': 'cc57ad1bd9977aa13e7ac6c3aa618303012686e232b36c052c6a9f1a74e5f528',
+    'supporting_documents': {
+        'bb7d9213fb7e71feea180d87bfae60bf': '27f61b98cd1923fe942c06ffdc39bd933806ed652b8fd049971769afec896c2e',
+    },
+    'conditions_view': 'source_tables',
+    'record_label': 'Planned fuel profiles',
+    'record_description': 'The CSV contains eight planned profiles: five pure fuels and three blends. Each row lists an envelope of candidate conditions. It does not identify a completed flight test or show which combinations were flown.',
+    'reviewed_limitations_only': True,
+    'overview': [
+        {'text': 'FLEX-2 extended the ISS droplet experiments to pure fuels, mixtures, slow flow and paired droplets. The indexed science requirements describe the proposed program.',
+         'source_refs': [{'document_id': 'bb7d9213fb7e71feea180d87bfae60bf', 'field': 'Section 4.1, Experiment Objectives'}]},
+    ],
+    'materials': [
+        {'text': 'The CSV lists pure iso-octane, n-octane, heptane, decane and ethanol, plus a heptane/iso-octane blend and two propanol/glycerol blends.', 'field': 'Sample (Fuel Type) column'},
+    ],
+    'conditions': [
+        {'text': 'The profiles list 1.5–5 mm starting diameter, 17–30% oxygen as discrete options, 0.5–3 atm as discrete pressure options, 25 °C and 0.1–5 cm/s flow. Oxygen/nitrogen and oxygen/helium are alternatives.', 'field': 'Planned envelope columns'},
+    ],
+    'measurements': [
+        {'text': 'The science requirements specify imaging and radiometry to derive droplet and flame sizes, burning rates, and soot or radiation quantities. The profile table records no measured outcomes.',
+         'source_refs': [{'document_id': 'bb7d9213fb7e71feea180d87bfae60bf', 'field': 'Section 4.3, Science Data End Products'}]},
+    ],
+    'findings': [
+        {'text': 'In the published FLEX-2 subset, free-floating n-decane droplets produced higher peak soot volume fractions than n-heptane droplets. The peak for n-heptane decreased with increasing starting diameter.',
+         'source_refs': [{'title': 'Influence of Droplet Size and Fuel Composition on Sooting Behavior in Microgravity Droplet Combustion',
+                          'source_url': 'https://doi.org/10.1080/00102202.2025.2595114', 'field': 'Abstract; FLEX-2 dataset'}]},
+    ],
+    'limitations': [
+        {'text': 'The science requirements and CSV describe different fuel sets. The CSV is reproduced as its own planning source. Neither source establishes completed test coverage.',
+         'source_refs': [{'document_id': 'bb7d9213fb7e71feea180d87bfae60bf', 'field': 'Section 4.2, Table 2'},
+                         {'document_id': '1b6b19c7f74a8b74171912ade1cec6d1', 'field': 'Sample (Fuel Type) column'}]},
+    ],
+    'design_question': 'Which reported flight measurements can support a comparison of droplet extinction conditions?',
+    'design_connection': 'Use recorded fuel, atmosphere and droplet histories from individual flight tests when comparing outcomes.',
+    'design_limit': 'The CSV is a planning envelope and cannot support an outcome comparison by itself.',
+}
+
+REPORT_DETAILS['PSI-142'] = {
+    'document_id': 'ebe9fd14c6289fcfcf3be72d989cee4f',
+    'content_hash': 'ae5212034e09a6e15600cf95cebdcc19796c6881cb72df7421f649fef05022b3',
+    'supporting_documents': {
+        '6e4645db591e8576f14d121bed98cc26': 'c66d135b0053590d239f06b9e8627d826e3d726b8443fd2cbccc37484b6a8e7f',
+    },
+    'conditions_view': 'source_tables',
+    'record_label': 'Published figure references',
+    'record_description': 'The eight rows identify published figures by data ID, DOI and figure number. The CSV is an index to analyzed data. Measurements and simulation outputs are in the linked publications and NASA workbook.',
+    'reviewed_limitations_only': True,
+    'replace_measurements': True,
+    'overview': [
+        {'text': 'This ground investigation used earlier FLEX flight observations to inform laboratory counterflow experiments and simulations of cool, warm and hot flames.', 'field': 'Comment[Approach]'},
+    ],
+    'materials': [
+        {'text': 'The referenced analyses include straight-chain alkane vapors and dimethyl ether. Some datasets compare cases with and without ozone.', 'field': 'Comment[Approach]'},
+    ],
+    'conditions': [
+        {'text': 'Counterflow flame measurements and modeled cases have different conditions. Use each publication for its geometry, pressure and mixture. The CSV contains no per-run settings.',
+         'source_refs': [{'document_id': '6e4645db591e8576f14d121bed98cc26', 'field': 'Data Description and Figure ID columns'}]},
+    ],
+    'measurements': [
+        {'text': 'The figure index covers hot- and cool-flame extinction, formaldehyde laser-induced fluorescence, temperature measurements and chemiluminescence.',
+         'source_refs': [{'document_id': '6e4645db591e8576f14d121bed98cc26', 'field': 'Data Description column'}]},
+    ],
+    'findings': [
+        {'text': 'Heavier n-alkanes were more reactive in the studied cool diffusion flames. The kinetic models tended to predict higher cool-flame extinction limits than measured.',
+         'source_refs': [{'title': 'Study of the low-temperature reactivity of large n-alkanes through cool diffusion flame extinction',
+                          'source_url': 'https://doi.org/10.1016/j.combustflame.2017.01.028', 'field': 'Abstract; Figure 7'}]},
+        {'text': 'The laboratory warm diffusion flame showed two spatially distinct reaction zones. Temperature and optical measurements helped distinguish the two stages.',
+         'source_refs': [{'title': 'Low-temperature multistage warm diffusion flames',
+                          'source_url': 'https://doi.org/10.1016/j.combustflame.2018.03.013', 'field': 'Abstract; Figure 8'}]},
+    ],
+    'limitations': [
+        {'text': 'Data ID 4 points to Figure 2 of a paper on interactions between a premixed double flame and a vortex. Use that paper for the context of the measured and computed extinction data.',
+         'source_refs': [{'document_id': '6e4645db591e8576f14d121bed98cc26', 'csv_record': 4},
+                         {'title': 'Transient interactions between a premixed double flame and a vortex',
+                          'source_url': 'https://doi.org/10.1016/j.proci.2018.07.050', 'field': 'Figure 2'}]},
+    ],
+    'design_question': 'How well do extinction models reproduce measured limits for different flame regimes?',
+    'design_connection': 'Compare predicted limits with measurements for the same fuel, flame geometry and regime before using a model to interpret suppression evidence.',
+    'design_limit': 'The ground experiments and simulations do not establish suppression settings for spacecraft.',
+}
+
+REPORT_DETAILS['PSI-107'] = {
+    'document_id': 'bb342110767512edec05599d090aadff',
+    'content_hash': '95e76859017d201dcd6a9fb12f1df568aed77e0edf7a1b609975db37f32fa680',
+    'supporting_documents': {
+        'e68ca7a5c3a7449e8e9c0d5adf50ba6c': 'fb0d7e60cf5367afb429089e9901d27288f78038efd26c8de1db4fbe04117136',
+    },
+    'conditions_view': 'source_tables',
+    'record_label': 'Flight log rows',
+    'record_description': 'The CSV contains 469 rows, including repeated entries and timestamps shared by multiple flow settings. The final report separately describes 526 ignited flames and 55 measured smoke points. The CSV row count should not be used as either total.',
+    'reviewed_limitations_only': True,
+    'replace_measurements': True,
+    'overview': [
+        {'text': 'SPICE studied soot release from gas-jet diffusion flames inside the ISS Microgravity Science Glovebox. Operators adjusted fuel flow after ignition to locate the onset of soot escape from the flame.', 'page': 19},
+    ],
+    'materials': [
+        {'text': 'The report lists ethylene, propane, propylene and nitrogen-diluted propylene. Methane was attempted, but the flame reached the end plate before a smoke point could be obtained.', 'page': 20},
+    ],
+    'conditions': [
+        {'text': 'The log lists nozzle diameter, fuel volume and mass flow, hydrocarbon mass flow, and coflow air speed. Settings may change within the same ignition interval.',
+         'source_refs': [{'document_id': 'e68ca7a5c3a7449e8e9c0d5adf50ba6c', 'field': 'Nozzle and flow columns'}]},
+    ],
+    'measurements': [
+        {'text': 'Researchers used video to identify smoke points and measure the luminous distance from the burner to the flame tip. The CSV records flow settings and timestamps, with no smoke-point length column.', 'page': 19},
+    ],
+    'findings': [
+        {'text': 'Within the reported test range, smoke-point length increased as coflow speed increased and as burner diameter decreased.', 'page': 24},
+        {'text': 'The report found propylene had the greatest sooting propensity among the fuels and blends compared. The order of ethylene and propane differed between the microgravity and normal-gravity results.', 'page': 24},
+    ],
+    'limitations': [
+        {'text': 'The CSV reuses ignition and flame-off times and includes exactly repeated rows. Blank end times and flow values remain unavailable. A logged zero remains a source value.',
+         'source_refs': [{'document_id': 'e68ca7a5c3a7449e8e9c0d5adf50ba6c', 'field': 'Timestamp and flow columns'}]},
+        {'text': 'Some tests were limited by fuel availability. Flame motion and a gradual change in brightness at the tip added uncertainty to video-based smoke-point identification.', 'page': 20},
+        {'text': 'The apparatus had no in-flame velocity diagnostics. The coflow setting does not describe the full velocity field around the flame.', 'page': 19},
+    ],
+    'design_question': 'How might airflow and fuel affect the onset of soot release?',
+    'design_connection': 'Use the smoke-point comparisons to identify conditions worth testing when studying soot production around a spacecraft flame.',
+    'design_limit': 'SPICE measured flame smoke points. It did not measure a smoke detector’s alarm threshold or response time.',
+}
+
+REPORT_DETAILS['PSI-101'] = {
+    'document_id': '0d3e77f391f878bc9c53fcf77a70984a',
+    'content_hash': '65381e2715eb7379113dd1b9c550baaa5fa5a247dba00419123143aa98ef80d6',
+    'supporting_documents': {
+        'bcd8d0c52a9595dc853e9ecf55d4fb10': '87164b7dc9168a4273c159f7a9f23699afbd06ad97b77974377e79b9bf8a3bef',
+    },
+    'conditions_view': 'source_tables',
+    'record_label': 'Flight and aging log entries',
+    'record_description': 'The CSV has 109 entries, including separately listed secondary aging. The final report distinguishes 67 conducted runs, including two with reused samples, and 66 successfully completed test points.',
+    'reviewed_limitations_only': True,
+    'replace_measurements': True,
+    'overview': [
+        {'text': 'SAME-R reused the ISS SAME apparatus to study smoke from overheated spacecraft materials. The 2010 reflight extended the heating and airflow conditions, added a prototype detector and used rebuilt aerosol collectors.', 'page': 2},
+        {'text': 'The July–September flight operations section reports 67 runs, including two with reused samples. Separately listing secondary aging gives 109 entries, and the report introduction counts 66 successfully completed test points.',
+         'source_refs': [{'document_id': '0d3e77f391f878bc9c53fcf77a70984a', 'page': 2}, {'document_id': '0d3e77f391f878bc9c53fcf77a70984a', 'page': 3}]},
+    ],
+    'materials': [
+        {'text': 'Samples included Kapton, silicone rubber, lampwick, Teflon and Pyrell fire-retardant foam. Pyrell replaced the dibutyl phthalate used in SAME.', 'page': 2},
+    ],
+    'conditions': [
+        {'text': 'The CSV gives inlet velocity, heating duration and aging times. It includes a reported 0 cm/s inlet setting. The report derived heating temperatures from engineering logs because the same resistance ratio (Rt/R0) could correspond to different sample temperatures.',
+         'source_refs': [{'document_id': '0d3e77f391f878bc9c53fcf77a70984a', 'page': 2}, {'document_id': 'bcd8d0c52a9595dc853e9ecf55d4fb10', 'field': 'Inlet velocity, Rt/R0 and time columns'}]},
+    ],
+    'measurements': [
+        {'text': 'Aerosol instruments measured quantities related to particle number and mass. The reflight also evaluated the two-moment MPASS prototype and collected particles on grids for transmission electron microscopy.',
+         'source_refs': [{'document_id': '0d3e77f391f878bc9c53fcf77a70984a', 'page': 3}, {'document_id': '0d3e77f391f878bc9c53fcf77a70984a', 'page': 6}]},
+    ],
+    'findings': [
+        {'text': 'In the report’s zero-inlet-flow comparisons, the diameter of a particle of average mass was 30–40% larger than in the corresponding flow tests. The comparison concerns this measure of particle size and this apparatus.', 'page': 83},
+        {'text': 'MPASS combined two measurements to distinguish a signal from many smaller particles from one produced by fewer larger particles in the prototype evaluation.', 'page': 7},
+    ],
+    'limitations': [
+        {'text': 'Both the Lampwick and Teflon rows carry test number 57. The source preserves both entries, along with blank time fields and net aging marked n/a.',
+         'source_refs': [{'document_id': 'bcd8d0c52a9595dc853e9ecf55d4fb10', 'field': 'Test number and aging time columns'}]},
+        {'text': 'During the zero-flow tests, smoke could diffuse from the inlet into the glovebox. The report describes particle loss and sparse deposits on the microscopy grids for those conditions.', 'page': 83},
+    ],
+    'design_question': 'How should detector evaluations account for smoke aged in low-flow enclosures?',
+    'design_connection': 'Compare detector signals across particle sizes, source materials and inlet-flow conditions represented in controlled tests.',
+    'design_limit': 'The reflight’s prototype measurements and inlet settings establish neither a cabin-wide airflow threshold nor certified alarm performance.',
+}
+
+REPORT_DETAILS['PSI-102'] = {
+    'document_id': 'c99157843fb956e85d82bef9de8ba53f',
+    'content_hash': 'af91c96d22d93bbefbc0f2c5e1cc06e24813f532e5379b3fec9f121cccb22193',
+    'supporting_documents': {
+        '2833e6673803b70e2f666e22421b55bf': '268d1e121d2f211b124407dd32b9475617bd269ede2c2d1749441da3e949a2af',
+    },
+    'conditions_view': 'source_tables',
+    'record_label': 'Condition summary rows',
+    'record_description': 'The eight rows summarize source conditions. Four Teflon rows report numeric settings, and four other materials refer back to those rows. The report’s flight log is in Appendix A.',
+    'reviewed_limitations_only': True,
+    'replace_measurements': True,
+    'overview': [
+        {'text': 'SAME heated spacecraft material samples in the ISS Microgravity Science Glovebox in September and early October 2007. The flight investigation evaluated the particles released by overheating and compared how different smoke detectors responded.',
+         'source_refs': [{'document_id': 'c99157843fb956e85d82bef9de8ba53f', 'page': 24}, {'document_id': 'c99157843fb956e85d82bef9de8ba53f', 'page': 25}]},
+    ],
+    'materials': [
+        {'text': 'The flight report lists Kapton, silicone rubber, Teflon, cotton lampwick and dibutyl phthalate deposited on a porous wick.', 'page': 24},
+    ],
+    'conditions': [
+        {'text': 'The four explicit Teflon entries list 5 or 10 cm/s airflow, 1 or 2 mg/min weight-loss rate, and 1 or 20 minutes of aging. The other materials refer to conditions 1–4 with blank numeric cells.',
+         'source_refs': [{'document_id': '2833e6673803b70e2f666e22421b55bf', 'field': 'Sample material, airflow, weight loss rate and aging duration columns'}]},
+    ],
+    'measurements': [
+        {'text': 'The team estimated particle size from aerosol measurements and compared the signals of ISS light-scattering and Space Shuttle ionization detectors. Thermal precipitators collected particles for microscopy.',
+         'source_refs': [{'document_id': 'c99157843fb956e85d82bef9de8ba53f', 'page': 25}, {'document_id': 'c99157843fb956e85d82bef9de8ba53f', 'page': 28}]},
+    ],
+    'findings': [
+        {'text': 'The Teflon example produced a strong Space Shuttle detector signal and a more erratic ISS detector signal. Silicone rubber produced strong responses from both detectors in the illustrated test.', 'page': 25},
+        {'text': 'The reported size distributions for Kapton and Teflon were narrower than for silicone rubber, with little particle mass above 1 μm.', 'page': 28},
+    ],
+    'limitations': [
+        {'text': 'The eight-row CSV is a conditions summary. Appendix A contains the chronological flight log. The source table leaves the cross-referenced numeric cells blank.',
+         'source_refs': [{'document_id': 'c99157843fb956e85d82bef9de8ba53f', 'page': 25}, {'document_id': '2833e6673803b70e2f666e22421b55bf', 'field': 'Sample material column'}]},
+        {'text': 'Extraneous particles contaminated the returned microscopy grids. The team still identified recognizable lampwick and Teflon particles on some grids.', 'page': 28},
+    ],
+    'design_question': 'How does smoke from different overheated materials affect detector response?',
+    'design_connection': 'Use the observed differences to select material and particle-size ranges for comparing detector responses.',
+    'design_limit': 'The detector examples apply to the tested materials and apparatus. Operational alarm performance needs separate validation.',
 }

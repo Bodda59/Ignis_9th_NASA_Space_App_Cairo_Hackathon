@@ -283,7 +283,7 @@ export type InvestigationResponse = {
     planned_record_count?: number
     record_label?: string
     record_description?: string
-    conditions_view?: 'source_tables' | null
+    conditions_view?: 'source_tables' | 'metadata_only' | 'no_indexed_tables' | null
     measurement_summary_status?: 'available' | 'not_mapped'
     unavailable_reason: string | null
   }

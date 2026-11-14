@@ -3023,6 +3023,1062 @@
     "subresearch_area": "Fire Safety"
   },
   {
+    "id": "PSI-117",
+    "doi": "10.60555/gz0q-b577",
+    "name": "Effect of External Thermo-Convective Perturbation on Cool Flame Dynamics: A Multidimensional Multi-Physics CFD Analysis",
+    "acronym": "",
+    "approach": "OpenFOAM was used to develop a 3-D CFD model of n-alkane droplet cool flames in microgravity, coupling variable-density Navier–Stokes flow with low-temperature combustion chemistry, coupled heat and mass transfer, and radiation. Model fidelity was established against ISS FLEX measurements, after which controlled simulations examined three forcing modes (i) convection alone to mimic droplet drift, (ii) imposed heat flux, and (iii) combined convection plus heating applied to both large (1–4 mm) and sub-millimeter (~0.5 mm) droplets.\n\nTo accelerate progress, the study began with simplified chemistry and transitioned to reduced mechanisms for parameter sweeps over forcing amplitude and frequency, ambient composition (including ozone-assisted cases), and pressure. From each case, predictive observables were extracted (ignition delay, oscillation frequency and amplitude, stand-off and extinction diameters), and were used to construct stability maps that delineated conditions for cool-flame onset, persistence, and quenching. These maps were reconciled with FLEX observations and were used to guide next-generation test matrices for both large- and small-droplet experiments.",
+    "end_date": "02-14-2022",
+    "hardware": [],
+    "keywords": [
+      "Cool Flames",
+      "Droplet combustion",
+      "thermo-convective perturbation",
+      "FLEX"
+    ],
+    "platform": "",
+    "objective": "The objective of this ground investigation was to use flight data obtained from PSI through NASA’s Flame Extinguishment Experiment (FLEX) to quantify how externally imposed thermal and convective perturbations regulated the dynamics and ultimate fate of already established droplet cool flames, and to explain run-to-run variability by isolating the roles of deliberate heating and unintentional drift-induced convection. Focusing on both small and large droplets, the work mapped stability windows for ignition, sustained oscillation, transitions to hot ignition and warm-flame behavior, and extinction under microgravity. By leveraging and extending the FLEX data in the PSI, this study produced reusable models and sensitivity analyses that coupled low-temperature chemistry with transport and radiative effects.",
+    "hypothesis": "External thermo-convective perturbations (imposed temperature gradients, non-uniform heating, oscillatory/shear inflow) were expected to govern cool-flame ignition, oscillation, transition to hot ignition, and extinction by shifting residence time and scalar dissipation. In microgravity, where buoyancy was suppressed, this forcing was anticipated to dominate transport. A multidimensional, multi-physics CFD model was used to map perturbation-dependent stability boundaries and predict observables for comparison with FLEX data.",
+    "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-117",
+    "start_date": "02-15-2017",
+    "researchers": [
+      {
+        "role": "Principal Investigator (PI)",
+        "last_name": "Farouk",
+        "first_name": "Tanvir",
+        "affiliation": "University of South Carolina",
+        "middle_initials": ""
+      },
+      {
+        "role": "Project Scientist",
+        "last_name": "Hicks",
+        "first_name": "Mike",
+        "affiliation": "NASA GRC",
+        "middle_initials": ""
+      }
+    ],
+    "source_file": "i_Investigation.txt",
+    "project_type": "Ground Investigation",
+    "publications": [
+      {
+        "doi": "10.1016/j.proci.2022.07.094",
+        "url": "https://doi.org/10.1016/j.proci.2022.07.094",
+        "title": "Extinction characteristics of isolated n-alkane fuel droplets during low temperature cool flame burning in air (2023)",
+        "status": "published",
+        "authors": "Farouk Tanvir I., Dryer Frederick L."
+      },
+      {
+        "doi": "10.1016/j.proci.2020.06.200",
+        "url": "https://doi.org/10.1016/j.proci.2020.06.200",
+        "title": "Sub-millimeter sized multi-component jet fuel surrogate droplet combustion: Physicochemical preferential vaporization effects (2021)",
+        "status": "published",
+        "authors": "Farouk Tanvir I., Won Sang Hee, Dryer Frederick L."
+      },
+      {
+        "doi": "10.1016/j.combustflame.2020.06.012",
+        "url": "https://doi.org/10.1016/j.combustflame.2020.06.012",
+        "title": "Initial diameter effects on combustion of unsupported equi-volume n-heptane/iso-octane mixture droplets and the transition to cool flame behavior: Experimental observations and detailed numerical modeling (2020)",
+        "status": "published",
+        "authors": "Xu Yuhao, Farouk Tanvir I., Hicks Michael C., Avedisian C. Thomas"
+      },
+      {
+        "doi": "10.1016/j.proci.2018.05.151",
+        "url": "https://doi.org/10.1016/j.proci.2018.05.151",
+        "title": "Oscillatory cool flame combustion behavior of submillimeter sized n-alkane droplet under near limit conditions (2019)",
+        "status": "published",
+        "authors": "Alam Fahd E., Aghdam Ali Charchi, Dryer Frederick L., Farouk Tanvir I."
+      },
+      {
+        "doi": "",
+        "url": "",
+        "title": "Investigating the role of preferential vaporization during submillimeter sized multicomponent jet fuel surrogate droplet combustion (2019)",
+        "status": "published",
+        "authors": "Farouk T, Won S, Dryer F."
+      },
+      {
+        "doi": "",
+        "url": "",
+        "title": "Multi-component jet fuel surrogate droplet combustion: Preferential vaporization behaviors under spray relevant conditions and effects on combustion behaviors (2019)",
+        "status": "published",
+        "authors": "Farouk T, Won S, Dryer F."
+      },
+      {
+        "doi": "",
+        "url": "",
+        "title": "Cool Flame Combustion of Sub-Millimeter Sized Higher n-Alkane Droplets at Atmospheric Condition (2017)",
+        "status": "published",
+        "authors": "Alam F, Dryer F, Farouk T."
+      },
+      {
+        "doi": "",
+        "url": "",
+        "title": "Non-Premixed - Partially Premixed to Diffusive Burning: Initial Transient of Direct Cool Flame Burn (2017)",
+        "status": "published",
+        "authors": "Alam F, Dryer F, Farouk T."
+      },
+      {
+        "doi": "",
+        "url": "",
+        "title": "Oscillatory Cool Flame Combustion Behavior of Submillimeter Sized n-Alkane Droplet under Near Limit Conditions (2018)",
+        "status": "published",
+        "authors": "Alam F, Charchi A, Dryer F, Farouk T."
+      },
+      {
+        "doi": "10.1016/j.pecs.2019.100787",
+        "url": "https://doi.org/10.1016/j.pecs.2019.100787",
+        "title": "Dynamics of cool flames (2019)",
+        "status": "published",
+        "authors": "Ju Yiguang, Reuter Christopher B., Yehia Omar R., Farouk Tanvir I., Won Sang Hee"
+      }
+    ],
+    "raw_metadata": {
+      "STUDY": [],
+      "Study Title": [
+        "Effect of External Thermo-Convective Perturbation on Cool Flame Dynamics: A Multidimensional Multi-Physics CFD Analysis"
+      ],
+      "Comment[DOI]": [
+        "10.60555/gz0q-b577"
+      ],
+      "STUDY ASSAYS": [],
+      "INVESTIGATION": [],
+      "STUDY FACTORS": [],
+      "STUDY CONTACTS": [],
+      "STUDY PROTOCOLS": [],
+      "Study File Name": [
+        "s_PSI-117.txt"
+      ],
+      "Study PubMed ID": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "Comment[Funding]": [
+        "NNX17AF97A"
+      ],
+      "Study Identifier": [
+        "PSI-117"
+      ],
+      "Study Person Fax": [
+        "",
+        ""
+      ],
+      "Term Source File": [
+        "https://psi.nasa.gov/",
+        "http://data.bioontology.org/ontologies/EFO"
+      ],
+      "Term Source Name": [
+        "PSI",
+        "EFO"
+      ],
+      "Comment[Approach]": [
+        "OpenFOAM was used to develop a 3-D CFD model of n-alkane droplet cool flames in microgravity, coupling variable-density Navier–Stokes flow with low-temperature combustion chemistry, coupled heat and mass transfer, and radiation. Model fidelity was established against ISS FLEX measurements, after which controlled simulations examined three forcing modes (i) convection alone to mimic droplet drift, (ii) imposed heat flux, and (iii) combined convection plus heating applied to both large (1–4 mm) and sub-millimeter (~0.5 mm) droplets.\n\nTo accelerate progress, the study began with simplified chemistry and transitioned to reduced mechanisms for parameter sweeps over forcing amplitude and frequency, ambient composition (including ozone-assisted cases), and pressure. From each case, predictive observables were extracted (ignition delay, oscillation frequency and amplitude, stand-off and extinction diameters), and were used to construct stability maps that delineated conditions for cool-flame onset, persistence, and quenching. These maps were reconciled with FLEX observations and were used to guide next-generation test matrices for both large- and small-droplet experiments."
+      ],
+      "Study Description": [
+        ""
+      ],
+      "Study Design Type": [
+        "Cool Flames",
+        "Droplet combustion",
+        "thermo-convective perturbation",
+        "FLEX"
+      ],
+      "Study Factor Name": [],
+      "Study Factor Type": [],
+      "Comment[Objective]": [
+        "The objective of this ground investigation was to use flight data obtained from PSI through NASA’s Flame Extinguishment Experiment (FLEX) to quantify how externally imposed thermal and convective perturbations regulated the dynamics and ultimate fate of already established droplet cool flames, and to explain run-to-run variability by isolating the roles of deliberate heating and unintentional drift-induced convection. Focusing on both small and large droplets, the work mapped stability windows for ignition, sustained oscillation, transitions to hot ignition and warm-flame behavior, and extinction under microgravity. By leveraging and extending the FLEX data in the PSI, this study produced reusable models and sensitivity analyses that coupled low-temperature chemistry with transport and radiative effects."
+      ],
+      "STUDY PUBLICATIONS": [],
+      "Study Person Email": [
+        "farouk@cec.sc.edu",
+        "michael.hicks@nasa.gov"
+      ],
+      "Study Person Phone": [
+        "",
+        ""
+      ],
+      "Study Person Roles": [
+        "Principal Investigator (PI)",
+        "Project Scientist"
+      ],
+      "Study Protocol URI": [],
+      "Comment[Hypothesis]": [
+        "External thermo-convective perturbations (imposed temperature gradients, non-uniform heating, oscillatory/shear inflow) were expected to govern cool-flame ignition, oscillation, transition to hot ignition, and extinction by shifting residence time and scalar dissipation. In microgravity, where buoyancy was suppressed, this forcing was anticipated to dominate transport. A multidimensional, multi-physics CFD model was used to map perturbation-dependent stability boundaries and predict observables for comparison with FLEX data."
+      ],
+      "Investigation Title": [
+        ""
+      ],
+      "Study Protocol Name": [],
+      "Study Protocol Type": [],
+      "Term Source Version": [
+        "1.0",
+        "132"
+      ],
+      "Comment[Identifiers]": [
+        ""
+      ],
+      "Comment[Mission End]": [
+        ""
+      ],
+      "Study Person Address": [
+        "",
+        ""
+      ],
+      "Comment[Mission Link]": [
+        ""
+      ],
+      "Comment[Mission Name]": [
+        ""
+      ],
+      "Comment[Project Link]": [
+        ""
+      ],
+      "Comment[Project Type]": [
+        "Ground Investigation"
+      ],
+      "Study Assay File Name": [],
+      "Study Publication DOI": [
+        "10.1016/j.proci.2022.07.094",
+        "10.1016/j.proci.2020.06.200",
+        "10.1016/j.combustflame.2020.06.012",
+        "10.1016/j.proci.2018.05.151",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "10.1016/j.pecs.2019.100787"
+      ],
+      "Study Submission Date": [
+        "18-Sep-2024"
+      ],
+      "Comment[Mission Start]": [
+        ""
+      ],
+      "Comment[Project Title]": [
+        ""
+      ],
+      "Comment[Research Area]": [
+        "Combustion Science"
+      ],
+      "Comment[Space Program]": [
+        "National Aeronautics and Space Administration (NASA), PSI grant"
+      ],
+      "INVESTIGATION CONTACTS": [],
+      "Study Person Last Name": [
+        "Farouk",
+        "Hicks"
+      ],
+      "Study Protocol Version": [],
+      "Comment[Proposal Title]": [
+        "Effect of External Thermo-Convective Perturbation on Cool Flame Dynamics: A Multidimensional Multi-Physics CFD Analysis"
+      ],
+      "Investigation PubMed ID": [],
+      "Study Person First Name": [
+        "Tanvir",
+        "Mike"
+      ],
+      "Study Publication Title": [
+        "Extinction characteristics of isolated n-alkane fuel droplets during low temperature cool flame burning in air (2023)",
+        "Sub-millimeter sized multi-component jet fuel surrogate droplet combustion: Physicochemical preferential vaporization effects (2021)",
+        "Initial diameter effects on combustion of unsupported equi-volume n-heptane/iso-octane mixture droplets and the transition to cool flame behavior: Experimental observations and detailed numerical modeling (2020)",
+        "Oscillatory cool flame combustion behavior of submillimeter sized n-alkane droplet under near limit conditions (2019)",
+        "Investigating the role of preferential vaporization during submillimeter sized multicomponent jet fuel surrogate droplet combustion (2019)",
+        "Multi-component jet fuel surrogate droplet combustion: Preferential vaporization behaviors under spray relevant conditions and effects on combustion behaviors (2019)",
+        "Cool Flame Combustion of Sub-Millimeter Sized Higher n-Alkane Droplets at Atmospheric Condition (2017)",
+        "Non-Premixed - Partially Premixed to Diffusive Burning: Initial Transient of Direct Cool Flame Burn (2017)",
+        "Oscillatory Cool Flame Combustion Behavior of Submillimeter Sized n-Alkane Droplet under Near Limit Conditions (2018)",
+        "Dynamics of cool flames (2019)"
+      ],
+      "Term Source Description": [
+        "User defined terms",
+        "Experimental Factor Ontology"
+      ],
+      "Comment[Acknowledgments]": [
+        ""
+      ],
+      "Comment[Flight Platform]": [
+        ""
+      ],
+      "Comment[orcidIdentifier]": [
+        "",
+        "0000-0002-5579-0949"
+      ],
+      "Investigation Identifier": [
+        ""
+      ],
+      "Investigation Person Fax": [],
+      "STUDY DESIGN DESCRIPTORS": [],
+      "Study Person Affiliation": [
+        "University of South Carolina",
+        "NASA GRC"
+      ],
+      "Study Publication Status": [
+        "published",
+        "published",
+        "published",
+        "published",
+        "published",
+        "published",
+        "published",
+        "published",
+        "published",
+        "published"
+      ],
+      "Comment[Data Source Link]": [
+        ""
+      ],
+      "Comment[Research Impacts]": [
+        "Space Benefits: Potential to improve spacecraft fire-safety modeling by resolving cool-flame/extinction behavior in microgravity; leverages FLEX to define safer operating envelopes/materials.\nEarth Benefits: Advances low-temperature combustion understanding relevant to engine knock, efficiency, and emissions; delivers validated CFD tools transferrable to practical combustors."
+      ],
+      "Comment[Study Person REF]": [
+        "",
+        ""
+      ],
+      "Comment[SubResearch Area]": [
+        "Droplet"
+      ],
+      "Investigation Description": [
+        ""
+      ],
+      "ONTOLOGY SOURCE REFERENCE": [],
+      "Study Person Mid Initials": [
+        "",
+        ""
+      ],
+      "Study Public Release Date": [
+        "10-Jun-2026"
+      ],
+      "INVESTIGATION PUBLICATIONS": [],
+      "Investigation Person Email": [],
+      "Investigation Person Phone": [],
+      "Investigation Person Roles": [],
+      "Study Protocol Description": [],
+      "Comment[Project Identifier]": [
+        ""
+      ],
+      "Comment[Study Grant Number]": [
+        ""
+      ],
+      "Study Assay Technology Type": [],
+      "Comment[Experiment Hardware]": [
+        ""
+      ],
+      "Investigation Person Address": [],
+      "Study Assay Measurement Type": [],
+      "Comment[Managing NASA Center]": [
+        "Glenn Research Center (GRC)"
+      ],
+      "Investigation Publication DOI": [],
+      "Investigation Submission Date": [
+        ""
+      ],
+      "Study Publication Author List": [
+        "Farouk Tanvir I., Dryer Frederick L.",
+        "Farouk Tanvir I., Won Sang Hee, Dryer Frederick L.",
+        "Xu Yuhao, Farouk Tanvir I., Hicks Michael C., Avedisian C. Thomas",
+        "Alam Fahd E., Aghdam Ali Charchi, Dryer Frederick L., Farouk Tanvir I.",
+        "Farouk T, Won S, Dryer F.",
+        "Farouk T, Won S, Dryer F.",
+        "Alam F, Dryer F, Farouk T.",
+        "Alam F, Dryer F, Farouk T.",
+        "Alam F, Charchi A, Dryer F, Farouk T.",
+        "Ju Yiguang, Reuter Christopher B., Yehia Omar R., Farouk Tanvir I., Won Sang Hee"
+      ],
+      "Comment[Data Source Accession]": [
+        ""
+      ],
+      "Comment[Investigation Acronym]": [
+        ""
+      ],
+      "Investigation Person Last Name": [],
+      "Study Protocol Components Name": [],
+      "Study Protocol Components Type": [],
+      "Study Protocol Parameters Name": [],
+      "Comment[Investigation End Date]": [
+        "02-14-2022"
+      ],
+      "Comment[Study Publication Link]": [
+        "https://doi.org/10.1016/j.proci.2022.07.094",
+        "https://doi.org/10.1016/j.proci.2020.06.200",
+        "https://doi.org/10.1016/j.combustflame.2020.06.012",
+        "https://doi.org/10.1016/j.proci.2018.05.151",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "https://doi.org/10.1016/j.pecs.2019.100787"
+      ],
+      "Investigation Person First Name": [],
+      "Investigation Publication Title": [],
+      "Study Assay Technology Platform": [],
+      "Investigation Person Affiliation": [],
+      "Investigation Publication Status": [],
+      "Comment[Experiment Hardware Link]": [
+        ""
+      ],
+      "Comment[Investigation Start Date]": [
+        "02-15-2017"
+      ],
+      "Investigation Person Mid Initials": [],
+      "Investigation Public Release Date": [
+        ""
+      ],
+      "Study Design Type Term Source REF": [
+        "PSI",
+        "PSI",
+        "PSI",
+        "PSI"
+      ],
+      "Study Factor Type Term Source REF": [],
+      "Study Person Roles Term Source REF": [
+        "",
+        ""
+      ],
+      "Study Protocol Type Term Source REF": [],
+      "Investigation Publication Author List": [],
+      "Study Design Type Term Accession Number": [
+        "https://psi.nasa.gov/",
+        "https://psi.nasa.gov/",
+        "https://psi.nasa.gov/",
+        "https://psi.nasa.gov/"
+      ],
+      "Study Factor Type Term Accession Number": [],
+      "Study Person Roles Term Accession Number": [
+        "Principal Investigator (PI)",
+        "Project Scientist"
+      ],
+      "Study Publication Status Term Source REF": [
+        "EFO",
+        "EFO",
+        "EFO",
+        "EFO",
+        "EFO",
+        "EFO",
+        "EFO",
+        "EFO",
+        "EFO",
+        "EFO"
+      ],
+      "Study Protocol Type Term Accession Number": [],
+      "Investigation Person Roles Term Source REF": [],
+      "Study Assay Technology Type Term Source REF": [],
+      "Study Assay Measurement Type Term Source REF": [],
+      "Study Protocol Components Type Term Source REF": [],
+      "Study Protocol Parameters Name Term Source REF": [],
+      "Study Publication Status Term Accession Number": [
+        "http://www.ebi.ac.uk/efo/EFO_0001796",
+        "http://www.ebi.ac.uk/efo/EFO_0001796",
+        "http://www.ebi.ac.uk/efo/EFO_0001796",
+        "http://www.ebi.ac.uk/efo/EFO_0001796",
+        "http://www.ebi.ac.uk/efo/EFO_0001796",
+        "http://www.ebi.ac.uk/efo/EFO_0001796",
+        "http://www.ebi.ac.uk/efo/EFO_0001796",
+        "http://www.ebi.ac.uk/efo/EFO_0001796",
+        "http://www.ebi.ac.uk/efo/EFO_0001796",
+        "http://www.ebi.ac.uk/efo/EFO_0001796"
+      ],
+      "Investigation Person Roles Term Accession Number": [],
+      "Investigation Publication Status Term Source REF": [],
+      "Study Assay Technology Type Term Accession Number": [],
+      "Study Assay Measurement Type Term Accession Number": [],
+      "Study Protocol Components Type Term Accession Number": [],
+      "Study Protocol Parameters Name Term Accession Number": [],
+      "Investigation Publication Status Term Accession Number": []
+    },
+    "release_date": "10-Jun-2026",
+    "research_area": "Combustion Science",
+    "source_sha256": "f86a1b97fa011cb02c8c52d1e05184840d4f020197cf60462a942654612fb27a",
+    "managing_center": "Glenn Research Center (GRC)",
+    "submission_date": "18-Sep-2024",
+    "research_impacts": "Space Benefits: Potential to improve spacecraft fire-safety modeling by resolving cool-flame/extinction behavior in microgravity; leverages FLEX to define safer operating envelopes/materials.\nEarth Benefits: Advances low-temperature combustion understanding relevant to engine knock, efficiency, and emissions; delivers validated CFD tools transferrable to practical combustors.",
+    "subresearch_area": "Droplet"
+  },
+  {
+    "id": "PSI-142",
+    "doi": "10.60555/80qf-vj95",
+    "name": "Quantitative Studies of Cool Flame Transitions at Radiation / Stretch Extinction Using Counterflow Flames",
+    "acronym": "",
+    "approach": "Using the experimental conditions of FLEX flight, a comparative studies of the oxygen concentration effects on the extinction limits of cool flames was conducted using three different numerical modeling schemes, (a) spark-assisted flame propagation of a n-heptane/air mixture, (b) one dimensional freely-propagating dimethyl ether (DME) flames using an arc-length continuation method and (c) simulated cool flame regimes and burning limits at elevated pressure (up to 20 atm) using DME/air mixtures.\n\nSpecific research details are outlined in the publication, ''Dynamics of cool flames'' [https://doi.org/10.1016/j.pecs.2019.100787]; '' Understanding Cool Flames and Warm Flames'', [https://doi.org/10.1016/j.proci.2020.09.019] and ''Study of the low-temperature reactivity of large n-alkanes through cool diffusion flame extinction'', [https://doi.org/10.1016/j.combustflame.2017.01.028].",
+    "end_date": "07-31-2021",
+    "hardware": [
+      {
+        "links_as_supplied": "https://doi.org/10.1016/j.combustflame.2016.01.008",
+        "names_as_supplied": "Principal Investigator Laboratory Hardware"
+      }
+    ],
+    "keywords": [
+      "Cool Flame Transitions",
+      "FLEX",
+      "Ground-based experiments",
+      "Dibutyl Ether",
+      "Flames",
+      "Modeling",
+      "Radiation",
+      "Kinetic experiments",
+      "Low temperature flames",
+      "Emissions",
+      "Counterflow flames",
+      "Supercritical Reacting Fluids",
+      "Extinction Limit",
+      "Low temperature chemistry",
+      "n-alkane",
+      "PSI Grant"
+    ],
+    "platform": "Not Applicable",
+    "objective": "By using the Flame Extinguishment (FLEX) experimental data from the Physical Sciences Informatics (PSI) system of combustion science, the purpose of this grant was to conduct new simulations and ground-based experiments using ozone-sensitized counterflow flames to:\n    1) Develop a new diagram of the flammability limits of diffusional cool flames affected by radiation, diffusion, and convection.\n    2) Bridge the knowledge gap between the flammability limits and extinction limits of hot flames and cool flames.\n    3) Verify the phenomena observed on the ISS flame extinguishment experiments.\n    4) Obtain new, quantitative data of extinction limit, flame temperature, and species distribution for the validation of kinetic and radiation models involving cool flames.\n    5) Extend the cool flame experiments from the original ISS droplet experiments to a more general ground-based combustion system involving radiation, diffusion, convection, and low-temperature chemistry while maintaining a one-dimensional geometry.",
+    "hypothesis": "This investigation attempts to answer the critical question as to what conditions causes the hot flames transfer to cool flames and how the cool flame flammable region is related to hot flame flammability limit and extinction limit. The investigation hypothesizes that factors such as oxygen concentration, dilution, pressure, diffusion, and convection transport processes affect the cool flame transition.",
+    "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-142",
+    "start_date": "08-01-2016",
+    "researchers": [
+      {
+        "role": "Principal Investigator (PI)",
+        "last_name": "Ju",
+        "first_name": "Yiguang",
+        "affiliation": "Princeton University",
+        "middle_initials": ""
+      },
+      {
+        "role": "Technical Point of Contact",
+        "last_name": "Dietrich",
+        "first_name": "Daniel",
+        "affiliation": "NASA GRC",
+        "middle_initials": ""
+      },
+      {
+        "role": "Co-Investigator (Co-I)",
+        "last_name": "Reuter",
+        "first_name": "Christopher",
+        "affiliation": "Princeton University",
+        "middle_initials": ""
+      }
+    ],
+    "source_file": "i_Investigation.txt",
+    "project_type": "Ground Investigation",
+    "publications": [
+      {
+        "doi": "10.1016/j.pecs.2019.100787",
+        "url": "http://dx.doi.org/10.1016/j.pecs.2019.100787",
+        "title": "Dynamics of cool flames",
+        "status": "published",
+        "authors": "Ju Yiguang, Reuter Christopher B., Yehia Omar R., Farouk Tanvir I., Won Sang Hee"
+      },
+      {
+        "doi": "10.1016/j.combustflame.2021.111471",
+        "url": "http://dx.doi.org/10.1016/j.combustflame.2021.111471",
+        "title": "The radical index and the effect of oxygen concentration on non-premixed cool flame extinction of large n-alkanes",
+        "status": "published",
+        "authors": "Zhou Mengni, Yehia Omar R., Xu Wenbin, Reuter Christopher B., Wang Ziyu, Yan Chao, Jiang Bo, Ju Yiguang"
+      },
+      {
+        "doi": "10.1016/j.combustflame.2017.01.006",
+        "url": "http://dx.doi.org/10.1016/j.combustflame.2017.01.006",
+        "title": "On the propagation limits and speeds of premixed cool flames at elevated pressures",
+        "status": "published",
+        "authors": "Ju Yiguang"
+      },
+      {
+        "doi": "10.1016/j.combustflame.2017.01.028",
+        "url": "http://dx.doi.org/10.1016/j.combustflame.2017.01.028",
+        "title": "Study of the low-temperature reactivity of large n-alkanes through cool diffusion flame extinction",
+        "status": "published",
+        "authors": "Reuter Christopher B., Lee Minhyeok, Won Sang Hee, Ju Yiguang"
+      },
+      {
+        "doi": "10.1016/j.combustflame.2018.06.004",
+        "url": "http://dx.doi.org/10.1016/j.combustflame.2018.06.004",
+        "title": "Counterflow flame experiments and chemical kinetic modeling of dimethyl ether/methane mixtures",
+        "status": "published",
+        "authors": "Reuter Christopher B., Zhang Rui, Yehia Omar R., Rezgui Yacine, Ju Yiguang"
+      },
+      {
+        "doi": "10.1016/j.combustflame.2018.03.013",
+        "url": "http://dx.doi.org/10.1016/j.combustflame.2018.03.013",
+        "title": "Low-temperature multistage warm diffusion flames",
+        "status": "published",
+        "authors": "Yehia Omar R., Reuter Christopher B., Ju Yiguang"
+      },
+      {
+        "doi": "10.1016/j.proci.2018.05.082",
+        "url": "http://dx.doi.org/10.1016/j.proci.2018.05.082",
+        "title": "Dynamics and burning limits of near-limit hot, warm, and cool diffusion flames of dimethyl ether at elevated pressures",
+        "status": "published",
+        "authors": "Lin Eric, Reuter Christopher B., Ju Yiguang"
+      },
+      {
+        "doi": "10.1016/j.proci.2018.06.161",
+        "url": "http://dx.doi.org/10.1016/j.proci.2018.06.161",
+        "title": "On the chemical characteristics and dynamics of n-alkane low-temperature multistage diffusion flames",
+        "status": "published",
+        "authors": "Yehia Omar R., Reuter Christopher B., Ju Yiguang"
+      },
+      {
+        "doi": "10.1016/j.proci.2014.05.120",
+        "url": "http://dx.doi.org/10.1016/j.proci.2014.05.120",
+        "title": "Quantitative measurements of HO 2 /H 2 O 2 and intermediate species in low and intermediate temperature oxidation of dimethyl ether",
+        "status": "published",
+        "authors": "Kurimoto Naoki, Brumfield Brian, Yang Xueliang, Wada Tomoya, Diévart Pascal, Wysocki Gerard, Ju Yiguang"
+      },
+      {
+        "doi": "",
+        "url": "https://ars.els-cdn.com/content/image/1-s2.0-S0010218021002145-mmc1.pdf",
+        "title": "SUPPLEMENTARY MATERIAL\nThe radical index and the effect of oxygen concentration on non-premixed cool flame extinction of large n-alkanes",
+        "status": "published",
+        "authors": "Yiguang Ju, Mengni Zhou, Omar R. Yehia, Wenbin Xu, Christopher B. Reuter, Ziyu Wang,  Chao Yan"
+      },
+      {
+        "doi": "",
+        "url": "http://www.icders.org/ICDERS2017/abstracts/ICDERS2017-1073.pdf",
+        "title": "Pressure and Radiation Effects on the Dynamics of Hot and Cool Diffusion Flames",
+        "status": "published",
+        "authors": "CB. Reuter, E. Lin, Y. Ju"
+      },
+      {
+        "doi": "10.1016/j.proci.2018.07.050",
+        "url": "https://doi.org/10.1016/j.proci.2018.07.050",
+        "title": "Transient interactions between a premixed double flame and a vortex",
+        "status": "published",
+        "authors": "Reuter Christopher B., Katta Viswanath R., Yehia Omar R., Ju Yiguang"
+      }
+    ],
+    "raw_metadata": {
+      "STUDY": [],
+      "Study Title": [
+        "Quantitative Studies of Cool Flame Transitions at Radiation / Stretch Extinction Using Counterflow Flames"
+      ],
+      "Comment[DOI]": [
+        "10.60555/80qf-vj95"
+      ],
+      "STUDY ASSAYS": [],
+      "INVESTIGATION": [],
+      "STUDY FACTORS": [],
+      "STUDY CONTACTS": [],
+      "STUDY PROTOCOLS": [],
+      "Study File Name": [
+        "s_PSI-142.txt"
+      ],
+      "Study PubMed ID": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "Comment[Funding]": [
+        "NNX16AK07G"
+      ],
+      "Study Identifier": [
+        "PSI-142"
+      ],
+      "Study Person Fax": [
+        "",
+        "",
+        ""
+      ],
+      "Term Source File": [
+        "https://psi.nasa.gov/",
+        "http://data.bioontology.org/ontologies/EFO"
+      ],
+      "Term Source Name": [
+        "PSI",
+        "EFO"
+      ],
+      "Comment[Approach]": [
+        "Using the experimental conditions of FLEX flight, a comparative studies of the oxygen concentration effects on the extinction limits of cool flames was conducted using three different numerical modeling schemes, (a) spark-assisted flame propagation of a n-heptane/air mixture, (b) one dimensional freely-propagating dimethyl ether (DME) flames using an arc-length continuation method and (c) simulated cool flame regimes and burning limits at elevated pressure (up to 20 atm) using DME/air mixtures.\n\nSpecific research details are outlined in the publication, ''Dynamics of cool flames'' [https://doi.org/10.1016/j.pecs.2019.100787]; '' Understanding Cool Flames and Warm Flames'', [https://doi.org/10.1016/j.proci.2020.09.019] and ''Study of the low-temperature reactivity of large n-alkanes through cool diffusion flame extinction'', [https://doi.org/10.1016/j.combustflame.2017.01.028]."
+      ],
+      "Study Description": [
+        ""
+      ],
+      "Study Design Type": [
+        "Cool Flame Transitions",
+        "FLEX",
+        "Ground-based experiments",
+        "Dibutyl Ether",
+        "Flames",
+        "Modeling",
+        "Radiation",
+        "Kinetic experiments",
+        "Low temperature flames",
+        "Emissions",
+        "Counterflow flames",
+        "Supercritical Reacting Fluids",
+        "Extinction Limit",
+        "Low temperature chemistry",
+        "n-alkane",
+        "PSI Grant"
+      ],
+      "Study Factor Name": [],
+      "Study Factor Type": [],
+      "Comment[Objective]": [
+        "By using the Flame Extinguishment (FLEX) experimental data from the Physical Sciences Informatics (PSI) system of combustion science, the purpose of this grant was to conduct new simulations and ground-based experiments using ozone-sensitized counterflow flames to:\n    1) Develop a new diagram of the flammability limits of diffusional cool flames affected by radiation, diffusion, and convection.\n    2) Bridge the knowledge gap between the flammability limits and extinction limits of hot flames and cool flames.\n    3) Verify the phenomena observed on the ISS flame extinguishment experiments.\n    4) Obtain new, quantitative data of extinction limit, flame temperature, and species distribution for the validation of kinetic and radiation models involving cool flames.\n    5) Extend the cool flame experiments from the original ISS droplet experiments to a more general ground-based combustion system involving radiation, diffusion, convection, and low-temperature chemistry while maintaining a one-dimensional geometry."
+      ],
+      "STUDY PUBLICATIONS": [],
+      "Study Person Email": [
+        "yju@princeton.edu",
+        "daniel.l.dietrich@nasa.gov",
+        "cbreuter@princeton.edu"
+      ],
+      "Study Person Phone": [
+        "",
+        "",
+        ""
+      ],
+      "Study Person Roles": [
+        "Principal Investigator (PI)",
+        "Technical Point of Contact",
+        "Co-Investigator (Co-I)"
+      ],
+      "Study Protocol URI": [],
+      "Comment[Hypothesis]": [
+        "This investigation attempts to answer the critical question as to what conditions causes the hot flames transfer to cool flames and how the cool flame flammable region is related to hot flame flammability limit and extinction limit. The investigation hypothesizes that factors such as oxygen concentration, dilution, pressure, diffusion, and convection transport processes affect the cool flame transition."
+      ],
+      "Investigation Title": [
+        ""
+      ],
+      "Study Protocol Name": [],
+      "Study Protocol Type": [],
+      "Term Source Version": [
+        "1.0",
+        "132"
+      ],
+      "Comment[Identifiers]": [
+        ""
+      ],
+      "Comment[Mission End]": [
+        ""
+      ],
+      "Study Person Address": [
+        "",
+        "",
+        ""
+      ],
+      "Comment[Mission Link]": [
+        ""
+      ],
+      "Comment[Mission Name]": [
+        ""
+      ],
+      "Comment[Project Link]": [
+        ""
+      ],
+      "Comment[Project Type]": [
+        "Ground Investigation"
+      ],
+      "Study Assay File Name": [],
+      "Study Publication DOI": [
+        "10.1016/j.pecs.2019.100787",
+        "10.1016/j.combustflame.2021.111471",
+        "10.1016/j.combustflame.2017.01.006",
+        "10.1016/j.combustflame.2017.01.028",
+        "10.1016/j.combustflame.2018.06.004",
+        "10.1016/j.combustflame.2018.03.013",
+        "10.1016/j.proci.2018.05.082",
+        "10.1016/j.proci.2018.06.161",
+        "10.1016/j.proci.2014.05.120",
+        "",
+        "",
+        "10.1016/j.proci.2018.07.050"
+      ],
+      "Study Submission Date": [
+        "18-Sep-2024"
+      ],
+      "Comment[Mission Start]": [
+        ""
+      ],
+      "Comment[Project Title]": [
+        ""
+      ],
+      "Comment[Research Area]": [
+        "Combustion Science"
+      ],
+      "Comment[Space Program]": [
+        "National Aeronautics and Space Administration (NASA)"
+      ],
+      "INVESTIGATION CONTACTS": [],
+      "Study Person Last Name": [
+        "Ju",
+        "Dietrich",
+        "Reuter"
+      ],
+      "Study Protocol Version": [],
+      "Comment[Proposal Title]": [
+        ""
+      ],
+      "Investigation PubMed ID": [],
+      "Study Person First Name": [
+        "Yiguang",
+        "Daniel",
+        "Christopher"
+      ],
+      "Study Publication Title": [
+        "Dynamics of cool flames",
+        "The radical index and the effect of oxygen concentration on non-premixed cool flame extinction of large n-alkanes",
+        "On the propagation limits and speeds of premixed cool flames at elevated pressures",
+        "Study of the low-temperature reactivity of large n-alkanes through cool diffusion flame extinction",
+        "Counterflow flame experiments and chemical kinetic modeling of dimethyl ether/methane mixtures",
+        "Low-temperature multistage warm diffusion flames",
+        "Dynamics and burning limits of near-limit hot, warm, and cool diffusion flames of dimethyl ether at elevated pressures",
+        "On the chemical characteristics and dynamics of n-alkane low-temperature multistage diffusion flames",
+        "Quantitative measurements of HO 2 /H 2 O 2 and intermediate species in low and intermediate temperature oxidation of dimethyl ether",
+        "SUPPLEMENTARY MATERIAL\nThe radical index and the effect of oxygen concentration on non-premixed cool flame extinction of large n-alkanes",
+        "Pressure and Radiation Effects on the Dynamics of Hot and Cool Diffusion Flames",
+        "Transient interactions between a premixed double flame and a vortex"
+      ],
+      "Term Source Description": [
+        "User defined terms",
+        "Experimental Factor Ontology"
+      ],
+      "Comment[Acknowledgments]": [
+        ""
+      ],
+      "Comment[Flight Platform]": [
+        "Not Applicable"
+      ],
+      "Investigation Identifier": [
+        ""
+      ],
+      "Investigation Person Fax": [],
+      "STUDY DESIGN DESCRIPTORS": [],
+      "Study Person Affiliation": [
+        "Princeton University",
+        "NASA GRC",
+        "Princeton University"
+      ],
+      "Study Publication Status": [
+        "published",
+        "published",
+        "published",
+        "published",
+        "published",
+        "published",
+        "published",
+        "published",
+        "published",
+        "published",
+        "published",
+        "published"
+      ],
+      "Comment[Data Source Link]": [
+        ""
+      ],
+      "Comment[Research Impacts]": [
+        "Obtaining a fundamental understanding of the warm diffusion flame is particularly relevant to combustion in highly turbulent flow fields and in microgravity environments, owing to the possibility of long residence times. The results showed that the warm flame has a double reaction zone structure and plays a critical role in the transition between cool flames and hot flames. At elevated pressures, it was found that the flammable region of warm flames and cool flames expands due to the increase in low-temperature and intermediate-temperature reactivity with pressure. Since many real engines operate in the 20-40 atm pressure range, therefore, cool flames and warm flames are relevant and important flame regimes for high-pressure near-limit combustion applications. These calculations from this investigation will serve to advance the understanding of near-limit flame dynamics and provide guidance for experimental observation of different flame regimes."
+      ],
+      "Comment[Study Person REF]": [
+        "",
+        "",
+        ""
+      ],
+      "Comment[SubResearch Area]": [
+        "Spacecraft Fire Safety"
+      ],
+      "Investigation Description": [
+        ""
+      ],
+      "ONTOLOGY SOURCE REFERENCE": [],
+      "Study Person Mid Initials": [
+        "",
+        "",
+        ""
+      ],
+      "Study Public Release Date": [
+        "18-Sep-2024"
+      ],
+      "INVESTIGATION PUBLICATIONS": [],
+      "Investigation Person Email": [],
+      "Investigation Person Phone": [],
+      "Investigation Person Roles": [],
+      "Study Protocol Description": [],
+      "Comment[Project Identifier]": [
+        ""
+      ],
+      "Comment[Study Grant Number]": [
+        ""
+      ],
+      "Study Assay Technology Type": [],
+      "Comment[Experiment Hardware]": [
+        "Principal Investigator Laboratory Hardware"
+      ],
+      "Investigation Person Address": [],
+      "Study Assay Measurement Type": [],
+      "Comment[Managing NASA Center]": [
+        "Glenn Research Center (GRC)"
+      ],
+      "Investigation Publication DOI": [],
+      "Investigation Submission Date": [
+        ""
+      ],
+      "Study Publication Author List": [
+        "Ju Yiguang, Reuter Christopher B., Yehia Omar R., Farouk Tanvir I., Won Sang Hee",
+        "Zhou Mengni, Yehia Omar R., Xu Wenbin, Reuter Christopher B., Wang Ziyu, Yan Chao, Jiang Bo, Ju Yiguang",
+        "Ju Yiguang",
+        "Reuter Christopher B., Lee Minhyeok, Won Sang Hee, Ju Yiguang",
+        "Reuter Christopher B., Zhang Rui, Yehia Omar R., Rezgui Yacine, Ju Yiguang",
+        "Yehia Omar R., Reuter Christopher B., Ju Yiguang",
+        "Lin Eric, Reuter Christopher B., Ju Yiguang",
+        "Yehia Omar R., Reuter Christopher B., Ju Yiguang",
+        "Kurimoto Naoki, Brumfield Brian, Yang Xueliang, Wada Tomoya, Diévart Pascal, Wysocki Gerard, Ju Yiguang",
+        "Yiguang Ju, Mengni Zhou, Omar R. Yehia, Wenbin Xu, Christopher B. Reuter, Ziyu Wang,  Chao Yan",
+        "CB. Reuter, E. Lin, Y. Ju",
+        "Reuter Christopher B., Katta Viswanath R., Yehia Omar R., Ju Yiguang"
+      ],
+      "Comment[Data Source Accession]": [
+        ""
+      ],
+      "Comment[Investigation Acronym]": [
+        ""
+      ],
+      "Investigation Person Last Name": [],
+      "Study Protocol Components Name": [],
+      "Study Protocol Components Type": [],
+      "Study Protocol Parameters Name": [],
+      "Comment[Investigation End Date]": [
+        "07-31-2021"
+      ],
+      "Comment[Study Publication Link]": [
+        "http://dx.doi.org/10.1016/j.pecs.2019.100787",
+        "http://dx.doi.org/10.1016/j.combustflame.2021.111471",
+        "http://dx.doi.org/10.1016/j.combustflame.2017.01.006",
+        "http://dx.doi.org/10.1016/j.combustflame.2017.01.028",
+        "http://dx.doi.org/10.1016/j.combustflame.2018.06.004",
+        "http://dx.doi.org/10.1016/j.combustflame.2018.03.013",
+        "http://dx.doi.org/10.1016/j.proci.2018.05.082",
+        "http://dx.doi.org/10.1016/j.proci.2018.06.161",
+        "http://dx.doi.org/10.1016/j.proci.2014.05.120",
+        "https://ars.els-cdn.com/content/image/1-s2.0-S0010218021002145-mmc1.pdf",
+        "http://www.icders.org/ICDERS2017/abstracts/ICDERS2017-1073.pdf",
+        "https://doi.org/10.1016/j.proci.2018.07.050"
+      ],
+      "Investigation Person First Name": [],
+      "Investigation Publication Title": [],
+      "Study Assay Technology Platform": [],
+      "Investigation Person Affiliation": [],
+      "Investigation Publication Status": [],
+      "Comment[Experiment Hardware Link]": [
+        "https://doi.org/10.1016/j.combustflame.2016.01.008"
+      ],
+      "Comment[Investigation Start Date]": [
+        "08-01-2016"
+      ],
+      "Investigation Person Mid Initials": [],
+      "Investigation Public Release Date": [
+        ""
+      ],
+      "Study Design Type Term Source REF": [
+        "PSI",
+        "PSI",
+        "PSI",
+        "PSI",
+        "PSI",
+        "PSI",
+        "PSI",
+        "PSI",
+        "PSI",
+        "PSI",
+        "PSI",
+        "PSI",
+        "PSI",
+        "PSI",
+        "PSI",
+        "PSI"
+      ],
+      "Study Factor Type Term Source REF": [],
+      "Study Person Roles Term Source REF": [
+        "",
+        "",
+        ""
+      ],
+      "Study Protocol Type Term Source REF": [],
+      "Investigation Publication Author List": [],
+      "Study Design Type Term Accession Number": [
+        "https://psi.nasa.gov/",
+        "https://psi.nasa.gov/",
+        "https://psi.nasa.gov/",
+        "https://psi.nasa.gov/",
+        "https://psi.nasa.gov/",
+        "https://psi.nasa.gov/",
+        "https://psi.nasa.gov/",
+        "https://psi.nasa.gov/",
+        "https://psi.nasa.gov/",
+        "https://psi.nasa.gov/",
+        "https://psi.nasa.gov/",
+        "https://psi.nasa.gov/",
+        "https://psi.nasa.gov/",
+        "https://psi.nasa.gov/",
+        "https://psi.nasa.gov/",
+        "https://psi.nasa.gov/"
+      ],
+      "Study Factor Type Term Accession Number": [],
+      "Study Person Roles Term Accession Number": [
+        "Principal Investigator (PI)",
+        "Technical Point of Contact",
+        "Co-Investigator (Co-I)"
+      ],
+      "Study Publication Status Term Source REF": [
+        "EFO",
+        "EFO",
+        "EFO",
+        "EFO",
+        "EFO",
+        "EFO",
+        "EFO",
+        "EFO",
+        "EFO",
+        "EFO",
+        "EFO",
+        "EFO"
+      ],
+      "Study Protocol Type Term Accession Number": [],
+      "Investigation Person Roles Term Source REF": [],
+      "Study Assay Technology Type Term Source REF": [],
+      "Study Assay Measurement Type Term Source REF": [],
+      "Study Protocol Components Type Term Source REF": [],
+      "Study Protocol Parameters Name Term Source REF": [],
+      "Study Publication Status Term Accession Number": [
+        "http://www.ebi.ac.uk/efo/EFO_0001796",
+        "http://www.ebi.ac.uk/efo/EFO_0001796",
+        "http://www.ebi.ac.uk/efo/EFO_0001796",
+        "http://www.ebi.ac.uk/efo/EFO_0001796",
+        "http://www.ebi.ac.uk/efo/EFO_0001796",
+        "http://www.ebi.ac.uk/efo/EFO_0001796",
+        "http://www.ebi.ac.uk/efo/EFO_0001796",
+        "http://www.ebi.ac.uk/efo/EFO_0001796",
+        "http://www.ebi.ac.uk/efo/EFO_0001796",
+        "http://www.ebi.ac.uk/efo/EFO_0001796",
+        "http://www.ebi.ac.uk/efo/EFO_0001796",
+        "http://www.ebi.ac.uk/efo/EFO_0001796"
+      ],
+      "Investigation Person Roles Term Accession Number": [],
+      "Investigation Publication Status Term Source REF": [],
+      "Study Assay Technology Type Term Accession Number": [],
+      "Study Assay Measurement Type Term Accession Number": [],
+      "Study Protocol Components Type Term Accession Number": [],
+      "Study Protocol Parameters Name Term Accession Number": [],
+      "Investigation Publication Status Term Accession Number": []
+    },
+    "release_date": "18-Sep-2024",
+    "research_area": "Combustion Science",
+    "source_sha256": "ae5212034e09a6e15600cf95cebdcc19796c6881cb72df7421f649fef05022b3",
+    "managing_center": "Glenn Research Center (GRC)",
+    "submission_date": "18-Sep-2024",
+    "research_impacts": "Obtaining a fundamental understanding of the warm diffusion flame is particularly relevant to combustion in highly turbulent flow fields and in microgravity environments, owing to the possibility of long residence times. The results showed that the warm flame has a double reaction zone structure and plays a critical role in the transition between cool flames and hot flames. At elevated pressures, it was found that the flammable region of warm flames and cool flames expands due to the increase in low-temperature and intermediate-temperature reactivity with pressure. Since many real engines operate in the 20-40 atm pressure range, therefore, cool flames and warm flames are relevant and important flame regimes for high-pressure near-limit combustion applications. These calculations from this investigation will serve to advance the understanding of near-limit flame dynamics and provide guidance for experimental observation of different flame regimes.",
+    "subresearch_area": "Spacecraft Fire Safety"
+  },
+  {
     "id": "PSI-159",
     "doi": "10.60555/cyt1-kh64",
     "name": "Advanced Combustion via Microgravity Experiments / Cool Flames Investigation with Gases",
@@ -8119,6 +9175,387 @@
     "managing_center": "Glenn Research Center (GRC)",
     "submission_date": "2009-06-01",
     "research_impacts": "Extended duration space flight missions with larger vessels will require fire detection systems with increased reliability and sensitivity. This research will impact the development of novel fire and smoke detection systems for the International Space Station and future spacecrafts. Additionally, the successful adaptation of the TSI P-Trak for microgravity can inform the design of instruments for use in other challenging Earth environments, such as submarines or underwater laboratories where accurate detection of smoke can save lives.",
+    "subresearch_area": "Spacecraft Fire Safety"
+  },
+  {
+    "id": "PSI-62",
+    "doi": "10.60555/e9xp-ex83",
+    "name": "Concurrent Flame Spread Modeling using Flamelet Generated Manifolds in Microgravity with Comparison to BASS Experiments using Two-Color Tomography",
+    "acronym": "",
+    "approach": "The approach combined high-resolution computational modeling with experimental validation to study concurrent flame spread in microgravity. A previously developed computational framework  was employed to run fully coupled simulations of fluid–solid responses, focusing on materials subject to charring and ablation. Within this framework, the unsteady FGM method was implemented and tested on various BASS geometries, including flat sheets, spheres, and rod-shaped polymethyl methacrylate (PMMA) samples, as well as wax cylinders.\nExperimental imagery found in PSI from the BASS and BASS-II investigations was post-processed using newly developed two-color tomography methods with DSLR cameras, enabling 3D reconstructions of soot and temperature fields for direct comparison to model predictions. The evaluation metrics included flame geometry, temperature distribution, soot volume fraction, and flame spread rate, with special emphasis on reproducing the “Goldilocks” flammability zone reported by Olson and Ferkul. Comparative analyses were also carried out with a parallel NSF-supported terrestrial flame spread project, ensuring that the predictive capabilities of the UFGM approach were assessed across both microgravity and normal-gravity conditions.",
+    "end_date": "04-30-2021",
+    "hardware": [],
+    "keywords": [
+      "BASS",
+      "Flame Spread",
+      "Flamelet Generated Manifolds"
+    ],
+    "platform": "",
+    "objective": "The objective of this research was to develop and validate new flamelet generated manifold (FGM) modeling techniques for concurrent flame spread in microgravity. Concurrent flame spread presented one of the greatest modeling challenges in combustion science due to the intricate coupling between heat transfer, mass transport, and chemical kinetics near the solid-vapor interface. Traditional modeling strategies often relied on hybridized turbulence and chemistry models that were not fully consistent and failed to capture important intermediate reaction pathways.\nTo overcome these shortcomings, this PSI grant advanced the use of an unsteady flamelet generated manifold (UFGM) framework that reduced the complexity of reacting systems by mapping them into lower-dimensional manifolds. The research aimed to leverage this methodology to simulate solid fuel combustion processes with high fidelity, using the NASA Burning and Suppression of Solids (BASS and BASS-II) experiments as benchmarks. Ultimately, the long-term goal was to enable accurate prediction of flammability limits for spacecraft materials and to provide a tool that could also serve as a subgrid-scale model in large-eddy simulations of fires, supporting spacecraft safety and hazard mitigation.",
+    "hypothesis": "The unsteady flamelet generated manifold (UFGM) approach was believed to be able to accurately reproduce concurrent flame spread in microgravity, including phenomena such as the “Goldilocks” flammability zone, by coupling near-wall thermal, mass transport, and chemical processes with far-field flow dynamics.",
+    "source_url": "https://psi.nasa.gov/physci/repo/data/investigations/PSI-62",
+    "start_date": "05-01-2019",
+    "researchers": [
+      {
+        "role": "Principal Investigator (PI)",
+        "last_name": "DesJardin",
+        "first_name": "Paul",
+        "affiliation": "New York University, Buffalo",
+        "middle_initials": ""
+      },
+      {
+        "role": "Project Scientist",
+        "last_name": "Urban",
+        "first_name": "David",
+        "affiliation": "NASA GRC",
+        "middle_initials": ""
+      }
+    ],
+    "source_file": "i_Investigation.txt",
+    "project_type": "Ground Investigation",
+    "publications": [
+      {
+        "doi": "10.1016/j.combustflame.2017.03.001",
+        "url": "https://doi.org/10.1016/j.combustflame.2017.03.001",
+        "title": "Microgravity flammability boundary for PMMA rods in axial stagnation flow: Experimental results and energy balance analyses (2017)",
+        "status": "published",
+        "authors": "Olson Sandra L., Ferkul Paul V."
+      },
+      {
+        "doi": "10.1016/j.combustflame.2023.112939",
+        "url": "https://doi.org/10.1016/j.combustflame.2023.112939",
+        "title": "Radiative flamelet generated manifolds for solid fuel flame spread in microgravity (2023)",
+        "status": "published",
+        "authors": "Budzinski Kenneth, DesJardin Paul E."
+      },
+      {
+        "doi": "10.1016/j.combustflame.2023.112910",
+        "url": "https://doi.org/10.1016/j.combustflame.2023.112910",
+        "title": "Theoretical estimates of flammability bounds for thin condensed fuel diffusion flames in microgravity using detailed models of chemistry and radiation (2023)",
+        "status": "published",
+        "authors": "Budzinski Kenneth, DesJardin Paul E."
+      },
+      {
+        "doi": "10.1016/j.combustflame.2021.111395",
+        "url": "https://doi.org/10.1016/j.combustflame.2021.111395",
+        "title": "Two-color pyrometry based flame to fuel surface radiative heat flux diagnostic using flamelets",
+        "status": "published",
+        "authors": "Aphale Siddhant S., DesJardin Paul E."
+      }
+    ],
+    "raw_metadata": {
+      "STUDY": [],
+      "Study Title": [
+        "Concurrent Flame Spread Modeling using Flamelet Generated Manifolds in Microgravity with Comparison to BASS Experiments using Two-Color Tomography"
+      ],
+      "Comment[DOI]": [
+        "10.60555/e9xp-ex83"
+      ],
+      "STUDY ASSAYS": [],
+      "INVESTIGATION": [],
+      "STUDY FACTORS": [],
+      "STUDY CONTACTS": [],
+      "STUDY PROTOCOLS": [],
+      "Study File Name": [
+        "s_PSI-62.txt"
+      ],
+      "Study PubMed ID": [
+        "",
+        "",
+        "",
+        ""
+      ],
+      "Comment[Funding]": [
+        "80NSSC20K0426"
+      ],
+      "Study Identifier": [
+        "PSI-62"
+      ],
+      "Study Person Fax": [
+        "",
+        ""
+      ],
+      "Term Source File": [
+        "https://psi.nasa.gov/",
+        ""
+      ],
+      "Term Source Name": [
+        "PSI",
+        "EFO"
+      ],
+      "Comment[Approach]": [
+        "The approach combined high-resolution computational modeling with experimental validation to study concurrent flame spread in microgravity. A previously developed computational framework  was employed to run fully coupled simulations of fluid–solid responses, focusing on materials subject to charring and ablation. Within this framework, the unsteady FGM method was implemented and tested on various BASS geometries, including flat sheets, spheres, and rod-shaped polymethyl methacrylate (PMMA) samples, as well as wax cylinders.\nExperimental imagery found in PSI from the BASS and BASS-II investigations was post-processed using newly developed two-color tomography methods with DSLR cameras, enabling 3D reconstructions of soot and temperature fields for direct comparison to model predictions. The evaluation metrics included flame geometry, temperature distribution, soot volume fraction, and flame spread rate, with special emphasis on reproducing the “Goldilocks” flammability zone reported by Olson and Ferkul. Comparative analyses were also carried out with a parallel NSF-supported terrestrial flame spread project, ensuring that the predictive capabilities of the UFGM approach were assessed across both microgravity and normal-gravity conditions."
+      ],
+      "Study Description": [
+        ""
+      ],
+      "Study Design Type": [
+        "BASS",
+        "Flame Spread",
+        "Flamelet Generated Manifolds"
+      ],
+      "Study Factor Name": [],
+      "Study Factor Type": [],
+      "Comment[Objective]": [
+        "The objective of this research was to develop and validate new flamelet generated manifold (FGM) modeling techniques for concurrent flame spread in microgravity. Concurrent flame spread presented one of the greatest modeling challenges in combustion science due to the intricate coupling between heat transfer, mass transport, and chemical kinetics near the solid-vapor interface. Traditional modeling strategies often relied on hybridized turbulence and chemistry models that were not fully consistent and failed to capture important intermediate reaction pathways.\nTo overcome these shortcomings, this PSI grant advanced the use of an unsteady flamelet generated manifold (UFGM) framework that reduced the complexity of reacting systems by mapping them into lower-dimensional manifolds. The research aimed to leverage this methodology to simulate solid fuel combustion processes with high fidelity, using the NASA Burning and Suppression of Solids (BASS and BASS-II) experiments as benchmarks. Ultimately, the long-term goal was to enable accurate prediction of flammability limits for spacecraft materials and to provide a tool that could also serve as a subgrid-scale model in large-eddy simulations of fires, supporting spacecraft safety and hazard mitigation."
+      ],
+      "STUDY PUBLICATIONS": [],
+      "Study Person Email": [
+        "ped3@buffalo.edu",
+        "david.l.urban@nasa.gov"
+      ],
+      "Study Person Phone": [
+        "",
+        ""
+      ],
+      "Study Person Roles": [
+        "Principal Investigator (PI)",
+        "Project Scientist"
+      ],
+      "Study Protocol URI": [],
+      "Comment[Hypothesis]": [
+        "The unsteady flamelet generated manifold (UFGM) approach was believed to be able to accurately reproduce concurrent flame spread in microgravity, including phenomena such as the “Goldilocks” flammability zone, by coupling near-wall thermal, mass transport, and chemical processes with far-field flow dynamics."
+      ],
+      "Investigation Title": [
+        ""
+      ],
+      "Study Protocol Name": [],
+      "Study Protocol Type": [],
+      "Term Source Version": [
+        "1.0",
+        ""
+      ],
+      "Comment[Identifiers]": [
+        ""
+      ],
+      "Comment[Mission End]": [
+        ""
+      ],
+      "Study Person Address": [
+        "",
+        ""
+      ],
+      "Comment[Mission Link]": [
+        ""
+      ],
+      "Comment[Mission Name]": [
+        ""
+      ],
+      "Comment[Project Link]": [
+        ""
+      ],
+      "Comment[Project Type]": [
+        "Ground Investigation"
+      ],
+      "Study Assay File Name": [],
+      "Study Publication DOI": [
+        "10.1016/j.combustflame.2017.03.001",
+        "10.1016/j.combustflame.2023.112939",
+        "10.1016/j.combustflame.2023.112910",
+        "10.1016/j.combustflame.2021.111395"
+      ],
+      "Study Submission Date": [
+        "30-Apr-2021"
+      ],
+      "Comment[Mission Start]": [
+        ""
+      ],
+      "Comment[Project Title]": [
+        ""
+      ],
+      "Comment[Research Area]": [
+        "Combustion Science"
+      ],
+      "Comment[Space Program]": [
+        "NASA, PSI grant"
+      ],
+      "INVESTIGATION CONTACTS": [],
+      "Study Person Last Name": [
+        "DesJardin",
+        "Urban"
+      ],
+      "Study Protocol Version": [],
+      "Comment[Proposal Title]": [
+        "Concurrent Flame Spread Modeling using Flamelet Generated Manifolds in Microgravity with Comparison to BASS Experiments using Two-Color Tomography"
+      ],
+      "Investigation PubMed ID": [],
+      "Study Person First Name": [
+        "Paul",
+        "David"
+      ],
+      "Study Publication Title": [
+        "Microgravity flammability boundary for PMMA rods in axial stagnation flow: Experimental results and energy balance analyses (2017)",
+        "Radiative flamelet generated manifolds for solid fuel flame spread in microgravity (2023)",
+        "Theoretical estimates of flammability bounds for thin condensed fuel diffusion flames in microgravity using detailed models of chemistry and radiation (2023)",
+        "Two-color pyrometry based flame to fuel surface radiative heat flux diagnostic using flamelets"
+      ],
+      "Term Source Description": [
+        "User defined terms",
+        ""
+      ],
+      "Comment[Acknowledgments]": [
+        ""
+      ],
+      "Comment[Flight Platform]": [
+        ""
+      ],
+      "Comment[orcidIdentifier]": [
+        "0009-0000-0124-2376",
+        "0000-0003-0427-1871"
+      ],
+      "Investigation Identifier": [
+        ""
+      ],
+      "Investigation Person Fax": [],
+      "STUDY DESIGN DESCRIPTORS": [],
+      "Study Person Affiliation": [
+        "New York University, Buffalo",
+        "NASA GRC"
+      ],
+      "Study Publication Status": [
+        "published",
+        "published",
+        "published",
+        "published"
+      ],
+      "Comment[Data Source Link]": [
+        ""
+      ],
+      "Comment[Research Impacts]": [
+        "This research provides predictive tools for screening new materials’ flammability limits, which can lead to the design of safer spacecrafts. The development of Large Eddy Simulation subgrid models is expected to improve hazard assessment capabilities critical for managing fire risks during long-duration space missions and within confined spacecraft habitats. On Earth, these advancements could improve combustion modeling by deepening our understanding of coupled thermal, chemical, and flow processes, which betters fire safety standards. The computational methods being refined have the potential to enable more effective fire prevention and mitigation strategies and  foster innovations in diagnostics and simulations applicable across a variety of combustion scenarios. Overall, this research can contribute significantly to safer human exploration in space and improvements to fire safety protocols on Earth."
+      ],
+      "Comment[SubResearch Area]": [
+        "Spacecraft Fire Safety"
+      ],
+      "Investigation Description": [
+        ""
+      ],
+      "ONTOLOGY SOURCE REFERENCE": [],
+      "Study Person Mid Initials": [
+        "",
+        ""
+      ],
+      "Study Public Release Date": [
+        "14-Nov-2025"
+      ],
+      "INVESTIGATION PUBLICATIONS": [],
+      "Investigation Person Email": [],
+      "Investigation Person Phone": [],
+      "Investigation Person Roles": [],
+      "Study Protocol Description": [],
+      "Comment[Project Identifier]": [
+        ""
+      ],
+      "Comment[Study Grant Number]": [
+        ""
+      ],
+      "Study Assay Technology Type": [],
+      "Comment[Experiment Hardware]": [
+        ""
+      ],
+      "Investigation Person Address": [],
+      "Study Assay Measurement Type": [],
+      "Comment[Managing NASA Center]": [
+        "Glenn Research Center (GRC)"
+      ],
+      "Investigation Publication DOI": [],
+      "Investigation Submission Date": [
+        ""
+      ],
+      "Study Publication Author List": [
+        "Olson Sandra L., Ferkul Paul V.",
+        "Budzinski Kenneth, DesJardin Paul E.",
+        "Budzinski Kenneth, DesJardin Paul E.",
+        "Aphale Siddhant S., DesJardin Paul E."
+      ],
+      "Comment[Data Source Accession]": [
+        ""
+      ],
+      "Comment[Investigation Acronym]": [
+        ""
+      ],
+      "Investigation Person Last Name": [],
+      "Study Protocol Components Name": [],
+      "Study Protocol Components Type": [],
+      "Study Protocol Parameters Name": [],
+      "Comment[Investigation End Date]": [
+        "04-30-2021"
+      ],
+      "Comment[Study Publication Link]": [
+        "https://doi.org/10.1016/j.combustflame.2017.03.001",
+        "https://doi.org/10.1016/j.combustflame.2023.112939",
+        "https://doi.org/10.1016/j.combustflame.2023.112910",
+        "https://doi.org/10.1016/j.combustflame.2021.111395"
+      ],
+      "Investigation Person First Name": [],
+      "Investigation Publication Title": [],
+      "Study Assay Technology Platform": [],
+      "Investigation Person Affiliation": [],
+      "Investigation Publication Status": [],
+      "Comment[Experiment Hardware Link]": [
+        ""
+      ],
+      "Comment[Investigation Start Date]": [
+        "05-01-2019"
+      ],
+      "Investigation Person Mid Initials": [],
+      "Investigation Public Release Date": [
+        ""
+      ],
+      "Study Design Type Term Source REF": [
+        "PSI",
+        "PSI",
+        "PSI"
+      ],
+      "Study Factor Type Term Source REF": [],
+      "Study Person Roles Term Source REF": [
+        "",
+        ""
+      ],
+      "Study Protocol Type Term Source REF": [],
+      "Investigation Publication Author List": [],
+      "Study Design Type Term Accession Number": [
+        "https://psi.nasa.gov/",
+        "https://psi.nasa.gov/",
+        "https://psi.nasa.gov/"
+      ],
+      "Study Factor Type Term Accession Number": [],
+      "Study Person Roles Term Accession Number": [
+        "Principal Investigator (PI)",
+        "Project Scientist"
+      ],
+      "Study Publication Status Term Source REF": [
+        "EFO",
+        "EFO",
+        "EFO",
+        "EFO"
+      ],
+      "Study Protocol Type Term Accession Number": [],
+      "Investigation Person Roles Term Source REF": [],
+      "Study Assay Technology Type Term Source REF": [],
+      "Study Assay Measurement Type Term Source REF": [],
+      "Study Protocol Components Type Term Source REF": [],
+      "Study Protocol Parameters Name Term Source REF": [],
+      "Study Publication Status Term Accession Number": [
+        "http://www.ebi.ac.uk/efo/EFO_0001796",
+        "http://www.ebi.ac.uk/efo/EFO_0001796",
+        "http://www.ebi.ac.uk/efo/EFO_0001796",
+        "http://www.ebi.ac.uk/efo/EFO_0001796"
+      ],
+      "Investigation Person Roles Term Accession Number": [],
+      "Investigation Publication Status Term Source REF": [],
+      "Study Assay Technology Type Term Accession Number": [],
+      "Study Assay Measurement Type Term Accession Number": [],
+      "Study Protocol Components Type Term Accession Number": [],
+      "Study Protocol Parameters Name Term Accession Number": [],
+      "Investigation Publication Status Term Accession Number": []
+    },
+    "release_date": "14-Nov-2025",
+    "research_area": "Combustion Science",
+    "source_sha256": "fbbe3e34f381692c62721f4d59a6e85121e90cac852a5846a885da8935edaa16",
+    "managing_center": "Glenn Research Center (GRC)",
+    "submission_date": "30-Apr-2021",
+    "research_impacts": "This research provides predictive tools for screening new materials’ flammability limits, which can lead to the design of safer spacecrafts. The development of Large Eddy Simulation subgrid models is expected to improve hazard assessment capabilities critical for managing fire risks during long-duration space missions and within confined spacecraft habitats. On Earth, these advancements could improve combustion modeling by deepening our understanding of coupled thermal, chemical, and flow processes, which betters fire safety standards. The computational methods being refined have the potential to enable more effective fire prevention and mitigation strategies and  foster innovations in diagnostics and simulations applicable across a variety of combustion scenarios. Overall, this research can contribute significantly to safer human exploration in space and improvements to fire safety protocols on Earth.",
     "subresearch_area": "Spacecraft Fire Safety"
   },
   {
