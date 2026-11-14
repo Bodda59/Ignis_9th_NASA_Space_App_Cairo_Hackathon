@@ -7,7 +7,7 @@ from psycopg.types.json import Jsonb
 from data_pipeline.facts import SAMPLE_KEYS, VERSION, build_facts, digest
 from data_pipeline.queue import enqueue_narrative
 from data_pipeline.search_index import refresh_search_index
-from data_pipeline.conditions import ColumnMapping, header_key, parse_value
+from data_pipeline.conditions import MISSING, ColumnMapping, header_key, parse_value
 
 
 def rebuild(store, job):
@@ -123,8 +123,7 @@ def replace_experiment_data(conn, study, source_hash):
                 for header, measured in profile.get('measurement_columns', {}).items():
                     if header not in row['row_data']:
                         raise ValueError('Reviewed measurement column missing from source.')
-                    value = parse_value(row['row_data'][header], ColumnMapping.model_validate(
-                        {k: v for k, v in measured.items() if k in ColumnMapping.model_fields}))
+                    value = measurement_value(row['row_data'], header, measured)
                     measurement_info[measured['key']] = dict(measured, source_refs=[source])
                     conn.execute('''INSERT INTO investigation_measurements
                         (id,investigation_id,test_id,measurement_key,value,original_unit,source)
@@ -137,6 +136,16 @@ def replace_experiment_data(conn, study, source_hash):
                               Jsonb(parameters), Jsonb(source)))
         row_total += len(source_rows)
     return docs, build_facts(study, records, list(measurement_info.values()), row_total)
+
+
+def measurement_value(row, header, measured):
+    value = parse_value(row[header], ColumnMapping.model_validate(
+        {k: v for k, v in measured.items() if k in ColumnMapping.model_fields}))
+    required = measured.get('requires_column')
+    if required and str(row.get(required)).strip().casefold() in MISSING | {'#value!'}:
+        value.update(state='ambiguous', low=None, high=None,
+                     note=f'Unverified derived value: {required} is not reported.')
+    return value
 
 
 def register_measurement(conn, measurement):

@@ -272,7 +272,7 @@ class Catalog:
                         for row in cursor:
                             buffer.seek(0)
                             buffer.truncate(0)
-                            cells = [str(row['cells'].get(key) or '') for key in keys]
+                            cells = ['' if row['cells'].get(key) is None else str(row['cells'][key]) for key in keys]
                             # CSV exports may be opened by spreadsheet software.
                             writer.writerow(["'"+v if v.lstrip().startswith(('=', '+', '-', '@', '\t', '\r')) else v for v in cells])
                             yield buffer.getvalue()

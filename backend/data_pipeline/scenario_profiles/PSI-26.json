@@ -1,5 +1,14 @@
 {
   "id_column": "As Run Test #",
   "record_kind": "reported_test",
-  "columns": {}
+  "source_record_values": {"Fuel Sample Material": ["SOOT Cleaning"]},
+  "columns": {
+    "Fuel Sample Material": {
+      "key": "material",
+      "label": "Reported material",
+      "kind": "category",
+      "excluded_values": ["SOOT Cleaning"],
+      "note": "Reported material label; the soot-cleaning activity is excluded from fuel categories."
+    }
+  }
 }

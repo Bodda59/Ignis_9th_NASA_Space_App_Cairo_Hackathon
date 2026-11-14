@@ -7,6 +7,33 @@
       "label": "Reported fuel bottle composition",
       "kind": "category",
       "note": "The bottle composition can differ from the diluted test fuel."
+    },
+    "Test Type": {
+      "key": "test_group",
+      "label": "Daily test group",
+      "kind": "category"
+    },
+    "Fuel MFC": {
+      "key": "fuel_mfc_capacity_slpm",
+      "label": "Fuel MFC maximum capacity",
+      "kind": "number",
+      "unit": "slpm",
+      "minimum": 0,
+      "note": "Controller full-scale capacity on a nitrogen calibration basis; not the flow rate during a flame."
+    },
+    "N2 MFC": {
+      "key": "nitrogen_mfc_capacity_slpm",
+      "label": "Nitrogen MFC maximum capacity",
+      "kind": "number",
+      "unit": "slpm",
+      "minimum": 0,
+      "note": "Controller full-scale capacity on a nitrogen calibration basis; not the flow rate during a flame."
+    },
+    "Fuel conc. Range": {
+      "key": "fuel_concentration_schedule",
+      "label": "Daily fuel-concentration schedule",
+      "kind": "category",
+      "note": "Fuel volume fraction after nitrogen dilution, varied between and sometimes during flames. Extinction can occur before the lowest listed concentration is reached; this is not an oxygen concentration or measured extinction limit."
     }
   }
 }

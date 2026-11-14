@@ -17,10 +17,10 @@ export function DetailHero({ data, synthetic }: { data: InvestigationResponse; s
   const selected = cmp.has(inv.id)
 
   const stats = [
-    { label: 'Numeric tests', value: data.data_availability.numeric_test_count },
-    { label: 'Findings', value: data.findings.length },
+    { label: 'Source rows', value: data.data_availability.source_row_count ?? data.tests.length },
+    { label: 'Reviewed findings', value: data.findings.length },
     { label: 'Design links', value: data.equipment_links.length },
-    { label: 'Sources', value: new Set(data.citations.map((c) => c.source_id)).size },
+    { label: 'Indexed documents', value: inv.source_ids.length },
   ]
 
   return (

@@ -1,14 +1,16 @@
 """Manually checked observations and their linked design questions."""
 
 REVIEWED = {
-    'PSI-25': {
-        'text': "The BASS-II authors reported that flame behavior was sensitive to changes in very low airflow in their ISS wind-tunnel tests.",
-        'source_refs': [{'title': "Combustion of Solids in Microgravity: Results from the BASS-II Experiment",
-                         'source_url': "https://ntrs.nasa.gov/citations/20160000593",
-                         'field': "Abstract"}],
-        'design_question': "How should material-flammability tests account for low ventilation speeds?",
-        'design_connection': "The results give material-screening researchers a reason to include low-flow conditions when studying the behavior of the tested solids.",
-        'design_limit': "The result applies to the tested sample geometries and wind-tunnel conditions.",
+    'PSI-20': {
+        'text': "The BRE final report describes quasi-steady burning at nominal ambient oxygen mole fractions of 0.265 and above, while methane/nitrogen flames self-extinguished within a minute under all tested ambient conditions. The observations depend on fuel and configuration; they do not define a safe operating envelope.",
+        'source_refs': [{'document_id': '483b390a60e83b6f30209ebe56eef4ad',
+                         'title': 'BRE final report (1 February 2022)',
+                         'source_url': 'https://psi.nasa.gov/physci/repo/data/investigations/PSI-20',
+                         'content_hash': 'c2f22c914b38d9e6742709688a2d1d81d8306e3c901b47314faf3b6ab43cec60',
+                         'page': 39}],
+        'design_question': 'How do oxygen concentration and pressure together affect persistent burning?',
+        'design_connection': 'The reported observations motivate considering both oxygen concentration and total pressure when reviewing material-flammability research.',
+        'design_limit': 'BRE used gaseous-fuel burners to emulate condensed-fuel burning. The daily summary does not identify the pressure or oxygen condition of each individual flame.',
     },
     'PSI-98': {
         'text': "In the Saffire concurrent-flow test, the flame stayed limited in size after ignition. The authors contrasted this with upward spread on Earth, where a flame on a similarly sized sample grows and accelerates.",
@@ -37,4 +39,416 @@ REVIEWED = {
         'design_connection': "The recorded post-flame behavior makes the observation period after visible extinction relevant when evaluating extinction evidence in similar droplet tests.",
         'design_limit': "FLEX-119 was a single supported-droplet test in a controlled microgravity chamber. The cool-flame interpretation was based on the observed vaporization and vapor cloud.",
     },
+}
+
+# Descriptions reviewed against the already indexed report, not inferred CSV measurements.
+REPORT_DETAILS = {
+    'PSI-20': {
+        'document_id': '483b390a60e83b6f30209ebe56eef4ad',
+        'content_hash': 'c2f22c914b38d9e6742709688a2d1d81d8306e3c901b47314faf3b6ab43cec60',
+        'overview': [
+            {'text': 'BRE used gaseous-fuel burners to emulate the burning behavior of liquids and solids. Material names such as PMMA and Nylon describe emulated properties, not solid samples burned in this campaign.', 'page': 40},
+            {'text': 'ISS testing occurred in two rounds: February–April 2019 and September 2020–January 2021. Methane and the 50-mm burner were both included in the second round, but not together.', 'page': 3},
+            {'text': 'The proposed oxygen/carbon-dioxide atmosphere objective was not carried out. The report identifies this as desired follow-on work, not an observed suppression result.', 'page': 40},
+        ],
+        'materials': [
+            {'text': 'The daily log lists 50% ethylene (C2H4), 100% ethylene and 100% methane (CH4) fuel bottles. These are bottle compositions, not necessarily the diluted fuel composition at the burner.', 'page': 24},
+            {'text': 'Burner size denotes the diameter of the perforated circular outlet: 25 mm or 50 mm. BRE emulates material properties using gas flames; these are not solid-sample dimensions.', 'page': 24},
+        ],
+        'conditions': [
+            {'text': 'Table 1 reports 18 daily log entries, including a day with zero ignitions. Burner diameter was 25 or 50 mm. The approximate daily oxygen lists include 21%, 25%, 26.5%, 34% and 40%; they are not per-flame condition assignments.', 'page': 24},
+            {'text': 'The four configuration groups were a 25-mm burner with 50% ethylene, 100% ethylene or 100% methane bottles, and a 50-mm burner with a 100% ethylene bottle. Bottle composition can differ from the diluted gas actually flowing during a test.', 'page': 24},
+        ],
+        'measurements': [
+            {'text': 'Image records include the ACME DataCam, the CFI intensified camera and the HiBMs camera. The report lists HOBJ and TIF image files and TS video; these files are described by the report, not imported as numeric rows in this dashboard.', 'page': 174},
+            {'text': 'Thin-filament pyrometry was used to analyze transient temperatures of four flames. This is a selected analysis, not temperature coverage for every daily record.', 'page': 36},
+            {'text': 'Center and offset heat-flux sensors were averaged to estimate the surface heat flux and heat of gasification in the reported preliminary analysis.', 'page': 25},
+            {'text': 'Radiometer arrays observed flame radiation; the report notes saturation in the BRE array during round 1 and in many standard-array observations during round 2.', 'page': 13},
+            {'text': 'Gas chromatography measured chamber species before, between or after tests, with the chamber mixed by a fan. It did not sample inside a burning flame and was used on only some test days.', 'page': 22},
+        ],
+        'findings': [
+            {'text': 'Quasi-steady burning was observed for nominal ambient oxygen mole fractions of 0.265 (26.5%) and above in the tested configurations. This was a burner emulation of condensed-fuel behavior, not a qualification test for actual spacecraft materials.', 'page': 39},
+            {'text': 'Methane/nitrogen flames self-extinguished within a minute under all ambient conditions tested. The report therefore identifies fuel chemistry as important to burn duration.', 'page': 39},
+            {'text': 'Ethylene flames did not sustain soot production in the reported microgravity tests. Soot appeared during ignition and disappeared shortly afterward; nitrogen dilution reduced its amount.', 'page': 39},
+            {'text': 'The authors reported radiative-loss fractions reaching about 60% for microgravity flames, compared with about 30% for normal-gravity flames in their comparison.', 'page': 39},
+            {'text': 'Thin-filament pyrometry of four flames gave an extinction-temperature range of 1100–1200 K, also supported by the reported numerical simulations. This is the range for that analysis, not a universal extinction threshold.', 'page': 39},
+            {'text': 'Flammability diagrams showed that the burner could emulate properties of several liquids and solids, including methanol, PMMA and Nylon. The materials were represented through combustion and gasification properties.', 'page': 39},
+            {'text': 'The preliminary flammability maps showed two extinction limits: radiative extinction for large flames and a second quenching limit for small flames.', 'page': 40},
+            {'text': 'Ambient pressure had a weak effect on the reported quality of burning, but affected radiation losses through the partial pressures of radiating species. This does not establish that pressure is unimportant to fire safety.', 'page': 39},
+        ],
+        'limitations': [
+            {'text': 'Radiometer saturation limits interpretation of the recorded radiation signals.', 'page': 13},
+            {'text': 'Fuel-flow controllers did not always provide steady or intended flow rates. The report identifies a make-up test day after a flow-transition problem on 3 September 2020.', 'page': 17},
+            {'text': 'The daily log does not assign chamber pressure or an exact oxygen level to each individual flame. Objectives and nominal report conditions must not be filled into missing per-flame records.', 'page': 24},
+            {'text': 'These are preliminary results. The report states that analysis and publication were still underway when this revision was prepared.', 'page': 1},
+            {'text': 'Repeated logs in the report are not fully consistent: Appendix C lists 5 April for day 19094, while the main Table 1 lists 4 April. Day 19094 also resolves to 4 April 2019. The displayed log follows the main Table 1 rather than silently merging conflicting appendices.', 'page': 63},
+        ],
+    },
+}
+
+
+# CLD daily-log scope is checked against the stored CSV revision. Published results
+# are cited separately; they are not numerical measurements from that daily table.
+CLD_LOG_REF = {'document_id': 'd676a8ec64c5a56dc506f3e1d1493f42', 'csv_record': 1}
+CLD_RESULTS_REF = {
+    'title': 'Laminar Non-Premixed Flames of Gaseous Fuel Aboard the International Space Station',
+    'file_name': 'ACME CSSCI paper 20220402.pdf',
+    'source_url': 'https://ntrs.nasa.gov/api/citations/20220005205/downloads/ACME%20CSSCI%20paper%2020220402.pdf#page=5',
+    'page': 5, 'source_type': 'paper',
+}
+REVIEWED['PSI-21'] = {
+    'text': 'NASA reported increased soot loading and larger sooty attached flames in microgravity, and extended dilution limits for lifted methane and ethylene coflow flames, compared with the normal-gravity cases studied.',
+    'source_refs': [CLD_RESULTS_REF],
+    'design_question': 'How should extinction models account for fuel dilution and coflow in microgravity?',
+    'design_connection': 'The reported stability differences provide experimental evidence for checking models of diluted gas flames. They do not directly measure the performance of a fire-suppression device.',
+    'design_limit': 'The results concern the tested methane and ethylene gas-burner configurations. Daily summaries do not specify the conditions of every individual flame.',
+}
+REPORT_DETAILS['PSI-21'] = {
+    'reviewed_limitations_only': True,
+    'document_id': CLD_LOG_REF['document_id'],
+    'content_hash': '2d511e9c06167abaaa1b96ceba7898455a93015d46383c412baf56d249b3a90f',
+    'record_description': 'Each row summarizes a test day, not one flame. Test Day uses YYDDD: two digits for the year and three for the day of that year. The table contains 32 dated entries and 344 ignitions from 15 November 2017 to 3 March 2021.',
+    'overview': [
+        {'text': 'CLD Flame studied methane and ethylene gas flames in an air coflow to test combustion models at highly diluted and strongly sooting conditions.', 'source_refs': [CLD_RESULTS_REF]},
+        {'text': 'The daily log groups the work into methane-based tests, ethylene-based tests and improved-coflow tests. These are campaign groups, not individual flame measurements.', 'source_refs': [CLD_LOG_REF, dict(CLD_LOG_REF, csv_record=15), dict(CLD_LOG_REF, csv_record=29)]},
+    ],
+    'materials': [
+        {'text': 'The gas fuels are methane (CH4) and ethylene (C2H4), with nitrogen used for dilution. The bottle compositions are 40% or 100% methane, and 30%, 50% or 100% ethylene. Bottle composition and the diluted fuel reaching the burner are different quantities.', 'source_refs': [CLD_LOG_REF, dict(CLD_LOG_REF, csv_record=12), dict(CLD_LOG_REF, csv_record=15), dict(CLD_LOG_REF, csv_record=23), dict(CLD_LOG_REF, csv_record=29)]},
+    ],
+    'conditions': [
+        {'text': 'The log has 32 test days and 344 ignitions. It does not provide a separate row or a complete set of conditions for each ignition.', 'source_refs': [dict(CLD_LOG_REF, field='Daily summary table', csv_record=None)]},
+        {'text': 'Fuel MFC and N2 MFC are the maximum capacities of the mass-flow controllers, expressed in standard liters per minute (slpm) on a nitrogen calibration basis. Fuel-controller capacities are 0.1 or 0.2 slpm; nitrogen-controller capacities are 0.02, 0.05, 0.1 or 0.2 slpm. These numbers are not the flow rates during a flame.', 'source_refs': [CLD_LOG_REF, dict(CLD_LOG_REF, csv_record=14), dict(CLD_LOG_REF, csv_record=25)]},
+        {'text': 'Fuel conc. Range describes fuel volume fraction after nitrogen dilution, varied between and sometimes during flames. It is not ambient oxygen concentration. The 0% endpoint in the 0%–30% entry does not establish that a flame burned at zero fuel.', 'source_refs': [CLD_LOG_REF, dict(CLD_LOG_REF, csv_record=29)]},
+    ],
+    'measurements': [
+        {'text': 'NASA reports measurements of flame temperature, CH* concentration, soot temperature and soot volume fraction for diluted methane and ethylene coflow flames. Numerical values for these diagnostics are not contained in the daily summary table.', 'source_refs': [CLD_RESULTS_REF]},
+    ],
+    'findings': [
+        {'text': 'For sooty attached flames, NASA reported that microgravity flames had several times greater soot volume fractions and were taller and wider than the normal-gravity comparison flames. The comparison is preliminary and does not describe every daily record.', 'source_refs': [CLD_RESULTS_REF]},
+        {'text': 'The reported microgravity tests extended dilution limits for both methane and ethylene, allowing more stable lifted flames at lower fuel concentrations than in the comparison normal-gravity cases.', 'source_refs': [CLD_RESULTS_REF]},
+    ],
+    'limitations': [
+        {'text': 'A flame could extinguish before reaching the lowest listed fuel concentration. The daily range therefore cannot be read as a measured extinction limit or a set of stable burning conditions.', 'source_refs': [CLD_LOG_REF]},
+        {'text': 'The daily table does not assign pressure, actual fuel/coflow velocity, temperature or soot measurements to each individual flame. Controller maximum ratings cannot fill those missing measurements.', 'source_refs': [CLD_LOG_REF]},
+        {'text': 'The cited NASA results are preliminary comparisons for the tested gas-fuel coflow configurations; they do not establish universal soot ratios or equipment performance.', 'source_refs': [CLD_RESULTS_REF]},
+    ],
+}
+
+
+CFI_REPORT_REF = {
+    'document_id': '67f843dfec5176c953c76edb409bab95',
+    'content_hash': 'f6cce7cc08ca69c155994d7a8898e21cd4aba122f4e46d5e00708e4889a1ebab',
+    'page': 23,
+}
+REVIEWED['PSI-159'] = {
+    'text': 'The CFI-G final report identifies spherical gas-fueled cool diffusion flames in normal n-butane tests near 2 bar and an ambient oxygen mole fraction of 0.39.',
+    'source_refs': [CFI_REPORT_REF],
+    'design_question': 'What evidence is needed to confirm extinction after a visible hot flame disappears?',
+    'design_connection': 'Cool combustion after hot-flame extinction motivates monitoring temperature and low-light signals during extinction research. This investigation did not test an extinguisher or certify a detector.',
+    'design_limit': 'The reported cool flames occurred in specific normal n-butane burner conditions. Their occurrence must not be generalized to every normal or inverse test.',
+}
+REPORT_DETAILS['PSI-159'] = {
+    'document_id': CFI_REPORT_REF['document_id'],
+    'content_hash': CFI_REPORT_REF['content_hash'],
+    'conditions_view': 'source_tables',
+    'replace_measurements': True,
+    'reviewed_limitations_only': True,
+    'record_description': 'There are 333 test-attempt records: 179 normal and 154 inverse. They include failed ignitions, brief flashes and repeated hot/cool transitions. A row is not necessarily a successful ignition or a confirmed cool flame. The first five digits of Test use YYDDD (year and day of year); Day is the sequence within that test round. Testing spans 29 March–18 October 2021. Select a source table below to view all its columns and pages.',
+    'overview': [
+        {'text': 'CFI-G investigated gas-fueled cool diffusion flames on the ISS in March–October 2021, first with normal flames and then inverse flames. A final normal-flame test day followed the inverse campaign.', 'page': 3},
+        {'text': 'The actual fuels were ethane, propane and n-butane. Ethane replaced the proposed n-pentane because ground testing found n-pentane impractical at its low vapor pressure.', 'page': 17},
+    ],
+    'materials': [
+        {'text': 'Ethane, propane and n-butane were used with nitrogen dilution. Percentages in Fuel identify the supplied gas mixture; Xf describes the fuel fraction for the test configuration, which can differ after further dilution.', 'page': 21},
+        {'text': 'The experiment used a porous spherical burner 6.35 mm in diameter. This is a gas-burner dimension, not a solid-sample size.', 'page': 8},
+    ],
+    'conditions': [
+        {'text': 'Normal configuration: fuel leaves the burner into an oxygen/nitrogen chamber atmosphere. XO2 before/after test describes chamber oxygen mole fraction; multiply by 100 for percent. Xf describes the fuel stream. The source table reports approximate pressure in bar, not kPa.', 'page': 21},
+        {'text': 'Inverse configuration: oxygen/nitrogen leaves the burner into a fuel/nitrogen chamber atmosphere. XO2 describes the burner oxidizer stream, not ambient chamber oxygen. Xf before/after test describes chamber fuel mole fraction. These quantities must not be merged with the normal-flame oxygen conditions.', 'page': 22},
+        {'text': 'Normal and inverse test records remain in separate tables. Burn time, hot ignition, termination, comments and any cool-flame annotations should be read together. Blank cool-flame entries do not establish that a cool flame was absent.', 'source_refs': [
+            {'document_id': '81548f419efa21003a221f50668e8e45', 'csv_record': 159},
+            {'document_id': '26f564dcb8051ea409d241522e633fe1', 'csv_record': 1}]},
+        {'text': 'Tad is adiabatic flame temperature and Zst is stoichiometric mixture fraction. Neither is a measured peak burner temperature. TFP indicates use of thin-filament pyrometry; it is not itself a numerical temperature reading.', 'source_refs': [
+            {'document_id': CFI_REPORT_REF['document_id'], 'page': 4},
+            {'document_id': CFI_REPORT_REF['document_id'], 'page': 10}]},
+    ],
+    'measurements': [
+        {'text': 'The two summary CSVs report burn duration and peak burner temperature. Burner temperature describes the burner hardware, not the flame gas temperature. The inverse table repeats temperature in Celsius and Kelvin; these are two representations of one quantity.', 'source_refs': [
+            {'document_id': '81548f419efa21003a221f50668e8e45', 'csv_record': 1},
+            {'document_id': '26f564dcb8051ea409d241522e633fe1', 'csv_record': 2}]},
+        {'text': 'The reported diagnostics include an intensified video camera, radiometers and thermocouples. The raw collection includes DataCam HOBJ images, intensified/HiBMs TIF images, ground-recorded TS video and comma-delimited non-imaging data. These raw files are described in the report; the four indexed documents here are two summary CSVs, the final report and an engineering document.', 'page': 86},
+    ],
+    'findings': [
+        {'text': 'The final report describes the first observations of spherical cool diffusion flames burning gaseous fuels. Within the reported ISS study, these were obtained only for normal n-butane flames near 2 bar and ambient oxygen mole fraction 0.39 (39%). This is a reported configuration, not a universal occurrence threshold.', 'page': 23},
+        {'text': 'The hot flames preceding the cool diffusion flames were reported to be 2.6 times as large. The authors identified burner temperature as important to cool-flame behavior and located the observed cool flames in fuel-rich regions near mixture fraction 0.53.', 'page': 23},
+        {'text': 'On the additional normal-flame test day, low-temperature combustion was followed by repeated hot-flame reignition. The report attributes the rapid reignition to catalytic effects of platinum in the closest exposed type-B thermocouple, limiting the cool-flame observation duration.', 'page': 17},
+    ],
+    'limitations': [
+        {'text': 'These are the preliminary results in the 21 November 2022 final report; analysis and publication were still underway at that revision.', 'page': 1},
+        {'text': 'Cool flames were difficult to ignite and detect. Early cool-flame periods were recognized only during later review, after tests had already been terminated. Intensified-camera protection and thermocouple-induced reignition also limited observation.', 'page': 15},
+        {'text': 'The 30 August 2021 imaging-storage failure lost most primary image data, including images from successful tests; an igniter failure also affected that day. The inverse table explicitly notes this loss.', 'page': 16},
+        {'text': 'Flow-controller performance was poor at small fractions of maximum flow. At high flow, the burner could produce non-spherical flames with local quenching near its supply tube. The pyrometry array had only three intact fibers, and the near thermocouple tip was bent during most inverse testing.', 'source_refs': [dict(CFI_REPORT_REF, page=16), dict(CFI_REPORT_REF, page=17)]},
+        {'text': 'The source CSV contains missing temperatures and spreadsheet errors. Inverse tests 21242 F4 and 21242 P2 contain #VALUE! in Kelvin; 21265 H3 lists 273.15 K despite a blank Celsius cell. The latter may be a blank-cell conversion artifact and is unverified. These entries do not establish a measured temperature.', 'source_refs': [
+            {'document_id': '26f564dcb8051ea409d241522e633fe1', 'csv_record': 95},
+            {'document_id': '26f564dcb8051ea409d241522e633fe1', 'csv_record': 96},
+            {'document_id': '26f564dcb8051ea409d241522e633fe1', 'csv_record': 130}]},
+        {'text': 'Normal tests 21125 A4 and 21125 H3 contain #DIV/0! for Tad and Zst, alongside zero fuel fraction and fuel flow. These spreadsheet errors are not numerical temperatures or mixture fractions. Blank durations remain unknown; zero-duration attempts remain zero.', 'source_refs': [
+            {'document_id': '81548f419efa21003a221f50668e8e45', 'csv_record': 68},
+            {'document_id': '81548f419efa21003a221f50668e8e45', 'csv_record': 76}]},
+        {'text': 'Some source annotations conflict: normal test 21102A1 says the flow was manually stopped but its termination code is SE. The available summary does not resolve which annotation is correct; the source entries are retained.', 'source_refs': [
+            {'document_id': '81548f419efa21003a221f50668e8e45', 'csv_record': 15}]},
+        {'text': 'The report also describes separate ground experiments with liquid n-heptane fuel pools. Their 705–760 K measurements are not temperatures from the ISS gas-burner CSVs. The possible engine-efficiency benefits are future applications, not efficiency improvements measured by CFI-G.', 'page': 23},
+    ],
+}
+
+
+FLAME_DESIGN_REF = {
+    'document_id': '2179917606ab4589b663ce8660813df6',
+    'content_hash': '1d64b7f42f079579671624da5356cfe6d867ad014dd1d6932e9fcc6d3a1706fd',
+    'page': 25,
+}
+FLAME_DESIGN_NORMAL = 'b32e148c0270ff705d2c4f763ff15ec9'
+FLAME_DESIGN_INVERSE = '26f1d9c9661b4836989ec2ae8234c656'
+REVIEWED['PSI-10'] = {
+    'text': 'The report identifies radiative extinction at about 1130 K for the studied atmospheric-pressure ethylene spherical flames, and conditions under which steady-state flame behavior was observed.',
+    'source_refs': [FLAME_DESIGN_REF],
+    'design_question': 'How do radiation losses and flame growth affect extinction evidence in microgravity?',
+    'design_connection': 'The findings support evaluating extinction models with time-resolved temperature and flame-size evidence. They provide research context for suppression studies, rather than measured extinguisher performance.',
+    'design_limit': 'The cited critical temperature and reactant mass fluxes concern the analyzed atmospheric-pressure ethylene spherical flames. They are not universal thresholds for other fuels, pressures or geometries.',
+}
+REPORT_DETAILS['PSI-10'] = {
+    'document_id': FLAME_DESIGN_REF['document_id'],
+    'content_hash': FLAME_DESIGN_REF['content_hash'],
+    'conditions_view': 'source_tables',
+    'replace_measurements': True,
+    'reviewed_limitations_only': True,
+    'record_description': 'The two source tables contain 327 test records: 207 normal and 120 inverse. Normal records include 187 ethylene and 20 propane entries. These are source-record counts, not a reconciled ignition total. Day is a campaign sequence, starting at 0 in the normal table; Test normally begins with YYDDD (year and day of year). RAMP, RAMPED and LOW O2 are source annotations, not zeros or single numerical conditions. Select either table below to see all reported fields and pages.',
+    'overview': [
+        {'text': 'Flame Design studied spherical gas diffusion flames on the ISS in April–July 2019 and October 2021–February 2022. The second round mainly used inverse flames, with an added normal propane test day on 28 October 2021 for temperature-diagnostic calibration.', 'page': 3},
+        {'text': 'The flight work used ethylene, nitrogen dilution and spherical burners, except for that single propane day. Methane, CO2 dilution and coflow tests in the original objectives were not carried out on the ISS.', 'page': 8},
+        {'text': 'The latest indexed Task Book report, generated in February 2024, confirms that both flight rounds were complete and data analysis and numerical modeling continued afterward. The investigation’s long project dates are not the duration of ISS flame testing.', 'source_refs': [
+            {'document_id': '58b4bc6ec90598c62ddac353149a88ca', 'page': 2}, dict(FLAME_DESIGN_REF, page=3)]},
+    ],
+    'materials': [
+        {'text': 'Ethylene (C2H4) was the fuel for both normal and inverse science tests, with nitrogen (N2) as diluent and oxygen (O2) as oxidizer. Propane (C3H8) was used for the additional normal-flame calibration day. The inverse table identifies ethylene through XC2H4 rather than a separate Fuel column.', 'page': 3},
+        {'text': 'The porous stainless-steel spherical burner was 6.35 mm (0.25 inch) in diameter. Serial numbers 1002 and 1003 distinguish burners, not different diameters. The second burner replaced the first partway through round 1.', 'source_refs': [dict(FLAME_DESIGN_REF, page=19), dict(FLAME_DESIGN_REF, page=24), dict(FLAME_DESIGN_REF, page=25)]},
+    ],
+    'conditions': [
+        {'text': 'Normal flames: fuel/nitrogen leaves the burner into an oxygen/nitrogen chamber atmosphere. Xfuel is the burner fuel mole fraction; XO2 (init) and XO2 (final) are chamber oxygen mole fractions. Multiply a mole fraction by 100 to express percent.', 'source_refs': [dict(FLAME_DESIGN_REF, page=25), {'document_id': FLAME_DESIGN_NORMAL, 'csv_record': 1}]},
+        {'text': 'Inverse flames: oxygen/nitrogen leaves the burner into an ethylene/nitrogen chamber atmosphere. XO2 is burner-supply oxygen, not ambient chamber oxygen. XC2H4 initial/final describes chamber ethylene mole fraction.', 'source_refs': [dict(FLAME_DESIGN_REF, page=25), {'document_id': FLAME_DESIGN_INVERSE, 'csv_record': 1}]},
+        {'text': 'pinit, pfinal and pmean are initial, final and mean chamber pressure in atmospheres (atm). One atm is 101.325 kPa. The finite-volume chamber pressure can change during a test; initial pressure must not be described as pressure held constant throughout.', 'source_refs': [dict(FLAME_DESIGN_REF, page=18), {'document_id': FLAME_DESIGN_INVERSE, 'csv_record': 1}]},
+        {'text': 'Flow columns use mg/s, not airflow velocity. For normal flames, mtot is mfuel plus mN2; for inverse flames it is mO2 plus mN2. The values describe burner-supply mass flow. Tad is the adiabatic flame temperature for the mixture, not a measured flame or burner temperature; mean Zst is stoichiometric mixture fraction.', 'source_refs': [dict(FLAME_DESIGN_REF, page=4), {'document_id': FLAME_DESIGN_NORMAL, 'csv_record': 1}, {'document_id': FLAME_DESIGN_INVERSE, 'csv_record': 1}]},
+        {'text': 'Changing-flow entries remain labeled RAMP or RAMPED. LOW O2 entries are qualified source descriptions. A fixed flow, oxygen level, Tad or Zst cannot be recovered from these labels alone.', 'source_refs': [
+            {'document_id': FLAME_DESIGN_NORMAL, 'csv_record': 2}, {'document_id': FLAME_DESIGN_INVERSE, 'csv_record': 88}]},
+    ],
+    'measurements': [
+        {'text': 'The CSVs provide pressures, reactant compositions, mass flows, Tad and Zst. They do not include burn duration, measured gas-temperature histories, flame size, soot-volume-fraction profiles or an extinction outcome for each row. Findings about those quantities come from the cited analyses.', 'source_refs': [
+            {'document_id': FLAME_DESIGN_NORMAL, 'field': 'Normal-flame table columns'},
+            {'document_id': FLAME_DESIGN_INVERSE, 'field': 'Inverse-flame table columns'}]},
+        {'text': 'The reported science diagnostics include color video, thin-filament pyrometry for gas temperature, thermocouples for burner temperature, and photomultiplier measurements of flame emission. These are distinct quantities and instruments.', 'page': 26},
+        {'text': 'The raw collection includes DataCam HOBJ images and converted TIF images, intensified/HiBMs TIF images, TS operations video and comma-delimited non-imaging data. Gas chromatography was used on some days and produced ASCII text files. The raw image and telemetry files are described in the report; they are not among the nine documents indexed here.', 'page': 93},
+    ],
+    'findings': [
+        {'text': 'For the atmospheric-pressure ethylene spherical-flame experiments and model analyzed in the report, radiative extinction occurred at a critical gas temperature of about 1130 K. This result must not be extended to all fuels, pressures or geometries, or read as a measured temperature in every CSV row.', 'page': 25},
+        {'text': 'That same atmospheric-pressure analysis identified critical reactant mass fluxes of 0.2 g/m²/s based on fuel for normal flames and 0.68 g/m²/s based on oxygen for inverse flames. Mass flux per unit flame area is different from the burner mass flow in mg/s listed in the tables.', 'page': 25},
+        {'text': 'Flames exhibiting steady-state behavior were observed on the ISS for up to 870 seconds under a narrow range of conditions. Simulations extended beyond 100,000 seconds; that longer duration is a model result, not an ISS burn time.', 'page': 25},
+        {'text': 'The analyzed flames grew as radiation losses increased and temperature fell. Before complete extinction, some flames entered an oscillatory mode with local extinction and re-formation. Small flames with lower radiation losses could show quasi-steady behavior, with test duration limited by burner heating.', 'page': 26},
+    ],
+    'limitations': [
+        {'text': 'The investigators report limitations in gas-temperature and soot-volume-fraction diagnostics and calibrations. The final report presents preliminary analyses; the later Task Book confirms that analysis continued after flight testing.', 'source_refs': [dict(FLAME_DESIGN_REF, page=18), {'document_id': '58b4bc6ec90598c62ddac353149a88ca', 'page': 2}]},
+        {'text': 'The burners did not always produce flames centered on the sphere or perfectly spherical flames, especially at high flow. Replacing burner 1002 with 1003 improved the symmetry but did not eliminate the problem.', 'source_refs': [dict(FLAME_DESIGN_REF, page=18), dict(FLAME_DESIGN_REF, page=19)]},
+        {'text': 'The TFP fiber array was misaligned during the first four inverse test days. Testing stopped after the issue was recognized on 27 December 2021; the array was aligned on 17 January 2022. Those images need appropriate interpretation before extracting temperature profiles.', 'page': 19},
+        {'text': 'The round-1 standard radiometer array saturated in nearly every test. The round-2 CFI-G array provided satisfactory measurements. Mass-flow controllers also sometimes produced unsteady or unintended flows.', 'page': 19},
+        {'text': 'Converted DataCam images were not color-balanced, dark-frame-subtracted or corrected for dead-pixel hot spots. The report warns that standard bilinear demosaicing averages pixels on and off TFP fibers and is detrimental to extracting temperature profiles.', 'page': 93},
+        {'text': 'For all 20 propane records, final oxygen and final/mean pressure are blank. These remain unknown; initial values cannot fill them. Ramped and LOW O2 entries likewise do not define one numerical condition.', 'source_refs': [
+            {'document_id': FLAME_DESIGN_NORMAL, 'csv_record': 188}, {'document_id': FLAME_DESIGN_NORMAL, 'csv_record': 207}, {'document_id': FLAME_DESIGN_INVERSE, 'csv_record': 88}]},
+        {'text': 'Inverse CSV row 86 identifies Test 22042M1, which would mean 11 February 2022, but places it in Day 6 among 22024 tests (24 January). The chamber-composition sequence also continues between its neighbors. This suggests a transposed identifier, but the indexed sources do not establish the correct ID; the original is retained and must not establish an extra test date.', 'source_refs': [
+            {'document_id': FLAME_DESIGN_INVERSE, 'csv_record': 85}, {'document_id': FLAME_DESIGN_INVERSE, 'csv_record': 86}, {'document_id': FLAME_DESIGN_INVERSE, 'csv_record': 87}, dict(FLAME_DESIGN_REF, page=24)]},
+        {'text': 'Source records and report ignition counts differ: the normal CSV has 13 entries for 24 June 2019 versus 14 ignitions in the report, and 20 propane entries for 28 October 2021 versus 18 ignitions. The CSV has no ignition-outcome field to reconcile these differences. The 327 rows therefore are not a verified total of successful ignitions.', 'source_refs': [
+            dict(FLAME_DESIGN_REF, page=24), {'document_id': FLAME_DESIGN_NORMAL, 'csv_record': 105}, {'document_id': FLAME_DESIGN_NORMAL, 'csv_record': 188}]},
+    ],
+}
+
+
+SFLAME_REPORT_REF = {
+    'document_id': '248417ae9740bc20a97ad5d681cd9c1f',
+    'content_hash': '2056f8f85291f49c1446981541e4689dc6df8ad02ef7ac0fddbd84e956968a3b',
+    'page': 29,
+}
+SFLAME_LOG = '23f6b437c02f7b93c77c042613c0daa3'
+SFLAME_GUIDE = 'f30292526614a98537c1e7f936cbddc1'
+REVIEWED['PSI-23'] = {
+    'text': 'The s-Flame report describes kinetic extinction at low flow and radiative extinction at high flow for the studied nitrogen-diluted ethylene and methane flames; the interpretation depends on the fuel, diluent and test conditions.',
+    'source_refs': [SFLAME_REPORT_REF],
+    'design_question': 'How should extinction models account for fuel composition, diluent and flow history?',
+    'design_connection': 'The observations provide evidence for checking microgravity flame-extinction models. They do not measure the effectiveness of a suppression device or establish a universal oxygen limit.',
+    'design_limit': 'Several hydrogen and helium-diluted cases had inconclusive extinction mechanisms or ended at a burner-temperature limit. Their behavior cannot be treated as a demonstrated suppression threshold.',
+}
+REPORT_DETAILS['PSI-23'] = {
+    'document_id': SFLAME_REPORT_REF['document_id'],
+    'content_hash': SFLAME_REPORT_REF['content_hash'],
+    'replace_measurements': True,
+    'reviewed_limitations_only': True,
+    'record_description': 'Each row summarizes a test day, not one flame. The 18 dated entries contain 276 nominally sustained ignitions from 11 September 2019 to 8 July 2020: 145 in nine nitrogen-diluted test days and 131 in nine helium-diluted test days. Test Day uses YYDDD (year and day of year, GMT). Atmospheric compositions are approximate day-level descriptions; a row can list more than one oxygen level.',
+    'overview': [
+        {'text': 's-Flame studied the structure, extinction and near-limit behavior of gas diffusion flames issuing from a porous spherical burner into a quiescent oxidizing atmosphere on the ISS. Round 1 ran in September 2019–January 2020; round 2 ran in May–July 2020 with helium replacing nitrogen as diluent.', 'page': 3},
+        {'text': 'The experiment produced transient and quasi-steady flames using hydrogen, methane, hydrogen/methane blends and ethylene. Sustained sooty flames and the proposed inherent pulsating instability were not established by the reported analyses; those original objectives must not be read as completed observations.', 'page': 31},
+    ],
+    'materials': [
+        {'text': 'The fuels were hydrogen (H2), methane (CH4), hydrogen/methane blends and ethylene (C2H4), with nitrogen (N2) or helium (He) dilution and oxygen as oxidizer. Fuel Bottle identifies the supplied mixture; further dilution at the burner can give a different composition during a test.', 'source_refs': [dict(SFLAME_REPORT_REF, page=24), dict(SFLAME_REPORT_REF, page=27)]},
+        {'text': 's-Flame used a porous spherical gas burner 6.35 mm in diameter. This is burner hardware, not a solid sample. Its flow was not perfectly symmetric at high flow rates.', 'source_refs': [dict(SFLAME_REPORT_REF, page=10), dict(SFLAME_REPORT_REF, page=17)]},
+    ],
+    'conditions': [
+        {'text': 'The daily log contains 18 days and 276 nominally sustained ignitions, split into 145 nitrogen-diluted and 131 helium-diluted ignitions. The helium campaign begins on 11 May 2020. These are daily totals, not 276 separately tabulated condition sets.', 'source_refs': [dict(SFLAME_REPORT_REF, page=24), {'document_id': SFLAME_GUIDE, 'page': 4}]},
+        {'text': 'Fuel flowed from the spherical burner into an oxygen/diluent atmosphere. The log lists nominal ambient oxygen near 21% or 30%, sometimes both on one day. These percentages are chamber-atmosphere descriptions, not fuel-bottle composition or exact per-flame oxygen readings.', 'page': 24},
+        {'text': 'The atmosphere was nominally near 1 atm, but chamber pressure increased and oxygen decreased as combustion changed the finite-volume chamber contents. The daily table does not provide pressure or the precise oxygen concentration for each flame.', 'page': 24},
+        {'text': 'Bottle composition and test mixture are different quantities. For example, the 6 January bottle lists 44.4% H2 with CH4, while the report describes tests with 20% H2 / 25% CH4 / 55% N2 after additional nitrogen dilution.', 'source_refs': [dict(SFLAME_REPORT_REF, page=24), dict(SFLAME_REPORT_REF, page=27)]},
+    ],
+    'measurements': [
+        {'text': 'The daily summary provides dates, approximate atmospheres, fuel bottles and ignition counts. Numerical flame temperatures, extinction flow rates, oscillation frequencies and species profiles are not contained in these 18 rows.', 'source_refs': [{'document_id': SFLAME_LOG, 'field': 'Daily summary table columns'}]},
+        {'text': 'The report describes thin-filament pyrometry, thermocouples, radiometers and photomultiplier measurements of flame emission, including OH* and CH*. Species distributions were not explicitly measured; interpreting optical signals as species information requires further analysis.', 'source_refs': [dict(SFLAME_REPORT_REF, page=18), dict(SFLAME_REPORT_REF, page=31)]},
+        {'text': 'Image data include DataCam HOBJ images; CFI, HiBMs and ultraviolet-camera TIF images; and ground-recorded TS video. Non-imaging measurements are stored in per-test CSV files. These raw records are described by the indexed reports, not imported as numerical rows in this daily table.', 'page': 106},
+        {'text': 'The data-interpretation guide explains that raw non-imaging signals require conversion from voltages to engineering units. Sampling is 125 Hz; the electric-field and ion-current channels belong to other ACME functionality and should be ignored for s-Flame.', 'source_refs': [{'document_id': SFLAME_GUIDE, 'page': 7}]},
+    ],
+    'findings': [
+        {'text': 'For the studied nitrogen-diluted ethylene and methane flames, the report describes kinetic extinction during flow reduction and radiative extinction at higher flow as flames expanded. The observations depend on mixture and flow history and do not define one universal extinction threshold.', 'page': 29},
+        {'text': 'Ethylene flames that normally tend to soot on Earth did not maintain inherent sooting in these microgravity tests. Soot formed during forced ignition and then dissipated, including in the reported nitrogen- and helium-diluted cases.', 'page': 30},
+        {'text': 'Nitrogen-diluted hydrogen flames could remain quasi-steady until the test timed out; radiative extinction was not observed in those cases. Kinetic extinction during flow reduction was suggested but required further analysis.', 'source_refs': [dict(SFLAME_REPORT_REF, page=27), dict(SFLAME_REPORT_REF, page=30)]},
+        {'text': 'Replacing nitrogen with helium changed ignition behavior and the apparent extinction limits. Some helium-diluted flames expanded to radiative extinction, while other cases ended at hardware limits or had inconclusive mechanisms. The report calls for further analysis rather than a single numerical helium-versus-nitrogen comparison.', 'page': 30},
+    ],
+    'limitations': [
+        {'text': 'The 29 July 2021 report presents preliminary results with analysis still underway. In particular, species distributions were not explicitly measured, and some extinction mechanisms remained tentative.', 'source_refs': [dict(SFLAME_REPORT_REF, page=1), dict(SFLAME_REPORT_REF, page=31)]},
+        {'text': 'High burner flow could shift the flame away from the burner center, distort its shape and cause local quenching near the supply tube. This limits ideal spherical-flame interpretation.', 'page': 17},
+        {'text': 'Mass-flow controllers sometimes delivered unintended or fluctuating flow, especially at small fractions of maximum capacity. These perturbations affected optical signals and could complicate interpretation of flame oscillations.', 'page': 18},
+        {'text': 'A large fraction of 13 September 2019 image data was lost. DataCam images from 18 December were misformatted, prompting a makeup day on 24 January. Dim hydrogen flames were also difficult to image, limiting assessment of three-dimensional symmetry.', 'page': 18},
+        {'text': 'Helium-diluted flames were difficult to ignite. Some tests used about 30% rather than the planned 21% oxygen, which limits direct comparisons between test cases. A planned hydrogen/methane/nitrogen blend was unavailable after a fuel-bottle leak.', 'source_refs': [dict(SFLAME_REPORT_REF, page=17), dict(SFLAME_REPORT_REF, page=18)]},
+        {'text': 'Some helium-diluted tests stopped automatically when the burner reached 250°C. That is a hardware cutoff, not the flame temperature or proof of radiative or kinetic extinction. The makeup day on 8 July also included exploratory reduced-oxygen tests beyond the daily log’s nominal oxygen list.', 'source_refs': [dict(SFLAME_REPORT_REF, page=28), dict(SFLAME_REPORT_REF, page=29)]},
+        {'text': 'Wavy or oscillatory flame surfaces were observed near extinction, but the hypothesized inherent pulsating instability was not conclusively established. Some disturbances were likely related to heat loss and imperfect fuel supply near the burner tube.', 'page': 31},
+        {'text': 'Raw voltages cannot be interpreted directly as calibrated temperatures, pressures or radiation. The guide recommends the CIR chamber-calculator pressure over the older ACME pressure-transducer channel and explains the additional camera and instrument conversions needed for quantitative analysis.', 'source_refs': [{'document_id': SFLAME_GUIDE, 'page': 7}, {'document_id': SFLAME_GUIDE, 'page': 19}]},
+    ],
+}
+
+
+BASS_REPORT_REF = {
+    'document_id': 'e1bdae6d0d8b389ccf7709d3eb409185',
+    'content_hash': 'fd5e89467bddd426e40081311f0b36541aac6a29236b2d3fc3758a901bc8c072',
+    'page': 22,
+}
+BASS_LOG = '934b981f07df7511543221a5408475c1'
+BASS_MATRIX = 'cab6159390f5d4ee3d56b488cd3c111a'
+BASS_FABRIC = '7ac756e58b0db10d84b02e19459b8d79'
+REVIEWED['PSI-26'] = {
+    'text': 'BASS observed strong sensitivity of solid-fuel flame behavior to low airflow, with different responses for thin fabrics and heated thicker fuels. Some heated PMMA flames resisted the available nitrogen jet.',
+    'source_refs': [BASS_REPORT_REF, dict(BASS_REPORT_REF, page=55)],
+    'design_question': 'How should material screening account for airflow, sample geometry and fuel preheating?',
+    'design_connection': 'The observations support comparing material behavior under relevant flow and thermal conditions. A small dim flame or a material’s name alone does not establish how a different spacecraft configuration will burn.',
+    'design_limit': 'These were small wind-tunnel specimens and particular nitrogen-jet conditions. The results do not certify a material or establish general suppression-system performance.',
+}
+REPORT_DETAILS['PSI-26'] = {
+    'document_id': BASS_REPORT_REF['document_id'],
+    'content_hash': BASS_REPORT_REF['content_hash'],
+    'conditions_view': 'source_tables',
+    'replace_measurements': True,
+    'reviewed_limitations_only': True,
+    'record_description': 'This table contains 122 source rows: 121 non-maintenance test entries and one soot-cleaning activity. Failed ignition attempts and repeated burns remain in the log. Test # is a matrix identifier; As Run Test # is an operational sequence label and is also reused in places. Sample # identifies the specimen and can recur across burns. Use the source row and date together with these labels; none alone is a unique physical-test identifier. Some date/GMT conflicts remain unresolved, as described below.',
+    'overview': [
+        {'text': 'BASS studied solid-material burning and nitrogen-jet suppression on the ISS during 2012–2013. It used a small wind tunnel in the Microgravity Science Glovebox, with opposed-flow, concurrent-flow and wake-burning configurations. This is the original BASS investigation, separate from BASS-II.', 'source_refs': [dict(BASS_REPORT_REF, page=2), dict(BASS_REPORT_REF, page=7), dict(BASS_REPORT_REF, page=57)]},
+        {'text': 'The work examined thin fabrics, thicker acrylic fuels and wax samples, including how airflow and heat stored in the solid change flame growth and extinction. The report’s material and suppression observations apply to the tested specimens and configurations.', 'source_refs': [dict(BASS_REPORT_REF, page=8), dict(BASS_REPORT_REF, page=55)]},
+    ],
+    'materials': [
+        {'text': 'The indexed log and report include SIBAL cotton/fiberglass fabric, PMMA (acrylic) spheres and slabs, Nomex fabrics, Ultem film, and paraffin/Japan-wax candles or slabs. Nomex-III and Nomex HT90-40 are different materials and must not be combined into one burn outcome.', 'source_refs': [dict(BASS_REPORT_REF, page=24), dict(BASS_REPORT_REF, page=26), {'document_id': BASS_LOG, 'field': 'Fuel Sample Material column'}]},
+        {'text': 'The fabric paper describes SIBAL as 75% cotton by mass with the remainder fiberglass. Its exposed strips were 8.5 cm long and 1 or 2 cm wide. The sphere labels refer to nominal diameters; a specimen’s shape and size can change when it is burned repeatedly.', 'source_refs': [{'document_id': BASS_FABRIC, 'field': 'Methods · sample construction'}, {'document_id': BASS_MATRIX, 'field': 'as run matrix · row 25; sphere size after repeated burns'}]},
+    ],
+    'conditions': [
+        {'text': 'The CSV provides dates, GMT day labels, matrix test numbers, as-run labels, sample numbers and material descriptions. It does not contain airflow, oxygen, pressure, nitrogen flow, burn duration or an ignition-outcome column for each entry. Those details require the as-run matrix and the cited analyses.', 'source_refs': [{'document_id': BASS_LOG, 'field': 'Source table columns'}]},
+        {'text': 'The wind tunnel could impose airflow up to 40 cm/s; that is apparatus capability, not the speed assigned to every row. Opposed and concurrent spread depend on the orientation of ignition and airflow, while wake flames burn behind a specimen.', 'source_refs': [dict(BASS_REPORT_REF, page=2), dict(BASS_REPORT_REF, page=7), dict(BASS_REPORT_REF, page=53)]},
+        {'text': 'Tests used cabin air or nitrogen-diluted air. The report includes PMMA examples at 17% oxygen and material tests near 21–22% oxygen. These cited case conditions must not be filled into every CSV row as one common atmosphere.', 'source_refs': [dict(BASS_REPORT_REF, page=26), dict(BASS_REPORT_REF, page=29), dict(BASS_REPORT_REF, page=52)]},
+        {'text': 'The as-run matrix distinguishes Fan display, Air display, nitrogen controls and observations. Flow was sometimes changed repeatedly within a burn. A control setting, a list of changing readings, or an Air display of zero is not automatically a measured constant flow of zero cm/s.', 'source_refs': [{'document_id': BASS_MATRIX, 'field': 'as run matrix · row 3 headers and row 11 observations'}]},
+    ],
+    'measurements': [
+        {'text': 'Video and digital still images provided most of the flight data. The analyses describe flame appearance, spread rate, growth and extinction dynamics. The six-column CSV is an index to those experiments, not a numerical flame-temperature or spread-rate dataset.', 'source_refs': [dict(BASS_REPORT_REF, page=8), {'document_id': BASS_LOG, 'field': 'Source table columns'}]},
+        {'text': 'The already indexed as-run spreadsheet transcription contains operational readings and notes, including flow changes, oxygen/pressure entries, camera settings, ignition failures and extinction actions. Camera settings and radiometer display/gain fields are not calibrated flame temperatures.', 'source_refs': [{'document_id': BASS_MATRIX, 'field': 'as run matrix · headers and test observations'}]},
+        {'text': 'Some figures are numerical simulations rather than flight measurements. For example, the report’s sequence of computed flame growth and reaction-rate fields must not be read as measured temperatures or outcomes for the CSV entries.', 'source_refs': [dict(BASS_REPORT_REF, page=32), dict(BASS_REPORT_REF, page=33), dict(BASS_REPORT_REF, page=47)]},
+    ],
+    'findings': [
+        {'text': 'For the tested thin fabric, opposed-flow spread reached a steady rate and was fastest at an intermediate airflow. In the reported concurrent-flow cases, spread rate increased with flow. These trends concern the tested fabric and geometry, not all solid fuels.', 'page': 22},
+        {'text': 'Quenching extinction was observed near 1 cm/s for the thin-fuel tests. Other BASS specimens could sustain dim blue flames below 1 cm/s, so this observation does not establish a universal airflow extinction limit.', 'source_refs': [dict(BASS_REPORT_REF, page=22), dict(BASS_REPORT_REF, page=54)]},
+        {'text': 'Some heated PMMA flames were weakened but not extinguished by the available nitrogen jet. One wake-flame example used 500 cc/min nitrogen without complete extinction. Stored heat in thicker solids affected the response; this does not show that nitrogen suppression always fails.', 'source_refs': [dict(BASS_REPORT_REF, page=52), dict(BASS_REPORT_REF, page=53), dict(BASS_REPORT_REF, page=55)]},
+        {'text': 'Ultem and Nomex HT90-40 did not sustain burning under the reported ISS conditions near 21–22% oxygen and about 15 cm/s flow, while Nomex-III did burn. The comparison is specimen- and condition-specific; it is not a blanket pass/fail classification for those material families.', 'page': 26},
+        {'text': 'The report describes small acrylic-slab flames persisting for more than five minutes before self-extinguishing. Low visible luminosity therefore did not imply an extinguished flame, and increased airflow could substantially change the burning behavior.', 'page': 55},
+    ],
+    'limitations': [
+        {'text': 'The CSV has 122 entries, including one maintenance activity, whereas the flight-results presentation reports 41 samples and 115 burns. The CSV contains 116 distinct nonblank as-run labels and 40 distinct nonblank sample labels. These counts are not equivalent, and the sources do not provide a complete reconciliation of successful burns, attempts and reused labels.', 'source_refs': [dict(BASS_REPORT_REF, page=8), {'document_id': BASS_LOG, 'field': 'Identifier columns and source-row counts'}]},
+        {'text': 'Some dates and GMT labels conflict in both the CSV and as-run matrix. Row 99 lists 26 April 2013 with GMT 113, which corresponds to 23 April. Row 117 lists 1 June with GMT 137 (17 May), and rows 118–122 list 1 June with GMT 150 (30 May). The available evidence does not determine which field is correct in these cases.', 'source_refs': [{'document_id': BASS_LOG, 'csv_record': 99}, {'document_id': BASS_LOG, 'csv_record': 117}, {'document_id': BASS_LOG, 'csv_record': 118}, {'document_id': BASS_MATRIX, 'field': 'as run matrix · rows 106 and 124–129'}]},
+        {'text': 'Repeated test, sample or as-run numbers cannot be treated as duplicate rows to delete. Examples include as-run 24 for two failed ignition attempts and as-run 85 for two burns. Reused sample numbers can also describe a specimen already altered and preheated by earlier burning.', 'source_refs': [{'document_id': BASS_MATRIX, 'field': 'as run matrix · rows 27–28 and 94–95'}]},
+        {'text': 'The log includes ignition failures and a soot-cleaning activity. A row’s presence therefore does not prove sustained combustion, extinction by nitrogen, or a successful material test.', 'source_refs': [{'document_id': BASS_LOG, 'csv_record': 66}, {'document_id': BASS_MATRIX, 'field': 'as run matrix · rows 17, 27–28 and 69'}]},
+        {'text': 'Some material labels are incomplete, such as “1 cm sphere” or “2 cm sphere.” The label alone does not establish the polymer, current diameter after previous burns, or flow configuration. Fuller specimen identification requires the sample/test context in the as-run matrix.', 'source_refs': [{'document_id': BASS_LOG, 'csv_record': 43}, {'document_id': BASS_MATRIX, 'field': 'as run matrix · repeated specimen observations'}]},
+        {'text': 'The thin-fabric paper notes that sample length was limited by the small wind tunnel. Steady concurrent-flow spread was reached only for low-flow cases and the short specimens available. Its trends must not be extrapolated to arbitrary fuel lengths or ventilation.', 'source_refs': [{'document_id': BASS_FABRIC, 'field': 'Abstract · concurrent-flow specimen and flow limits'}]},
+        {'text': 'The model comparison identifies remaining uncertainty in solid-phase chemical kinetics and flame standoff distance. Computed flame fields and adjusted model parameters are not independently measured per-test results.', 'page': 47},
+    ],
+}
+
+
+BASS2_REPORT_REF = {
+    'document_id': 'c7c733cd1e27bc37b1e98b4ebb48131a',
+    'content_hash': '5ffa911fd9b6356f204646003fb9342e341810dcdfdf5cb15756e7f01ec5f770',
+    'page': 11,
+}
+BASS2_LOG = '24abdb838266008fc35e640ce4e59a14'
+BASS2_MATRIX = 'af6dc06984356bffbeca07942d7abae4'
+BASS2_FAQ = '6aebba4e8c62d9c55696716bf302af7a'
+REVIEWED['PSI-25'] = {
+    'text': 'BASS-II found that solid-fuel flame spread and extinction depend on oxygen, airflow, geometry and thermal history. Low-flow quenching and high-flow blowoff are different extinction mechanisms.',
+    'source_refs': [dict(BASS2_REPORT_REF, page=72), dict(BASS2_REPORT_REF, page=108)],
+    'design_question': 'How should material screening distinguish ignition, sustained burning and extinction?',
+    'design_connection': 'The observations support checking oxygen, airflow direction, specimen dimensions and preheating together when comparing material-flammability tests.',
+    'design_limit': 'These small-duct experiments do not establish a universal oxygen limit or certify a material or suppression system. Ignition failure in one test does not establish inability to sustain an already developed flame.',
+}
+REPORT_DETAILS['PSI-25'] = {
+    'document_id': BASS2_REPORT_REF['document_id'],
+    'content_hash': BASS2_REPORT_REF['content_hash'],
+    'conditions_view': 'source_tables',
+    'replace_measurements': True,
+    'reviewed_limitations_only': True,
+    'record_description': 'The 129 source rows contain 126 entries from February–August 2014 and three documented Olson rod tests on 26 February 2016. They include unsuccessful ignition attempts and repeated burns of specimens. Test # combines a researcher prefix with a matrix label; a/b suffixes distinguish repeated runs. Sample # can recur. Rows are not a count of successful ignitions, and the table is grouped by researcher rather than ordered by date.',
+    'overview': [
+        {'text': 'BASS-II studied ignition, growth, spread and extinction of solid fuels in the ISS Microgravity Science Glovebox. Nitrogen dilution varied ambient oxygen, while a small wind tunnel varied ventilation speed and direction. This is distinct from the earlier BASS investigation.', 'page': 11},
+        {'text': 'The test matrix covers thin PMMA films, thick PMMA slabs, opposed-flow and concurrent/stagnation-flow rods, SIBAL fabric, three Nomex-III attempts and one Japan-wax candle. The indexed worksheet explicitly identifies the last three Olson tests as 2016 follow-up work; project start/end dates are not the duration of continuous flight testing.', 'source_refs': [dict(BASS2_REPORT_REF, page=13), dict(BASS2_REPORT_REF, page=54), {'document_id': BASS2_MATRIX, 'field': 'Olson worksheet · GMT header and rows 26–28'}]},
+    ],
+    'materials': [
+        {'text': 'PMMA is acrylic. Thin-film tests used nominal 100–400 micrometre thicknesses; thick-slab tests used 1–5 mm thicknesses and one- or two-sided burning. Rod diameters were nominally 6.35, 9.525 and 12.7 mm (¼, ⅜ and ½ inch), with clear and black variants. A separate specimen was a section of a 4-cm sphere.', 'source_refs': [dict(BASS2_REPORT_REF, page=21), dict(BASS2_REPORT_REF, page=55), dict(BASS2_REPORT_REF, page=63)]},
+        {'text': 'SIBAL is a 75% cotton / 25% fiberglass fabric. The detailed analyses describe widths of 1.2 and 2.2 cm, whereas operational labels commonly shorten these to 1 and 2 cm. Width conventions and exposed dimensions must be checked against the analysis before calculating spread rates or heat fluxes.', 'source_refs': [dict(BASS2_REPORT_REF, page=65), dict(BASS2_REPORT_REF, page=102), {'document_id': BASS2_LOG, 'field': 'Fuel Sample Material column'}]},
+        {'text': 'A reused specimen may already be shortened, melted or preheated. Sample labels and nominal dimensions do not establish its shape or temperature at the beginning of every subsequent run.', 'source_refs': [dict(BASS2_REPORT_REF, page=103), dict(BASS2_REPORT_REF, page=118)]},
+    ],
+    'conditions': [
+        {'text': 'Calibrated initial/final O2 columns are oxygen percent by volume, not fractions or a constant atmosphere throughout a burn. The CSA-CP oxygen sensor was corrected against the ISS Major Constituents Analyzer. The report describes 0.1 percentage-point sensor resolution; calibrated values still depend on valid underlying readings.', 'source_refs': [dict(BASS2_REPORT_REF, page=14), {'document_id': BASS2_FAQ, 'field': 'Lines 45–49 · oxygen calibration'}]},
+        {'text': 'Air display is duct velocity in cm/s with an approximately one-minute response time. Fan display is ten times fan voltage, and some entries also contain potentiometer settings. Neither a fan setting nor an Air display of zero proves zero instantaneous flow at the flame. Changing-flow sequences and annotations remain text.', 'source_refs': [dict(BASS2_REPORT_REF, page=12), dict(BASS2_REPORT_REF, page=13), {'document_id': BASS2_FAQ, 'field': 'Lines 37–43 · fan and air displays'}]},
+        {'text': 'Flow restrictor identifies an inlet plate configuration: 0 gives the highest available range and 2 the lowest. Apparatus capability reached about 55 cm/s without restrictors and about 35 cm/s with two; these are not speeds assigned to every row.', 'source_refs': [dict(BASS2_REPORT_REF, page=12), {'document_id': BASS2_FAQ, 'field': 'Flow restrictor definitions'}]},
+        {'text': 'Actual Date is the experiment date; GMT is the day of year. The FAQ warns that the video display date was one day ahead because its computer did not account for a leap year. Use the actual-date column rather than shifting it to match the video.', 'source_refs': [{'document_id': BASS2_FAQ, 'field': 'Lines 21–27 · actual date, video date and GMT'}]},
+        {'text': 'The PI groups studied different configurations: Bhattacharjee thin opposed films; Miller opposed slabs; Fernandez-Pello opposed rods; Olson concurrent/stagnation rods; and T’ien mainly concurrent fabric plus a spherical section. A condition or extinction observation in one group must not be assigned to every other group.', 'source_refs': [{'document_id': BASS2_FAQ, 'field': 'Lines 11–23 · researcher and specimen groups'}]},
+    ],
+    'measurements': [
+        {'text': 'The 17-column CSV provides identifiers, dates, material descriptions, operating displays, camera frame counts and before/after gas readings. It does not contain a calibrated flame-temperature history, burn-time column, spread-rate column or complete ignition/extinction classification. Those results come from the report, images and detailed matrix observations.', 'source_refs': [{'document_id': BASS2_LOG, 'field': 'Source table columns'}, dict(BASS2_REPORT_REF, page=64)]},
+        {'text': 'CO is a CSA-CP reading in ppm; CO2 is a CDM reading in percent by volume. These are concentrations in the MSG working volume, not emission rates, fuel mass loss or concentrations throughout the ISS cabin. Initial background concentrations can carry over between runs until purging.', 'source_refs': [dict(BASS2_REPORT_REF, page=14), dict(BASS2_REPORT_REF, page=16)]},
+        {'text': 'Radiometer gain is an uncalibrated instrument setting, not flame temperature or heat-release rate. Total Frames Shot counts Nikon still images, including postburn photographs; it is not video frames, seconds or burn duration. The video overlay data rate is distinct from the camera frame rate.', 'source_refs': [{'document_id': BASS2_FAQ, 'field': 'Lines 41–49 · radiometer, video overlay and total frames'}, dict(BASS2_REPORT_REF, page=13)]},
+        {'text': 'Reported heat-release rates were estimated using oxygen consumption and burn times. Intermediate oxygen histories in the slab analysis were estimated by assuming a linear change between endpoints. Neither is an independent continuous measurement supplied by this CSV.', 'source_refs': [dict(BASS2_REPORT_REF, page=16), dict(BASS2_REPORT_REF, page=68)]},
+    ],
+    'findings': [
+        {'text': 'In the thin-PMMA opposed-flow tests, quenching occurred near 1 cm/s for the 100–300 micrometre films and about 1.5 cm/s for 400 micrometres at the stated conditions. The authors emphasize substantial low-speed calibration uncertainty; these are not universal extinction thresholds.', 'page': 21},
+        {'text': 'The three BASS-II Nomex-III attempts did not develop sustained spreading flames. The detailed log records brief flashes or ignition without spread, so “did not sustain burning” is more precise than saying no flame ever appeared. The Japan-wax candle did sustain burning, with changing flame shape as flow decreased.', 'source_refs': [dict(BASS2_REPORT_REF, page=54), dict(BASS2_REPORT_REF, page=113)]},
+        {'text': 'For the thick-PMMA slab tests, two-sided flames generally spread faster than one-sided flames, and increasing thickness generally reduced spread rate. Substrate and holder heat losses affected these comparisons; they cannot be reduced to a ranking of material names.', 'source_refs': [dict(BASS2_REPORT_REF, page=66), dict(BASS2_REPORT_REF, page=71)]},
+        {'text': 'In the studied concurrent/stagnation rod tests, ignition delays increased at low oxygen and reached about 230 seconds. Already developed flames could persist at lower oxygen than allowed sustained ignition of a cold rod. Ignition and extinction limits therefore describe different behavior.', 'page': 76},
+        {'text': 'The SIBAL fabric analysis found a low-flow quenching branch, with observed quenching velocities between 1 and 5 cm/s and higher quenching speed at lower oxygen. The narrower-sample limit was not resolved, and the lowest-oxygen boundary could not be determined accurately by varying flow alone.', 'page': 108},
+        {'text': 'The sensor analysis found incomplete combustion and estimated most heat-release rates below 100 W for these small fires. CO production depended on geometry and operating conditions. These are report analyses, not heat-release values measured in every CSV row.', 'source_refs': [dict(BASS2_REPORT_REF, page=16), dict(BASS2_REPORT_REF, page=19)]},
+    ],
+    'limitations': [
+        {'text': 'The report overview counts 126 tests, while the CSV has 129 entries including three explicitly documented 2016 Olson follow-up tests. The table also contains ignition failures and repeated specimen burns. Source-entry totals, sustained ignitions and the number of physical specimens are different quantities.', 'source_refs': [dict(BASS2_REPORT_REF, page=11), {'document_id': BASS2_MATRIX, 'field': 'Olson worksheet · GMT header and rows 26–28'}, dict(BASS2_REPORT_REF, page=104)]},
+        {'text': 'Final calibrated oxygen is unavailable for B2, P22a, P22b, T28a and T28b because required sensor/calibration inputs are missing. The report preserves unadjusted final readings of 19.1% for P22b and 19.7% for T28b, but these must not be substituted for calibrated endpoints without a verified correction. F3 likewise has no final sensor reading.', 'source_refs': [dict(BASS2_REPORT_REF, page=112), dict(BASS2_REPORT_REF, page=113), dict(BASS2_REPORT_REF, page=115), dict(BASS2_REPORT_REF, page=121)]},
+        {'text': 'The CSA-CP CO range was 0–1000 ppm with 1 ppm resolution. OR/over means above range, and >500 is a bound rather than an exact reading. Negative and sub-resolution decimal entries remain recorded instrument/source values, not valid negative or precisely resolved concentrations. They are excluded from quantitative measurement summaries.', 'source_refs': [dict(BASS2_REPORT_REF, page=14), dict(BASS2_REPORT_REF, page=117), {'document_id': BASS2_LOG, 'csv_record': 6}]},
+        {'text': 'The fabric analysis explicitly questions the oxygen readings for T1 and T2. Initial/final gas readings are endpoints, and changing flow, sensor lag and near-limit calibration uncertainty prevent treating them as exact constant conditions throughout the test.', 'source_refs': [dict(BASS2_REPORT_REF, page=104), dict(BASS2_REPORT_REF, page=21), dict(BASS2_REPORT_REF, page=68)]},
+        {'text': 'The short duct and samples limit fully steady concurrent spread and fine adjustment near quenching. Reused fabric samples have less unburned length and provide less quantitative information. Report chapters can also combine earlier BASS cases with BASS-II; Table 7.1 marks the four earlier BASS tests separately.', 'source_refs': [dict(BASS2_REPORT_REF, page=101), dict(BASS2_REPORT_REF, page=103), dict(BASS2_REPORT_REF, page=104), dict(BASS2_REPORT_REF, page=108)]},
+        {'text': 'A flow leak caused local door overheating during the long M5 burn; a later camera-connector fault interrupted video until repaired. These documented anomalies affect specific tests and diagnostics, rather than establishing that every BASS-II record is unreliable.', 'source_refs': [dict(BASS2_REPORT_REF, page=117), dict(BASS2_REPORT_REF, page=127)]},
+        {'text': 'Model predictions and preflight hardware-temperature estimates are separate from measured flight results. The slab model overpredicted spread rates, and the preflight thermal analysis used assumed worst-case conditions. Such calculated temperatures or heat-release fields must not be reported as CSV measurements.', 'source_refs': [dict(BASS2_REPORT_REF, page=69), dict(BASS2_REPORT_REF, page=71), dict(BASS2_REPORT_REF, page=129), dict(BASS2_REPORT_REF, page=134)]},
+        {'text': 'Some source versions disagree on individual details. For example, P22b final CO is 239 ppm in the CSV/worksheet but 236 ppm in the report appendix. The available evidence does not establish a replacement, so the recorded value is retained. A precise value should be checked against the original sensor record before further analysis.', 'source_refs': [{'document_id': BASS2_LOG, 'csv_record': 97}, {'document_id': BASS2_MATRIX, 'field': 'Fernandez-Pello worksheet · cell P25'}, dict(BASS2_REPORT_REF, page=115)]},
+    ],
 }

@@ -38,6 +38,7 @@ class ConditionProfile(BaseModel):
     columns: dict[str, ColumnMapping | None] = Field(default_factory=dict, max_length=100)
     id_column: str | None = Field(default=None, max_length=200)
     record_kind: Literal['reported_test', 'source_record', 'planned_record'] | None = None
+    source_record_values: dict[str, list[str]] = Field(default_factory=dict, max_length=100)
 
 
 def header_key(text):
@@ -169,8 +170,12 @@ def extract_records(units, profile=None):
             id_column = next((k for k in unit.row_data if header_key(k) in
                               {'test', 'test no', 'test number', 'flex test'}), None)
         external_id = str(unit.row_data[id_column]).strip() if id_column else f'CSV record {unit.location.get("csv_record", index+1)}'
+        kind = profile.record_kind or ('reported_test' if id_column else 'source_record')
+        if any(str(unit.row_data.get(column, '')).strip().casefold() in {value.strip().casefold() for value in values}
+               for column, values in profile.source_record_values.items()):
+            kind = 'source_record'
         records.append({'passage_index': index, 'external_id': external_id or f'CSV record {index+1}',
-                        'kind': profile.record_kind or ('reported_test' if id_column else 'source_record'),
+                        'kind': kind,
                         'values': values})
     return records, {'version': EXTRACTOR_VERSION, 'unmapped_columns': sorted(unknown),
                      'mappings': mapped, 'records': len(records)}

@@ -120,6 +120,7 @@ export type Citation = {
   id: string
   source_id: string
   title: string
+  file_name?: string | null
   url: string | null
   location: string
   /** not in contract; 'fixture' marks synthetic sources so they are always labeled */
@@ -264,7 +265,7 @@ export type EquipmentLink = {
   citation_ids: string[]
 }
 
-export type SummarySectionKey = 'objectives' | 'materials' | 'conditions' | 'measurements' | 'findings' | 'limitations'
+export type SummarySectionKey = 'objectives' | 'study_context' | 'materials' | 'conditions' | 'measurements' | 'findings' | 'limitations'
 
 export type InvestigationResponse = {
   investigation: Investigation
@@ -274,7 +275,18 @@ export type InvestigationResponse = {
   findings: Finding[]
   equipment_links: EquipmentLink[]
   citations: Citation[]
-  data_availability: { numeric_test_count: number; unavailable_reason: string | null }
+  data_availability: {
+    numeric_test_count: number
+    source_row_count?: number
+    reported_test_count?: number
+    source_record_count?: number
+    planned_record_count?: number
+    record_label?: string
+    record_description?: string
+    conditions_view?: 'source_tables' | null
+    measurement_summary_status?: 'available' | 'not_mapped'
+    unavailable_reason: string | null
+  }
   /** null when the PSI record states no research impacts */
   earth?: StudyEarth | null
 }
@@ -442,6 +454,7 @@ export type RankedStudy = {
 }
 
 export type ExperimentTable = { id: string; title: string; row_count: number; columns: { key: string; header: string }[] }
+export const EXPERIMENT_PAGE_SIZE = 10
 export type ExperimentPage = {
   items: { row_number: number; cells: Record<string, string | null> }[]
   columns: ExperimentTable['columns']; next_cursor: string | null; total_rows: number

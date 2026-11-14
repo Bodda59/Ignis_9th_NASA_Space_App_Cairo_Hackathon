@@ -22,10 +22,11 @@ def aggregate(records):
         definition = None
         for record in records:
             value = record['parameters'].get(key)
+            if value:
+                definition = value['field']
             if not value or value['state'] != 'usable':
                 states[value['state'] if value else 'missing'] += 1
                 continue
-            definition = value['field']
             canonical = {'category': value.get('category'), 'low': value.get('low'),
                          'high': value.get('high'), 'unit': definition.get('unit')}
             signature = digest(canonical)

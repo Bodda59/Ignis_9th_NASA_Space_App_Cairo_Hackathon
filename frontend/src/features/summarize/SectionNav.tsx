@@ -3,7 +3,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { cn } from '@/lib/cn'
 import { scrollToEl } from '@/lib/scroll'
 
-export type SectionDef = { id: string; title: string; count?: number }
+export type SectionDef = { id: string; title: string; count?: number; countUnit?: string }
 
 /** Sticky numbered section index with scroll-spy. */
 export function SectionNav({ sections }: { sections: SectionDef[] }) {
@@ -54,7 +54,7 @@ export function SectionNav({ sections }: { sections: SectionDef[] }) {
                 )}
                 <span className="font-mono text-[11px] tabular-nums">{String(i + 1).padStart(2, '0')}</span>
                 <span className="flex-1">{s.title}</span>
-                {s.count !== undefined && <span className="font-mono text-[11px] text-[var(--color-ink-faint)]">{s.count}</span>}
+                {s.count !== undefined && <span className="whitespace-nowrap font-mono text-[11px] text-[var(--color-ink-faint)]">{s.count}{s.countUnit ? ` ${s.countUnit}` : ''}</span>}
               </a>
             </li>
           )

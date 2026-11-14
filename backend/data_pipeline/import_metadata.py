@@ -86,6 +86,13 @@ def import_metadata(store, root):
                                            source={'csv_header': header},
                                            note='Quantity and unit explicitly stated in the source CSV column header.')
             if columns:
+                if 'Peak burner temp (K)' in columns and 'Peak burner Temp (C)' in doc['row_data']:
+                    columns['Peak burner temp (K)']['requires_column'] = 'Peak burner Temp (C)'
+                if doc['investigation_id'] == 'PSI-25':
+                    for header in ('Initial CO (ppm)', 'Final CO (ppm)'):
+                        if header in columns:
+                            columns[header].update(minimum=0, maximum=1000, excluded_values=['0.2', '0.3'],
+                                note='CSA-CP range is 0–1000 ppm with 1 ppm resolution. Negative readings, sub-resolution decimals and over-range entries are not quantitative concentrations; source text is retained.')
                 profile['measurement_columns'] = columns
                 conn.execute('SELECT pg_advisory_xact_lock(hashtextextended(%s,0))', (doc['investigation_id'],))
                 conn.execute('UPDATE rag_documents SET catalog_profile=%s WHERE id=%s AND catalog_profile IS DISTINCT FROM %s',

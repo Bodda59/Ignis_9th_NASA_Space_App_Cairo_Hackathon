@@ -3,6 +3,7 @@
  * types. Simple pass-through calls live directly in client.ts.
  */
 import type { Audience } from '@/features/audience/audience'
+import { EXPERIMENT_PAGE_SIZE } from './types'
 import { citation } from './citation'
 import { ApiError } from './errors'
 import { download, http, post } from './transport'
@@ -155,7 +156,7 @@ const studyPath = (id: string) => `/api/v1/investigations/${encodeURIComponent(i
 export const experimentTables = (id: string, signal?: AbortSignal) =>
   http<{ items: ExperimentTable[] }>(studyPath(id), { signal })
 export function experimentRows(id: string, table: string, cursor: string | null, columns: string[], signal?: AbortSignal) {
-  const query = new URLSearchParams({ limit: '10' })
+  const query = new URLSearchParams({ limit: String(EXPERIMENT_PAGE_SIZE) })
   if (cursor) query.set('cursor', cursor)
   columns.forEach((column) => query.append('columns', column))
   return http<ExperimentPage>(`${studyPath(id)}/${encodeURIComponent(table)}/rows?${query}`, { signal })

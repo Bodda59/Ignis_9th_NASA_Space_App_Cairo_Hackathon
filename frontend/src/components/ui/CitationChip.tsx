@@ -25,8 +25,14 @@ export function CitationChip({ id, footnote = false }: { id: string; footnote?: 
         type="button"
         onFocus={() => setOpen(true)}
         onBlur={() => setOpen(false)}
-        onClick={() => scrollToEl(document.getElementById(`${prefix}${id}`), -140)}
-        aria-label={`Source ${n}: ${citation.title}, ${citation.location}`}
+        onClick={() => {
+          const target = document.getElementById(`${prefix}${id}`)
+          const group = target?.closest('details')
+          if (group) group.open = true
+          target?.focus({ preventScroll: true })
+          scrollToEl(target, -140)
+        }}
+        aria-label={`Source ${n}: ${citation.file_name ?? citation.title}, ${citation.location}`}
         className={
           footnote
             ? `ml-0.5 align-super font-sans text-[0.68em] font-semibold leading-none underline-offset-2 hover:underline ${synthetic ? 'text-[var(--color-ember)]' : 'text-[var(--color-flame)]'}`
@@ -50,11 +56,11 @@ export function CitationChip({ id, footnote = false }: { id: string; footnote?: 
             className="absolute bottom-full left-1/2 z-30 mb-2 block w-72 -translate-x-1/2 rounded-xl border border-[var(--color-line-strong)] bg-[var(--color-panel)] p-3.5 text-left shadow-[0_20px_50px_-15px_rgba(0,0,0,0.9)]"
           >
             <span className="label block">Source {n}{synthetic && ' · synthetic'}</span>
-            <span className="mt-1.5 block text-[13px] leading-snug text-[var(--color-ink)]">{citation.title}</span>
+            <span className="mt-1.5 block break-words text-[13px] leading-snug text-[var(--color-ink)]">{citation.file_name ?? citation.title}</span>
             <span className="mt-1 block font-mono text-[11px] text-[var(--color-ink-dim)]">{citation.location}</span>
             {citation.url && (
               <span className="mt-2 inline-flex items-center gap-1 text-[11px] text-[var(--color-flame)]">
-                <ExternalLink className="h-3 w-3" /> Opens in source list
+                <ExternalLink className="h-3 w-3" /> Jump to reference
               </span>
             )}
           </motion.span>

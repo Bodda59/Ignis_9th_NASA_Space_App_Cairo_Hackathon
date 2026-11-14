@@ -25,6 +25,10 @@ TOPICS = {
 }
 # These links describe research topics, with source documents listed alongside each study.
 EQUIPMENT_TOPICS = {
+    'PSI-23': 'suppression',
+    'PSI-10': 'suppression',
+    'PSI-21': 'suppression',
+    'PSI-159': 'suppression',
     'PSI-47': 'smoke_detection', 'PSI-101': 'smoke_detection', 'PSI-102': 'smoke_detection',
     'PSI-69': 'suppression', 'PSI-20': 'material_controls', 'PSI-25': 'material_controls',
     'PSI-26': 'material_controls', 'PSI-98': 'material_controls', 'PSI-99': 'material_controls',

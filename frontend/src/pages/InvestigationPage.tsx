@@ -6,7 +6,7 @@ import { api } from '@/api/client'
 import type { CitedText, InvestigationResponse } from '@/api/types'
 import { ButtonLink } from '@/components/ui/Button'
 import { Cited } from '@/components/ui/CitationChip'
-import { CitationCtx, indexCitations, isSynthetic } from '@/components/ui/citations'
+import { CitationCtx, groupCitations, indexCitations, isSynthetic } from '@/components/ui/citations'
 import { EvidenceBadge, NotReported } from '@/components/ui/Evidence'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { StateMessage } from '@/components/ui/StateMessage'
@@ -44,23 +44,44 @@ export function InvestigationPage() {
 }
 
 function Detail({ data }: { data: InvestigationResponse }) {
-  const idx = useMemo(() => indexCitations(data.citations), [data.citations])
   const synthetic = data.citations.some(isSynthetic)
   const s = data.summary_sections
   const inv = data.investigation
+  const nasaSourceUrl = data.citations.find((c) => c.url === `https://psi.nasa.gov/physci/repo/data/investigations/${inv.id}`)?.url
+  const availability = data.data_availability
+  const grouped = !data.tests.length && ((availability.source_record_count ?? 0) + (availability.planned_record_count ?? 0) > 0)
+  const sourceConditions = grouped || availability.conditions_view === 'source_tables'
+  const citations = useMemo(() => {
+    const used = new Set([
+      ...Object.values(data.summary_sections).flat().flatMap((entry) => entry.citation_ids),
+      ...data.findings.flatMap((entry) => entry.citation_ids),
+      ...data.equipment_links.flatMap((entry) => entry.citation_ids),
+    ])
+    if (!sourceConditions) {
+      const testSources = new Set(data.tests.map((test) => test.source_id))
+      for (const citation of data.citations) {
+        if (testSources.has(citation.id) || testSources.has(citation.source_id)) used.add(citation.id)
+      }
+    }
+    return data.citations.filter((citation) => used.has(citation.id) || citation.location === 'Source document')
+  }, [data, sourceConditions])
+  const idx = useMemo(() => indexCitations(citations), [citations])
+  const sourceCount = groupCitations(citations).length
+  const conditionCount = sourceConditions ? availability.source_row_count : data.tests.length
+  const conditionTitle = sourceConditions ? 'Reported conditions' : 'Test conditions'
 
   const sections: SectionDef[] = useMemo(
     () => [
       { id: 'overview', title: 'Overview' },
-      { id: 'conditions', title: 'Test conditions', count: data.tests.length },
-      { id: 'findings', title: 'Findings', count: data.findings.length },
-      { id: 'limitations', title: 'Limitations', count: s.limitations.length },
+      { id: 'conditions', title: conditionTitle, count: conditionCount, countUnit: sourceConditions ? 'rows' : 'tests' },
+      { id: 'findings', title: 'Reviewed findings', count: data.findings.length },
+      { id: 'limitations', title: 'Source notes & limitations', count: s.limitations.length },
       { id: 'equipment', title: 'Safety design links', count: data.equipment_links.length },
       { id: 'earth', title: 'On Earth', count: data.earth?.themes.length ?? 0 },
-      { id: 'data', title: 'Data for modeling', count: data.data_availability.numeric_test_count },
-      { id: 'sources', title: 'Sources', count: data.citations.length },
+      { id: 'data', title: 'Source data & export', count: availability.source_row_count, countUnit: 'rows' },
+      { id: 'sources', title: 'Source references', count: sourceCount },
     ],
-    [data, s.limitations.length],
+    [data, s.limitations.length, conditionTitle, conditionCount, availability.source_row_count, sourceConditions, sourceCount],
   )
 
   // Links such as /investigations/PSI-25#earth land on the section once the study has loaded.
@@ -83,12 +104,17 @@ function Detail({ data }: { data: InvestigationResponse }) {
           <DetailSection id="overview" n={1} title="Overview">
             <div className="grid gap-10 xl:grid-cols-[1.4fr_1fr]">
               <div>
-                <p className="label mb-3">Objective</p>
+                <p className="label mb-3">{['PSI-10', 'PSI-20', 'PSI-23', 'PSI-159'].includes(inv.id) && s.study_context?.length ? 'Original objectives · includes proposed work' : 'Stated objectives'}</p>
                 <EntryList entries={s.objectives} large />
+                {!!s.study_context?.length && <div className="mt-8">
+                  <p className="label mb-3">Work conducted · from the report</p>
+                  <EntryList entries={s.study_context} />
+                </div>}
               </div>
               <dl className="grid content-start gap-px overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-line)]">
                 <Fact label="Materials & fuels"><EntryList entries={s.materials} /></Fact>
-                <Fact label="Measurements"><EntryList entries={s.measurements} /></Fact>
+                <Fact label="Reported measurements & diagnostics">{s.measurements.length ? <EntryList entries={s.measurements} /> :
+                  <p className="text-sm text-[var(--color-ink-dim)]">A measurement summary has not been prepared from the indexed sources. This does not mean the investigation recorded no measurements.</p>}</Fact>
                 <Fact label="Fuel type">
                   {inv.fuel_types.length ? <span className="capitalize">{inv.fuel_types.join(', ')}</span> : <NotReported />}
                 </Fact>
@@ -96,16 +122,22 @@ function Detail({ data }: { data: InvestigationResponse }) {
             </div>
           </DetailSection>
 
-          <DetailSection id="conditions" n={2} title="Test conditions">
+          <DetailSection id="conditions" n={2} title={conditionTitle}>
             <div className="mb-8">
-              <p className="label mb-3">Study-wide</p>
+              <p className="label mb-3">{grouped ? `${availability.record_label ?? 'Source records'} · reported values` : 'Reported across test records'}</p>
               <EntryList entries={s.conditions} />
             </div>
-            <p className="label mb-3">Per test</p>
-            <TestConditions tests={data.tests} unavailableReason={data.data_availability.unavailable_reason} />
+            {sourceConditions ? <>
+              <p className="mb-4 text-sm leading-relaxed text-[var(--color-ink-dim)]">{availability.record_description}</p>
+              <p className="label mb-3">{grouped ? availability.record_label ?? 'Source records' : availability.source_record_count ? 'Test and activity records' : 'Individual test records'} · source table</p>
+              <ExperimentTables key={inv.id} id={inv.id} />
+            </> : <>
+              <p className="label mb-3">Individual test records</p>
+              <TestConditions tests={data.tests} unavailableReason={availability.unavailable_reason} />
+            </>}
           </DetailSection>
 
-          <DetailSection id="findings" n={3} title="Findings" aside={<EvidenceBadge kind="documented" />}>
+          <DetailSection id="findings" n={3} title="Reviewed findings" aside={data.findings.length ? <EvidenceBadge kind="documented" /> : undefined}>
             {data.findings.length ? (
               <ol className="space-y-3">
                 {data.findings.map((f, i) => (
@@ -126,16 +158,15 @@ function Detail({ data }: { data: InvestigationResponse }) {
               </ol>
             ) : (
               <div className="flex items-center gap-3 rounded-2xl border border-dashed border-[var(--color-line-strong)] p-6">
-                <NotReported />
-                <span className="text-[13px] text-[var(--color-ink-dim)]">No reviewed findings for this study in the collection yet.</span>
+                <span className="text-[13px] text-[var(--color-ink-dim)]">A reviewed findings summary has not been prepared for this study. The indexed reports may contain results; use “Ask about this study” to explore them with citations.</span>
               </div>
             )}
             <p className="mt-4 text-[11px] text-[var(--color-ink-faint)]">
-              Documented findings only. For what they could mean for fire safety, ask the AI — interpretations are labeled separately.
+              These findings summarize the cited reports. Their meaning depends on the tested fuels and conditions; the design links below explain possible relevance to fire safety.
             </p>
           </DetailSection>
 
-          <DetailSection id="limitations" n={4} title="Limitations">
+          <DetailSection id="limitations" n={4} title="Source notes & limitations">
             <ul className="space-y-3">
               {s.limitations.map((l, i) => (
                 <li key={i} className="flex gap-3 text-[14px] leading-relaxed text-[var(--color-ink-dim)]">
@@ -154,12 +185,19 @@ function Detail({ data }: { data: InvestigationResponse }) {
             <EarthSection earth={data.earth} />
           </DetailSection>
 
-          <DetailSection id="data" n={7} title="Data for modeling">
-            <ExperimentTables key={inv.id} id={inv.id} />
+          <DetailSection id="data" n={7} title="Source data & export">
+            {sourceConditions ? <p className="text-sm leading-relaxed text-[var(--color-ink-dim)]">The {availability.source_row_count} source rows are shown with the reported conditions above. CSV and JSON exports use the same stored values as the table. {grouped ? 'Each row summarizes a day or a group of conditions; it does not identify one individual test.' : availability.source_record_count ? 'The table includes test records and other logged activities; its row count is not a count of successful ignitions.' : 'Each row identifies a test attempt; it is not a count of successful ignitions or confirmed cool flames.'} <a href={`#source-table-${inv.id}`} className="text-[var(--color-flame)] underline">View the source table and export controls</a>.</p> :
+              <ExperimentTables key={inv.id} id={inv.id} />}
           </DetailSection>
 
-          <DetailSection id="sources" n={8} title="Sources">
-            <SourcesList citations={data.citations} />
+          <DetailSection id="sources" n={8} title="Source references">
+            <p className="mb-4 text-sm leading-relaxed text-[var(--color-ink-dim)]">References are grouped into {sourceCount} sources. Expand a source to see its cited pages or rows, or click a citation anywhere on this page to reveal its exact reference.</p>
+            <SourcesList citations={citations} sharedSource={nasaSourceUrl ? inv.id === 'PSI-20' ? {
+              url: 'https://psi.nasa.gov/physci/repo/search?q=PSI-20&data_source=psi&data_type=investigation',
+              citationUrl: nasaSourceUrl,
+              label: 'Find PSI-20 on NASA PSI',
+              description: 'Investigation PSI-20 · Advanced Combustion via Microgravity Experiments – Burning Rate Emulator (ACME BRE).',
+            } : { url: nasaSourceUrl, label: `Open ${inv.acronym} investigation on NASA PSI` } : undefined} />
           </DetailSection>
         </div>
       </div>

@@ -22,6 +22,7 @@
       "unit": "%",
       "minimum": 0,
       "maximum": 100,
+      "source_unit_suffix": "%",
       "note": "Day summary. Lists of oxygen values remain ambiguous and are never paired with other values as individual tests."
     }
   }
