@@ -9,6 +9,7 @@ from dashboard.service import CatalogError
 from data_pipeline.facts import aggregate
 from data_pipeline.reviewed import REPORT_DETAILS, REVIEWED
 from data_pipeline.source_metadata import source_details
+from research.cache import remember
 from research.crew import (
     CONDITIONS, EQUIPMENT_LABELS, EQUIPMENT_TOPICS, ResearchRequest, catalog_data,
     condition_value, discover_filters, find_research, fuel_types, material_labels,
@@ -255,4 +256,7 @@ def register_dashboard(router, service, read, audience, respond):
 
     @router.get('/investigations/{study}/detail', dependencies=[Depends(read)])
     def detail(study: str, request: Request, audience_type=Depends(audience)):
-        return respond(request, study_details(service(), study, audience_type), audience_type)
+        catalog = service()
+        # A study page runs about eight queries; reopening it within a minute reuses the result.
+        return respond(request, remember(catalog.store, ('detail', study, audience_type), 60,
+                                         lambda: study_details(catalog, study, audience_type)), audience_type)

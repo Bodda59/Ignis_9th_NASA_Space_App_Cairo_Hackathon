@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { ArrowUpRight, Check, CircleCheck, FileText, Orbit, Plus, TriangleAlert } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { warmInvestigation } from '@/api/client'
 import type { RelevanceNote, SearchItem } from '@/api/types'
 import { TopicBadge } from '@/components/ui/TopicBadge'
 import { useCompare } from '@/features/compare/compareStore'
@@ -26,6 +27,8 @@ export function ResultCard({ item, rank, ranked, index }: Props) {
     <motion.article
       ref={ref}
       onPointerMove={onPointerMove}
+      onPointerEnter={() => warmInvestigation(item.id)}
+      onFocus={() => warmInvestigation(item.id)}
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: Math.min(index * 0.05, 0.3), ease: [0.16, 1, 0.3, 1] }}

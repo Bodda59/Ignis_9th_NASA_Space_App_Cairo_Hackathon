@@ -15,6 +15,10 @@ Flame in Freefall is Team Ignis’s NASA Space Apps Cairo hackathon project. It 
 
 The React frontend and FastAPI backend are integrated on `main`. The research tools describe reported experiments and their limits. Fire-safety certification is outside the project’s scope.
 
+## Deploy
+
+Every push to `main` builds one container and deploys it to Azure Container Apps through GitHub Actions. See [DEPLOY.md](DEPLOY.md) for the setup and the Azure commands.
+
 ## Run locally
 
 Use Python 3.14 with [uv](https://docs.astral.sh/uv/) and Node.js 20.19+ in the 20.x line or 22.12+ with npm. Run both services from the repository on `main`, each in its own terminal.

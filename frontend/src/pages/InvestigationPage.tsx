@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import { TriangleAlert } from 'lucide-react'
 import { useEffect, useMemo, type ReactNode } from 'react'
 import { useParams } from 'react-router-dom'
-import { api } from '@/api/client'
+import { api, recent } from '@/api/client'
 import type { CitedText, InvestigationResponse } from '@/api/types'
 import { ButtonLink } from '@/components/ui/Button'
 import { Cited } from '@/components/ui/CitationChip'
@@ -23,7 +23,7 @@ import { scrollToEl } from '@/lib/scroll'
 
 export function InvestigationPage() {
   const { id = '' } = useParams()
-  const res = useAsync((sig) => api.investigation(id, sig), id)
+  const res = useAsync((sig) => api.investigation(id, sig), id, recent.investigation(id))
 
   if (res.status === 'error') {
     const notFound = res.error.status === 404
