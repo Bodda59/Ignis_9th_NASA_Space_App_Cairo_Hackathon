@@ -40,7 +40,6 @@ export function IntroFilm() {
   const [mode, setMode] = useState<Mode>(() => (readSeen() || prefersReducedMotion() ? 'ended' : 'playing'))
   const [filmMounted, setFilmMounted] = useState(() => mode === 'playing')
   const [muted, setMuted] = useState(true)
-  const [ready, setReady] = useState(false)
   const [blocked, setBlocked] = useState(false)
   const [clock, setClock] = useState(0)
   const autoplayAllowed = mode === 'playing'
@@ -72,7 +71,6 @@ export function IntroFilm() {
 
   const replay = useCallback(() => {
     window.clearTimeout(autoScroll.current)
-    setReady(false)
     setBlocked(false)
     setClock(0)
     setFilmMounted(true)
@@ -148,7 +146,7 @@ export function IntroFilm() {
     <section
       ref={section}
       aria-label="Ignis opening film"
-      className="sticky top-0 isolate h-[100svh] min-h-[520px] w-full overflow-hidden"
+      className="sticky top-0 isolate h-[100svh] min-h-[320px] w-full overflow-hidden"
       style={{ pointerEvents: gone ? 'none' : undefined }}
     >
       <motion.div
@@ -169,9 +167,13 @@ export function IntroFilm() {
       {filmMounted && (
         <video
           ref={video}
-          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-[900ms] ${
-            ready && playing ? 'opacity-100' : 'opacity-0'
+          // Whole 16:9 frame, as large as fits: the captions are burned into the lower part of the
+          // film, so cropping it (object-cover) cut them off in wide or short windows. Soft edges blend it in.
+          className={`absolute left-1/2 top-1/2 aspect-video w-[min(100%,calc(max(100svh,320px)*16/9))] -translate-x-1/2 -translate-y-1/2 object-cover transition-opacity duration-[900ms] [mask-image:linear-gradient(90deg,transparent,#000_4%,#000_96%,transparent),linear-gradient(transparent,#000_3%,#000_97%,transparent)] [mask-composite:intersect] ${
+            playing ? 'opacity-100' : 'opacity-0'
           }`}
+          // first frame (captions included) shows at once instead of a black screen while the film loads
+          poster="/video/ignis-intro-poster.jpg"
           autoPlay
           muted
           playsInline
@@ -182,7 +184,7 @@ export function IntroFilm() {
           aria-hidden
           tabIndex={-1}
           onContextMenu={(e) => e.preventDefault()}
-          onPlaying={() => { setReady(true); setBlocked(false) }}
+          onPlaying={() => setBlocked(false)}
           onEnded={onEnded}
           onError={(e) => { if (e.currentTarget.error) finish() }}
         >
@@ -194,7 +196,8 @@ export function IntroFilm() {
       {/* blend into the page */}
       <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,transparent_55%,rgba(8,9,14,0.65)_100%)]" />
       <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[var(--color-void)]/80 to-transparent" />
-      <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[var(--color-void)] to-transparent" />
+      {/* only after the film: while it plays this would darken the captions */}
+      <div aria-hidden className={`pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[var(--color-void)] to-transparent transition-opacity duration-700 ${playing ? 'opacity-0' : 'opacity-100'}`} />
 
       {/* HUD frame */}
       <div aria-hidden className="pointer-events-none absolute inset-4 sm:inset-6 lg:inset-8">
@@ -209,7 +212,7 @@ export function IntroFilm() {
           <p className="label hidden items-center gap-3 sm:flex">
             <span className={`inline-block h-1.5 w-1.5 rounded-full ${playing ? 'animate-pulse bg-[var(--color-ember)]' : 'bg-[var(--color-ink-faint)]'}`} />
             Opening sequence
-            <span className="text-[var(--color-ink-dim)]">{playing ? `${stamp(clock)} / 00:30` : 'End'}</span>
+            <span className="text-[var(--color-ink-dim)]">{playing ? `${stamp(clock)} / ${stamp(DURATION)}` : 'End'}</span>
           </p>
           <div className="ml-auto flex items-center gap-2">
             {playing && (
