@@ -21,6 +21,14 @@ class EarthApplicationsTest(unittest.TestCase):
         self.assertIsNone(study_earth('PSI-0'))
         self.assertEqual(citation('PSI-0'), {'doi': None, 'doi_url': None, 'psi_url': None})
 
+    def test_current_metadata_supplies_doi_and_benefits_for_unbundled_studies(self):
+        record = {'doi': '10.60555/mzjm-yv57', 'source_url': 'https://psi.nasa.gov/physci/repo/data/investigations/PSI-60',
+                  'research_impacts': 'Source-stated benefits from the current record.'}
+        self.assertEqual(citation('PSI-60', record)['doi_url'], 'https://doi.org/10.60555/mzjm-yv57')
+        self.assertEqual(study_earth('PSI-60', record)['text'], record['research_impacts'])
+        self.assertEqual(study_earth('PSI-60', record)['themes'], [])
+        self.assertIsNone(study_earth('PSI-25', {'research_impacts': ''}))
+
     def test_citation_links_the_doi(self):
         self.assertEqual(citation('PSI-25')['doi_url'], 'https://doi.org/10.60555/4qc4-de67')
 

@@ -33,9 +33,9 @@ def source_row(index, kind='source_record'):
 
 
 class InvestigationDetailTest(unittest.TestCase):
-    def details(self, rows, *, report_hash=None, hide_source_summary=False, notes=(), corrections=(), sid="PSI-20"):
+    def details(self, rows, *, report_hash=None, hide_source_summary=False, notes=(), corrections=(), sid="PSI-20", source_metadata=None):
         study = {'id': sid, 'name': 'BRE', 'description': '', 'objective': 'Reported objective',
-                 'metadata': {}, 'field_sources': {'objective': [{'field': 'Objective',
+                 'metadata': {'source_metadata': source_metadata} if source_metadata is not None else {}, 'field_sources': {'objective': [{'field': 'Objective',
                      'source_url': 'https://example.org/bre'}]}}
         facts = build_facts(study, rows, [], len(rows))
         # Audience projection may omit grouped summaries; detail must not hide the source data.
@@ -320,6 +320,31 @@ class InvestigationDetailTest(unittest.TestCase):
         self.assertIn('not conclusively established', limits)
         self.assertNotIn('corrected', limits)
         changed = self.details([], sid='PSI-23', report_hash='different-report')
+        self.assertEqual(changed['findings'], [])
+
+    def test_spice_analysis_has_metadata_scope_without_invented_flight_rows(self):
+        from research.crew import Context, habitat_relevance
+        _, reasons, _ = habitat_relevance({'id': 'PSI-60', 'metadata': {
+            'gravity_environments': ['normal_gravity', 'microgravity'],
+            'source_metadata': {'project_type': 'Ground Investigation'}}}, [], Context(habitat='spacecraft'))
+        self.assertIn('ground investigation', reasons[0]['text'])
+        result = self.details([], sid='PSI-60', report_hash=REPORT_DETAILS['PSI-60']['content_hash'],
+                              source_metadata={'source_file': 'i_Investigation.txt'})
+        self.assertEqual(result['tests'], [])
+        self.assertEqual(result['data_availability']['conditions_view'], 'metadata_only')
+        self.assertEqual(result['data_availability']['record_label'], 'Study metadata')
+        self.assertEqual(result['data_availability']['source_row_count'], 0)
+        self.assertIn('ground investigation', result['data_availability']['record_description'])
+        self.assertEqual(len(result['findings']), 2)
+        self.assertEqual(len(result['summary_sections']['limitations']), 5)
+        self.assertEqual(len(result['equipment_links']), 1)
+        paper = next(c for c in result['citations'] if c['source_type'] == 'paper')
+        self.assertIn('10.1080/00102202.2022.2041621', paper['url'])
+        self.assertIn('abstract', paper['location'])
+        self.assertIsNone(paper['file_name'])
+        self.assertFalse(any('1,600' in f['text'] for f in result['findings']))
+        changed = self.details([], sid='PSI-60', report_hash='different-metadata')
+        self.assertIsNone(changed['data_availability']['conditions_view'])
         self.assertEqual(changed['findings'], [])
 
     def test_bass2_uses_full_source_rows_and_keeps_sensor_limits_visible(self):

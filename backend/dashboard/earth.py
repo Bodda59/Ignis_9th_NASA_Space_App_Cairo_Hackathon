@@ -102,7 +102,7 @@ def records():
 
 
 def citation(sid, source=None):
-    record = records().get(sid) or source or {}
+    record = source if source is not None else records().get(sid) or {}
     doi = record.get('doi')
     return {'doi': doi, 'doi_url': f'https://doi.org/{doi}' if doi else None, 'psi_url': record.get('source_url')}
 
@@ -114,7 +114,7 @@ def themes_for(sid):
 
 def study_earth(sid, source=None):
     """NASA's impact text for one study, or None when the record has none."""
-    record = records().get(sid) or source
+    record = source if source is not None else records().get(sid)
     text = ((record or {}).get('research_impacts') or '').replace('\r\n', '\n').strip()
     if not text:
         return None

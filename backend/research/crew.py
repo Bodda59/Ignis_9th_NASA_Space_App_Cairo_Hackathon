@@ -25,6 +25,7 @@ TOPICS = {
 }
 # These links describe research topics, with source documents listed alongside each study.
 EQUIPMENT_TOPICS = {
+    'PSI-60': 'smoke_detection',
     'PSI-23': 'suppression',
     'PSI-10': 'suppression',
     'PSI-21': 'suppression',
@@ -211,7 +212,8 @@ def habitat_relevance(study, rows, context):
             reasons.append({'kind': 'habitat', 'text': f'Flight evidence from a {HABITATS[habitat].lower()} platform.'})
             score += 8
         elif habitat in {'spacecraft', 'space_station'} and 'microgravity' in study_gravities(study):
-            reasons.append({'kind': 'habitat', 'text': 'Related microgravity evidence from another flight platform.'})
+            ground = (study['metadata'].get('source_metadata') or {}).get('project_type') == 'Ground Investigation'
+            reasons.append({'kind': 'habitat', 'text': 'Related microgravity analysis from a ground investigation.' if ground else 'Related microgravity evidence from another flight platform.'})
             score += 3
         else:
             gaps.append({'kind': 'gravity', 'text': f'No indexed test from this study verifies the gravity of the selected {HABITATS[habitat].lower()}.'})

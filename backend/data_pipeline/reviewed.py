@@ -1158,3 +1158,57 @@ REPORT_DETAILS['PSI-115'] = {
     'design_connection': 'Use the predicted distributions to select particle sizes for follow-up detector tests with relevant materials and airflow.',
     'design_limit': 'The study modeled DBP in a specific chamber. Alarm thresholds and response times require detector measurements.',
 }
+
+
+SPICE_ANALYSIS_META = {
+    'document_id': '19565990280ac724dfccef0bd7c0896e',
+    'content_hash': 'cd48d3cb1854526043be402e4c3061db094cf20153506ebad1ca22f4c96492b1',
+}
+SPICE_ANALYSIS_PAPER = {
+    'title': 'A Combined Experimental and Computational Study of Soot Formation in Normal and Microgravity Conditions',
+    'source_url': 'https://doi.org/10.1080/00102202.2022.2041621',
+    'source_type': 'paper',
+    'field': 'Published abstract · qualitative results',
+}
+REVIEWED['PSI-60'] = {
+    'text': 'PSI-60 combines image-derived soot diagnostics with computational modeling. Detector design is a potential application, not a performance result reported in the metadata.',
+    'source_refs': [dict(SPICE_ANALYSIS_META, field='Comment[Approach] and Comment[Research Impacts]')],
+    'design_question': 'How could soot-model uncertainty affect interpretation of combustion images?',
+    'design_connection': 'This work informs soot-model validation and interpretation of flame images. It does not demonstrate smoke-detector performance.',
+    'design_limit': 'The collection provides no detector trials, alarm thresholds or detection-time measurements. A soot prediction cannot establish performance of an untested detector.',
+}
+REPORT_DETAILS['PSI-60'] = {
+    **SPICE_ANALYSIS_META,
+    'conditions_view': 'metadata_only',
+    'replace_measurements': True,
+    'reviewed_limitations_only': True,
+    'record_description': 'PSI-60 is a ground investigation analyzing earlier SPICE data and computational models, not a new collection of individual flight-test rows. This collection contains the investigation metadata file only; no experiment table or numerical result files are indexed. The image count in the objective describes material used by the research, not rows or images available for export here.',
+    'overview': [
+        {'text': 'The PSI record describes a ground-based study combining image analysis with soot modeling. It uses earlier Smoke Point In Co-flow Experiment data; the original SPICE flight investigation has its own record, PSI-107.', 'source_refs': [dict(SPICE_ANALYSIS_META, field='Comment[Objective] and Comment[Project Type]')]},
+        {'text': 'The listed project dates are 5 June 2019–29 August 2022. They describe the analysis project, not the dates or duration of the original ISS flame tests.', 'source_refs': [dict(SPICE_ANALYSIS_META, field='Comment[Investigation Start Date] and Comment[Investigation End Date]')]},
+        {'text': 'The publication was first published online in March 2022 and later appeared in a 2023 journal issue. Its abstract provides the qualitative findings below; the collection itself does not supply the underlying numerical fields.', 'source_refs': [dict(SPICE_ANALYSIS_PAPER, field='Publication dates and abstract')]},
+    ],
+    'materials': [
+        {'text': 'The linked paper concerns sooting ethylene–air coflow diffusion flames in Yale and ACME burner configurations.', 'source_refs': [SPICE_ANALYSIS_PAPER]},
+        {'text': 'This is gas-flame analysis, not a solid-material flammability test. Fuel lists and burner dimensions from the broader SPICE campaign must not be assigned to every case in this analysis.', 'source_refs': [dict(SPICE_ANALYSIS_META, field='Comment[Approach] and Comment[Objective]')]},
+    ],
+    'conditions': [
+        {'text': 'The metadata describes normal-gravity and microgravity comparisons in the analysis. It does not provide per-case oxygen, pressure, flow rates, burner dimensions or test identifiers from which individual conditions could be reconstructed.', 'source_refs': [dict(SPICE_ANALYSIS_META, field='Comment[Approach]')]},
+        {'text': 'Normal-gravity and microgravity computational cases are distinct from measured flight data. The record does not describe partial-gravity experiments or establish conditions for a lunar or Martian flame.', 'source_refs': [dict(SPICE_ANALYSIS_META, field='Comment[Approach] and Comment[Project Type]')]},
+    ],
+    'measurements': [
+        {'text': 'The metadata describes decoding Nikon NEF raw images into color channels, using color-ratio pyrometry to infer soot temperatures, and using absolute light calibration to infer soot volume fractions. These are calibrated quantities derived from images, not temperatures or soot values listed in this collection.', 'source_refs': [dict(SPICE_ANALYSIS_META, field='Comment[Approach]')]},
+        {'text': 'The computational work describes coupled flow, species and soot modeling, including radiation re-absorption and aggregate formation. Its calculated fields must be distinguished from experimental image-derived quantities.', 'source_refs': [dict(SPICE_ANALYSIS_META, field='Comment[Approach]')]},
+    ],
+    'findings': [
+        {'text': 'The published abstract reports that the modeled microgravity flames were broader, longer and cooler, with more soot and longer residence times than the normal-gravity cases. The changes were much weaker for the smaller ACME flame.', 'source_refs': [SPICE_ANALYSIS_PAPER]},
+        {'text': 'The authors identify inaccurate predicted temperatures as a likely contributor to soot-model disagreement. Using experimental temperatures is proposed as a way to improve predictions, rather than established here as a verified correction.', 'source_refs': [SPICE_ANALYSIS_PAPER]},
+    ],
+    'limitations': [
+        {'text': 'The PSI objective refers to more than 1,600 raw images, but this collection contains only metadata. Those images, calibration files, numerical temperature/soot fields and case-level tables are not available here for independent recalculation or CSV/JSON export.', 'source_refs': [dict(SPICE_ANALYSIS_META, field='Comment[Objective] and indexed source inventory')]},
+        {'text': 'Published-abstract summaries do not supply the numerical fields and uncertainties needed to reproduce results. Numerical validation requires the corresponding result and calibration files.', 'source_refs': [SPICE_ANALYSIS_PAPER]},
+        {'text': 'The hypothesis is an expectation, not a separate measured result. The dependence on burner configuration also prevents applying one normal-/microgravity trend to every SPICE case.', 'source_refs': [dict(SPICE_ANALYSIS_META, field='Comment[Hypothesis]'), SPICE_ANALYSIS_PAPER]},
+        {'text': 'Per-case operating conditions, flight hardware identification and a flight platform are not supplied in this record. Its connection to ISS observations does not mean the ground analysis was itself a new ISS experiment.', 'source_refs': [dict(SPICE_ANALYSIS_META, field='Comment[Experiment Hardware], Comment[Flight Platform] and Comment[Project Type]')]},
+        {'text': 'The stated fire-safety and cleaner-combustion benefits are potential applications. This collection does not demonstrate detector response, suppression effectiveness or a certified operating limit.', 'source_refs': [dict(SPICE_ANALYSIS_META, field='Comment[Research Impacts]')]},
+    ],
+}

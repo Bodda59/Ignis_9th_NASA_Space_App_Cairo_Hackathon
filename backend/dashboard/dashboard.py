@@ -61,7 +61,7 @@ def study_details(catalog, sid, audience):
             citations[ref_id] = {'id': ref_id, 'source_id': base, 'title': ref.get('title') or (doc or {}).get('title', 'NASA investigation metadata'),
                                  'file_name': ref.get('file_name') or (doc or {}).get('file_name') or
                                      ((study.get('metadata', {}).get('source_metadata') or {}).get('source_file')
-                                      if ref.get('field') and not ref.get('title') else None),
+                                      if ref.get('field') and not ref.get('title') and ref.get('source_type', 'psi') == 'psi' else None),
                                  'url': ref.get('source_url') or (doc or {}).get('url'), 'location': location,
                                  'source_type': ref.get('source_type', 'psi')}
             ids.append(ref_id)
@@ -195,6 +195,8 @@ def study_details(catalog, sid, audience):
         grouped_label = 'Source records'
     elif record_counts.get('planned_record'):
         grouped_label = 'Planned profiles'
+    if report and report.get('conditions_view') == 'metadata_only':
+        grouped_label = 'Study metadata'
     if report and report.get('record_label'):
         grouped_label = report['record_label']
     record_description = ('Each row is a daily log entry, not one flame. Year, Month and Date identify the test day; Flames Ignited is the daily ignition count. The log includes a day with zero ignitions. Oxygen entries are approximate daily values, not exact conditions for each flame. The zero-ignition day is retained as reported; chamber pressures are not listed in this table.'

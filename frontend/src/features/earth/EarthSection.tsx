@@ -14,7 +14,7 @@ export function EarthSection({ earth }: { earth?: StudyEarth | null }) {
   }
   return (
     <div className="space-y-6">
-      <div className="grid gap-8 xl:grid-cols-[1.4fr_1fr]">
+      <div className={earth.themes.length ? 'grid gap-8 xl:grid-cols-[1.4fr_1fr]' : 'space-y-6'}>
         <figure className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-panel)]/50 p-6">
           <figcaption className="label mb-4 flex items-center gap-2">
             <Quote className="h-3.5 w-3.5" aria-hidden="true" /> NASA’s words · Research impacts / Earth benefits
@@ -29,7 +29,7 @@ export function EarthSection({ earth }: { earth?: StudyEarth | null }) {
           )}
         </figure>
 
-        <div>
+        {!!earth.themes.length && <div>
           <p className="label mb-3">Where it could help</p>
           <ul className="space-y-3">
             {earth.themes.map((theme) => {
@@ -48,7 +48,7 @@ export function EarthSection({ earth }: { earth?: StudyEarth | null }) {
               )
             })}
           </ul>
-        </div>
+        </div>}
       </div>
 
       {earth.note && (
@@ -58,8 +58,8 @@ export function EarthSection({ earth }: { earth?: StudyEarth | null }) {
         </p>
       )}
       <p className="text-[11px] text-[var(--color-ink-faint)]">
-        The text is NASA’s statement of potential benefits, not a measured outcome. The themes are this project’s grouping;
-        each one quotes the sentence it rests on.
+        The text is NASA’s statement of potential benefits, not a measured outcome.
+        {!!earth.themes.length && ' The themes are this project’s grouping; each one quotes the sentence it rests on.'}
       </p>
     </div>
   )
