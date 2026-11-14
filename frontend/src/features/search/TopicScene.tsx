@@ -1,4 +1,4 @@
-import { Canvas, useFrame } from '@react-three/fiber'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useMemo, useRef, useState, type ReactNode } from 'react'
 import * as THREE from 'three'
 import type { SafetyTopic } from '@/api/types'
@@ -14,16 +14,27 @@ export default function TopicScene({ active, onToggle, reduced }: Props) {
       <ambientLight intensity={0.55} />
       <directionalLight position={[3, 4, 5]} intensity={2.2} color="#fff3e2" />
       <directionalLight position={[-4, -1, 2]} intensity={0.8} color="#6cc8ff" />
-      <TopicObj x={-1.9} topic="prevention" active={active.includes('prevention')} onToggle={onToggle} reduced={reduced}>
+      <Lineup active={active} onToggle={onToggle} reduced={reduced} />
+    </Canvas>
+  )
+}
+
+/** One object per third of the canvas width, so the HTML captions underneath sit exactly below them. */
+function Lineup({ active, onToggle, reduced }: Props) {
+  const third = useThree((s) => s.viewport.width) / 3
+  const x = Math.min(third, 2.1)
+  return (
+    <>
+      <TopicObj x={-x} topic="prevention" active={active.includes('prevention')} onToggle={onToggle} reduced={reduced}>
         <Shield />
       </TopicObj>
       <TopicObj x={0} topic="detection" active={active.includes('detection')} onToggle={onToggle} reduced={reduced}>
         <Detector reduced={reduced} />
       </TopicObj>
-      <TopicObj x={1.9} topic="suppression" active={active.includes('suppression')} onToggle={onToggle} reduced={reduced}>
+      <TopicObj x={x} topic="suppression" active={active.includes('suppression')} onToggle={onToggle} reduced={reduced}>
         <Extinguisher />
       </TopicObj>
-    </Canvas>
+    </>
   )
 }
 

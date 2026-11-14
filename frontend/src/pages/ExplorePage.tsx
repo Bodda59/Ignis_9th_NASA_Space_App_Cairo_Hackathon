@@ -39,21 +39,27 @@ export function ExplorePage() {
   return (
     <div className="mx-auto max-w-[1440px] px-6 pb-40 pt-28 lg:px-10">
       {/* header */}
-      <header className="flex flex-wrap items-end justify-between gap-6">
+      <header className="grid items-center gap-6 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
         <div>
           <p className="label mb-4">Search · Rank · Habitat context</p>
           <RevealText
             lines={['Explore']}
             className="font-display text-[clamp(2.8rem,6vw,5.5rem)] font-semibold uppercase leading-none tracking-[-0.04em]"
           />
-        </div>
-        <TopicObjects active={s.filters.safety_topics ?? []} onToggle={(t) => s.toggleIn('topic', t)} />
-        <div className="text-right" aria-live="polite">
-          <p className="font-display text-5xl font-light tabular-nums tracking-tight">
-            {data ? <CountUp value={data.total} /> : '—'}
+          <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-[var(--color-ink-dim)]">
+            Search every PSI combustion investigation in plain language, then narrow it down by safety topic, gravity, material or crew environment.
           </p>
-          <p className="label mt-1">{data?.total === 1 ? 'Investigation' : 'Investigations'}</p>
+          <p className="mt-3 max-w-xl text-sm text-[var(--color-ink-faint)]">
+            Results are ranked by research relevance, never by fire danger, and each one shows why it matched.
+          </p>
+          <div className="mt-6 flex items-baseline gap-3" aria-live="polite">
+            <span className="font-display text-5xl font-light tabular-nums tracking-tight">
+              {data ? <CountUp value={data.total} /> : '—'}
+            </span>
+            <span className="label">{data?.total === 1 ? 'Investigation' : 'Investigations'}</span>
+          </div>
         </div>
+        <TopicObjects className="hidden md:block" active={s.filters.safety_topics ?? []} onToggle={(t) => s.toggleIn('topic', t)} />
       </header>
 
       <div className="mt-10">
