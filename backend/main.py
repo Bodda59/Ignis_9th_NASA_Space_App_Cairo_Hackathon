@@ -84,6 +84,10 @@ def create_app(service=None, api_key=None):
     register_routes(app, execute, authorize)
     register_dashboard_extras(app, engine, execute, authorize)
     app.include_router(create_router(engine, execute, api_key, limit_query_requests))
+    # Deployed container: serve the built frontend and its API gateway (see web.py).
+    if os.getenv('FRONTEND_DIST'):
+        from web import WebGateway
+        app.add_middleware(WebGateway, dist=os.environ['FRONTEND_DIST'], api_key=expected_key)
     return app
 
 
