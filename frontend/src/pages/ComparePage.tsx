@@ -11,6 +11,7 @@ import { Skeleton } from '@/components/ui/Skeleton'
 import { StateMessage } from '@/components/ui/StateMessage'
 import { ComparabilityNotes } from '@/features/compare/ComparabilityNotes'
 import { CompareTable } from '@/features/compare/CompareTable'
+import { GravityFlames } from '@/features/compare/GravityFlames'
 import { rowStatus } from '@/features/compare/compareStatus'
 import { COMPARE_MAX, COMPARE_MIN, useCompare } from '@/features/compare/compareStore'
 import { StudyPicker } from '@/features/compare/StudyPicker'
@@ -55,24 +56,30 @@ export function ComparePage() {
   return (
     <CitationCtx.Provider value={idx}>
       <div className="mx-auto max-w-[1440px] px-6 pb-40 pt-28 lg:px-10">
-        <header className="flex flex-wrap items-end justify-between gap-6">
+        <header className="grid items-center gap-6 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
           <div>
             <p className="label mb-4">Side by side · 2–3 studies</p>
             <RevealText
               lines={['Compare']}
               className="font-display text-[clamp(2.8rem,6vw,5.5rem)] font-semibold uppercase leading-none tracking-[-0.04em]"
             />
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
+            <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-[var(--color-ink-dim)]">
+              {ready ? 'Objectives, materials, conditions, measurements, findings and limitations, lined up side by side.'
+                : 'Choose at least two studies. We’ll line up their objectives, materials, conditions, measurements, findings and limitations — and flag where results can’t be treated as equivalent.'}
+            </p>
+            <p className="mt-3 max-w-xl text-sm text-[var(--color-ink-faint)]">
+              The same flame looks different under each gravity, so conditions matter when you compare.
+            </p>
             {data && (
-              <DiffToggle on={diffOnly} onChange={setDiffOnly} count={data.fields.filter((f) => rowStatus(f) !== 'same').length} />
-            )}
-            {data && (
-              <ButtonLink to={`/ask?ids=${ids.join(',')}`} variant="primary" iconLeft={<MessageSquareText className="h-4 w-4" />}>
-                Ask about these studies
-              </ButtonLink>
+              <div className="mt-6 flex flex-wrap items-center gap-3">
+                <DiffToggle on={diffOnly} onChange={setDiffOnly} count={data.fields.filter((f) => rowStatus(f) !== 'same').length} />
+                <ButtonLink to={`/ask?ids=${ids.join(',')}`} variant="primary" iconLeft={<MessageSquareText className="h-4 w-4" />}>
+                  Ask about these studies
+                </ButtonLink>
+              </div>
             )}
           </div>
+          <GravityFlames className="relative hidden h-[400px] md:block" />
         </header>
 
         <div className="mt-12">
@@ -112,10 +119,6 @@ export function ComparePage() {
 function SelectionStart({ ids, labels, onAdd, onRemove }: { ids: string[]; labels: { id: string; acronym: string; name: string }[]; onAdd: (s: SearchItem) => void; onRemove: (id: string) => void }) {
   return (
     <div>
-      <p className="mb-8 max-w-xl text-[15px] leading-relaxed text-[var(--color-ink-dim)]">
-        Choose at least two studies. We’ll line up their objectives, materials, conditions, measurements, findings and
-        limitations — and flag where results can’t be treated as equivalent.
-      </p>
       <div className="grid gap-4 md:grid-cols-3">
         {Array.from({ length: COMPARE_MAX }, (_, i) => {
           const id = ids[i]
