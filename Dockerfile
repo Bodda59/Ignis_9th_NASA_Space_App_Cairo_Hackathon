@@ -1,5 +1,6 @@
 # Flame in Freefall: one container with the FastAPI backend and the built React app.
 # Build from the repository root:  docker build -t flame-in-freefall .
+# Versions come from frontend/package-lock.json and backend/uv.lock; no settings or secrets are baked in.
 
 # ── 1. Frontend build ───────────────────────────────────────────────
 FROM node:22-slim AS frontend
@@ -17,20 +18,26 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     FRONTEND_DIST=/app/frontend/dist
 WORKDIR /app/backend
 
-RUN pip install --no-cache-dir uv==0.13.8
+# uv reads backend/uv.lock. Pass --build-arg UV_VERSION=x.y.z to pin it.
+ARG UV_VERSION=""
+RUN pip install --no-cache-dir "uv${UV_VERSION:+==$UV_VERSION}"
 
-# Locked dependencies, except PyTorch and its GPU libraries. The locked Linux
-# PyTorch wheel pulls several GB of CUDA packages, so the CPU build of the same
-# version is installed first and satisfies sentence-transformers.
+# Locked dependencies. The locked Linux PyTorch wheel pulls several GB of CUDA
+# packages, so the CPU build of the same locked version is installed instead,
+# and the GPU-only packages are left out of the export.
 COPY backend/pyproject.toml backend/uv.lock ./
-RUN uv pip install --system --no-cache torch==2.15.0 --index-url https://download.pytorch.org/whl/cpu \
- && uv export --locked --no-dev --no-hashes --no-emit-project --no-header --no-annotate \
-    | grep -vE '^(torch|triton|nvidia-|cuda-)' > /tmp/requirements.txt \
+RUN uv export --locked --no-dev --no-hashes --no-emit-project --no-header --no-annotate > /tmp/locked.txt \
+ && torch=$(grep -E '^torch==' /tmp/locked.txt | cut -d';' -f1 | tr -d ' ') \
+ && test -n "$torch" \
+ && uv pip install --system --no-cache "$torch" --index-url https://download.pytorch.org/whl/cpu \
+ && grep -vE '^(torch|triton|nvidia-|cuda-)' /tmp/locked.txt > /tmp/requirements.txt \
  && uv pip install --system --no-cache -r /tmp/requirements.txt \
- && rm /tmp/requirements.txt
+ && rm /tmp/locked.txt /tmp/requirements.txt
 
-# Bake the embedding model into the image so a restart never downloads it.
-RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('BAAI/bge-small-en-v1.5', device='cpu')"
+# Bake the embedding model in, so a restart never downloads it. The app's own
+# loader names the model (EMBEDDING_MODEL or its default), so the name lives in one place.
+COPY backend/research/__init__.py backend/research/providers.py ./research/
+RUN python -c "from research.providers import get_embeddings; print('Embedding model ready:', get_embeddings().model_name)"
 ENV HF_HUB_OFFLINE=1
 
 COPY backend/ ./

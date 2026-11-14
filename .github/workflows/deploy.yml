@@ -2,10 +2,13 @@
 # to Azure Container Apps. A failed step stops the deploy; the live site keeps
 # running the previous revision.
 #
-# Repository secrets (Settings → Secrets and variables → Actions):
-#   AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID
-# Login uses OpenID Connect, so no Azure password is stored here. App secrets
-# (database URL, API keys) live only on the Container App.
+# Nothing about the Azure setup is written in this file. It comes from the
+# repository settings (Settings → Secrets and variables → Actions):
+#   Secrets:   AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID
+#   Variables: AZURE_REGISTRY (e.g. myregistry.azurecr.io), AZURE_RESOURCE_GROUP,
+#              AZURE_CONTAINER_APP, IMAGE_NAME
+# Login uses OpenID Connect, so no Azure password is stored. App secrets
+# (database URL, API keys) live only on the Container App. See DEPLOY.md.
 name: Deploy to Azure
 
 on:
@@ -22,10 +25,10 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  REGISTRY: flamefreefall123.azurecr.io
-  IMAGE: flame-in-freefall
-  RESOURCE_GROUP: rg-flame-freefall
-  CONTAINER_APP: flame-in-freefall
+  REGISTRY: ${{ vars.AZURE_REGISTRY }}
+  IMAGE: ${{ vars.IMAGE_NAME }}
+  RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+  CONTAINER_APP: ${{ vars.AZURE_CONTAINER_APP }}
 
 jobs:
   lint:
@@ -49,6 +52,21 @@ jobs:
     needs: lint
     runs-on: ubuntu-latest
     steps:
+      - name: Check the deployment settings
+        env:
+          CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        run: |
+          missing=""
+          for name in REGISTRY IMAGE RESOURCE_GROUP CONTAINER_APP CLIENT_ID TENANT_ID SUBSCRIPTION_ID; do
+            [ -n "${!name}" ] || missing="$missing $name"
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::Missing repository settings:$missing. See DEPLOY.md, step 5."
+            exit 1
+          fi
+
       - uses: actions/checkout@v4
 
       - uses: docker/setup-buildx-action@v3
