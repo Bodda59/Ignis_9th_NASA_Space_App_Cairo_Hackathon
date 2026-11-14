@@ -84,7 +84,8 @@ export function ContextBar({ s }: { s: S }) {
               <div className="space-y-5">
                 <div>
                   <p className="label mb-2.5">Habitat</p>
-                  <div className="flex flex-wrap gap-2">
+                  {/* Equal-width grid: tidy rows, and the same columns as the safety concerns below */}
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 [&>*]:w-full [&>*]:justify-center">
                     {HABITAT_IDS.map((h) => (
                       <Chip
                         key={h}
@@ -116,7 +117,7 @@ export function ContextBar({ s }: { s: S }) {
                 </div>
                 <div>
                   <p className="label mb-2.5">Safety concern</p>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 [&>*]:w-full [&>*]:justify-center">
                     {SAFETY_TOPICS.map((t) => {
                       const Icon = TOPIC[t].icon
                       return (

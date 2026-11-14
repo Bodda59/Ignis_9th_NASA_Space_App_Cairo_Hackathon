@@ -8,6 +8,7 @@ import { AudiencePicker } from '@/features/audience/AudiencePicker'
 
 // Research tools sit in the bar; the story pages share one "Learn" menu; Kids Lab gets its own button.
 const LINKS = [
+  { to: '/', label: 'Home' },
   { to: '/explore', label: 'Studies' },
   { to: '/compare', label: 'Compare' },
   { to: '/rank', label: 'Rank studies' },
@@ -62,7 +63,7 @@ export function TopNav({ tourOpen }: { tourOpen: boolean }) {
           {/* On phones the links scroll sideways so the row never overflows the screen. */}
           <div className="flex min-w-0 items-center gap-0 overflow-x-auto py-1 [scrollbar-width:none] min-[360px]:gap-1 sm:gap-2 [&::-webkit-scrollbar]:hidden">
           {[...LINKS, { to: '/mission', label: 'Game' }].map((l) => (
-            <NavLink key={l.to} to={l.to} className={({ isActive }) => linkClass(isActive)}>
+            <NavLink key={l.to} to={l.to} end={l.to === '/'} className={({ isActive }) => linkClass(isActive)}>
               {({ isActive }) => (
                 <>
                   {l.label}
