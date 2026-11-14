@@ -1,33 +1,70 @@
 # Flame in Freefall
 
-Flame in Freefall is Team Ignis’s NASA Space Apps Cairo hackathon project. It helps students, researchers, and engineers explore NASA combustion experiments, see how flames behave in microgravity, and trace findings back to the original report or test record.
+Flame in Freefall is Team Ignis’s project for the NASA International Space Apps Challenge in Cairo. It turns NASA’s Physical Science Informatics (PSI) combustion investigations into a searchable research dashboard and interactive lessons. Students, educators, researchers, and engineers can explore how flames behave in microgravity and trace findings to the original report or test record.
 
-## What works today
+## What you can do
 
-- **Explore and compare investigations.** Search the catalog, open investigation details and source metadata, compare studies, and preview or export experiment tables.
-- **Ask questions with citations.** Rank relevant investigations by keyword and semantic similarity. Ask a question to get a cited answer or an explanation that the available evidence is insufficient.
-- **Explore experimental conditions.** Filter by reported material, oxygen concentration, or airflow where available. The Evidence Map shows which conditions were reported together in a single record, which were reported separately, and where evidence is missing.
-- **Review crew-environment relevance.** See which investigations are relevant to a selected habitat or fire-safety concern, with matching test records and gaps in coverage.
-- **Review the partial-gravity gap.** The gravity page shows that PSI has no Moon or Mars combustion tests, lists the studies that compare microgravity with Earth gravity, explains E-FIELD's simulated effect, and links NASA partial-gravity tests published outside PSI.
-- **See the Earth applications.** Each investigation page shows NASA's stated research impacts and Earth benefits, with its DOI. The Earth page groups the studies by the Earth fire-safety problem they name and lists the NASA spin-offs already in use.
-- **Export learning materials.** Generate lecture slides in PowerPoint and study materials in Word or PDF.
-- **Index NASA source files.** The data pipeline reads PDF, TXT, and CSV files, stores searchable passages and normalized test conditions in PostgreSQL with pgvector, and publishes the investigation catalog.
+| Page | What it shows |
+| --- | --- |
+| [Home](http://127.0.0.1:5173/) | Watch the opening film and explore a 3D experiment journey, the ISS research environment, and examples of how gravity and oxygen affect combustion. |
+| [Studies](http://127.0.0.1:5173/explore) | Search the PSI combustion catalog and filter by safety topic, gravity, material, or crew environment. Open a study for findings, source notes, test conditions, and experiment tables. |
+| [Compare](http://127.0.0.1:5173/compare?ids=PSI-25,PSI-69) | Compare two or three studies side by side. The linked example compares BASS-II and FLEX. |
+| [Rank studies](http://127.0.0.1:5173/rank) | Rank by a research question, a set of test conditions, or a crew environment. See the strongest matching evidence by source type and open the underlying records. |
+| [Ask AI](http://127.0.0.1:5173/ask) | Ask for a cited explanation. The app can report insufficient evidence when the available sources do not support an answer. |
+| [Articles](http://127.0.0.1:5173/article), [Gravity](http://127.0.0.1:5173/gravity), and [Earth](http://127.0.0.1:5173/earth) | Read related NASA resources beyond PSI, examine the partial-gravity evidence gap, and see the Earth applications described in NASA records. |
+| [Kids Lab](http://127.0.0.1:5173/kids) | Use a flame slider, explore simplified NASA experiment summaries, and learn through quizzes and games such as Experiment Detective and Fire Patrol. |
+| [Fire Safety Officer](http://127.0.0.1:5173/mission) | Play three educational missions about fire prevention, detection, and suppression. |
 
-The React frontend and FastAPI backend are integrated on `main`. The research tools describe reported experiments and their limits. Fire-safety certification is outside the project’s scope.
+Study pages support table previews and exports, plus downloadable learning materials in Word, PDF, and PowerPoint where available. Relevance scores measure how closely evidence matches a query. The dashboard is intended for research and education.
 
-## Deploy
+## Dashboard screenshots
 
-Every push to `main` builds one container and deploys it to Azure Container Apps through GitHub Actions. See [DEPLOY.md](DEPLOY.md) for the setup and the Azure commands.
+**Research catalog.** Searching for BASS-II shows how the catalog lists matching investigations and filters.
+
+![Research dashboard with the BASS-II query, filters, and investigation results](docs/screenshots/catalog.jpg)
+
+**Investigation details.** The BASS-II page shows the study’s overview, indexed source types, and links to evidence.
+
+![BASS-II detail page showing indexed document categories and study navigation](docs/screenshots/investigation.jpg)
+
+**Scenario Evidence Map.** A BASS-II material query shows the matching record and where to open its source.
+
+![BASS-II scenario Evidence Map with source links](docs/screenshots/scenario-evidence.jpg)
+
+**Kids Lab and Fire Safety Officer.** The two learning experiences introduce the same research through a visual flame lesson and an interactive mission.
+
+![Kids Lab homepage with the Orbi guide and interactive flame slider](docs/screenshots/kids.jpg)
+
+![Fire Safety Officer mission dashboard with its Start mission button](docs/screenshots/mission.jpg)
 
 ## Run locally
 
-Use Python 3.14 with [uv](https://docs.astral.sh/uv/) and Node.js 20.19+ in the 20.x line or 22.12+ with npm. Run both services from the repository on `main`, each in its own terminal.
+### 1. Install the prerequisites
 
-Set `DATABASE_URL` to the team's initialized PostgreSQL database with pgvector and set `RAG_API_KEY` in the repository root's ignored `.env`. For cited answers, also configure the LLM provider and its credentials. See [backend setup](backend/README.md) for database initialization and catalog publishing.
+- Python 3.14 and [uv](https://docs.astral.sh/uv/getting-started/installation/).
+- Node.js 20.19+ in the 20.x line or 22.12+ and npm.
+- Access to an initialized Supabase PostgreSQL database with pgvector and the project’s indexed NASA data. The application can start before the database is ready, but catalog search and evidence lookup require populated tables.
 
-### Terminal 1 — Backend
+Open two terminals at the repository root.
 
-From the repository root, run:
+### 2. Configure the environment
+
+Create an ignored `.env` file in the repository root and fill in your own values. Keep any existing settings if the file is already present.
+
+```dotenv
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/postgres?sslmode=require"
+RAG_API_KEY="replace-with-your-local-api-key"
+
+# Used for cited answers. Omit these two settings if you only need search and ranking.
+LLM_PROVIDER=groq
+GROQ_API_KEY="replace-with-your-groq-key"
+```
+
+The backend reads process variables first, then `backend/.env`, then the root `.env`. Vite can reuse the same `RAG_API_KEY` and adds it to backend requests on the server side. See the [research setup](backend/research/README.md) for other language model providers and embedding configuration.
+
+For a new Supabase project, follow the [backend setup](backend/README.md) to apply the migrations, ingest source files, and publish catalog data. Schema initialization alone creates empty tables.
+
+### 3. Start FastAPI in Terminal 1
 
 ```sh
 cd backend
@@ -35,11 +72,15 @@ uv sync --locked
 uv run --locked python main.py serve
 ```
 
-The API runs at `http://127.0.0.1:8000`. Check the [health endpoint](http://127.0.0.1:8000/health) or explore the routes in [Swagger UI](http://127.0.0.1:8000/docs).
+Open [Swagger UI](http://127.0.0.1:8000/docs) for API schemas, or check that the server responds.
 
-### Terminal 2 — Frontend
+```sh
+curl -f http://127.0.0.1:8000/health
+```
 
-From the repository root, run:
+The health check confirms the API is up. Loading an investigation in the frontend also exercises the database. When calling protected routes directly from Swagger or a script, send `X-API-Key` and, where required, `X-Audience-Type` (for example, `engineer`).
+
+### 4. Start React in Terminal 2
 
 ```sh
 cd frontend
@@ -47,6 +88,34 @@ npm ci
 npm run dev
 ```
 
-Open [Flame in Freefall](http://127.0.0.1:5173). Vite forwards requests under `/research-gateway` to the backend on port `8000` and adds `X-API-Key` on the server side. It can reuse `RAG_API_KEY` from the repository root's `.env`. If you run the backend on a different port, set `RAG_BACKEND_URL` in `frontend/.env` and restart Vite. See [frontend setup](frontend/README.md) for proxy settings and build commands.
+Open [http://127.0.0.1:5173](http://127.0.0.1:5173) or the URL Vite prints if that port is taken. Vite forwards `/research-gateway` requests to FastAPI on port `8000`. If you start FastAPI on another port with `uv run --locked python main.py serve --port PORT`, set `RAG_BACKEND_URL` in `frontend/.env` to the matching URL and restart Vite. Press **Ctrl+C** in each terminal when you’re done.
 
-Try searching for **BASS-II** in Explore and opening its investigation page to inspect test records and citations. See [research API examples](backend/research/README.md) for direct requests to rank evidence, ask questions, and explore scenarios.
+### 5. Try a complete research flow
+
+1. Search for **BASS-II** in **Studies** and open the result, **PSI-25**.
+2. Review the indexed source types, then open **Source data & export** to inspect a table.
+3. Open the [prefilled BASS-II scenario](http://127.0.0.1:5173/rank?mode=scenario&ids=PSI-25&example=bass-ii), select **Rank investigations**, and choose **View source** in the Evidence Map.
+4. In **Ask AI**, ask “What materials did BASS-II test?” and open a citation from the answer. This step requires a configured language model provider.
+
+If `uv run --locked` reports that it cannot find `uv.lock`, check that you’re in `backend/` and that the checkout contains `backend/uv.lock`. If catalog pages return `401`, check that Vite and FastAPI use the same `RAG_API_KEY`. For a `503` accompanied by a PostgreSQL connection timeout, check that the Supabase project is active and its database host and port are reachable.
+
+## Data and architecture
+
+- [`frontend/`](frontend/) contains the React and TypeScript interface, the Vite development proxy, and the interactive visualizations and games.
+- [`backend/dashboard/`](backend/dashboard/) serves the catalog, study details, comparisons, and data exports.
+- [`backend/research/`](backend/research/) handles question ranking, reported-condition matching, crew-environment relevance, and cited answers.
+- [`backend/data_pipeline/`](backend/data_pipeline/) ingests NASA PDF, TXT, and CSV sources, stores searchable passages and normalized test conditions in PostgreSQL, and publishes catalog data.
+- In question mode, the ranker searches source types such as reports, science documents, and engineering documents in parallel. Scenario matching checks which conditions appear together in a reported record and exposes gaps in the Evidence Map.
+
+## Checks and deployment
+
+```sh
+# From backend/
+uv run --locked python -m unittest discover -s research -v
+
+# From frontend/
+npm run lint
+npm run build
+```
+
+The production container serves the built frontend and FastAPI from one URL. The GitHub Actions workflow builds and deploys it to Azure Container Apps when changes land on `main`. See [Azure deployment](DEPLOY.md) for configuration and rollout steps, and the [frontend guide](frontend/README.md) for local build and proxy details.

@@ -13,3 +13,4 @@ media/
 tests/
 node_modules 
 .work
+.judges_tmp
