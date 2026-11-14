@@ -34,6 +34,12 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react(), tailwindcss()],
     resolve: { alias: { '@': path.resolve(import.meta.dirname, 'src') } },
+    // One eager bundle: every page and 3D scene downloads up front, so nothing loads piece by piece later.
+    // The lazy() imports in the code still work; they resolve from this same file.
+    build: {
+      chunkSizeWarningLimit: 4096,
+      rolldownOptions: { output: { codeSplitting: false } },
+    },
     server: { host: '127.0.0.1', proxy: routes },
     preview: { host: '127.0.0.1', proxy: routes },
   }
