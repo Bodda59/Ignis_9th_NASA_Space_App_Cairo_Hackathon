@@ -42,7 +42,8 @@ export function EarthPage() {
           </p>
         </div>
         {/* Globe centred above the stats; positioned out of flow so it adds no height to the header */}
-        <div className="relative">
+        {/* min width keeps the globe in place even when the stats are missing (loading / error) */}
+        <div className="relative lg:min-w-[clamp(280px,23vw,360px)]">
           <EarthGlobe interactive className="pointer-events-none absolute bottom-full left-1/2 hidden size-[clamp(280px,23vw,360px)] -translate-x-1/2 translate-y-[22%] lg:block" />
           {data && (
             <dl className="relative z-10 grid w-full grid-cols-3 gap-8 border-t border-[var(--color-line)] pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
