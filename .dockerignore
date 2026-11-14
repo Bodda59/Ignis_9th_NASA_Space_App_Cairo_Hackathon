@@ -1,0 +1,14 @@
+.git
+.github
+.claude
+**/node_modules
+**/dist
+**/.venv
+**/.cache
+**/__pycache__
+**/*.py[cod]
+**/.env
+**/.env.*
+!**/.env.example
+**/.pytest_cache
+**/.ruff_cache
