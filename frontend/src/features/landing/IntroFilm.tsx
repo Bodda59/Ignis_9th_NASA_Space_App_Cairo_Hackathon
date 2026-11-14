@@ -1,9 +1,9 @@
 import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { ArrowDown, RotateCcw, Volume2, VolumeX } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { diveTo } from '@/lib/scroll'
+import { diveTo, isDiving } from '@/lib/scroll'
+import { readSeen, writeSeen } from './introSeen'
 
-const SEEN_KEY = 'ignis:opening:seen'
 const DURATION = 36
 const AUTO_SCROLL_DELAY_MS = 900
 /** The 'enter the site' dive: how long the programmatic zoom-through takes. */
@@ -14,12 +14,6 @@ type Mode = 'playing' | 'ended'
 
 const stamp = (s: number) => `00:${String(Math.min(DURATION, Math.floor(s))).padStart(2, '0')}`
 
-function readSeen() {
-  try { return sessionStorage.getItem(SEEN_KEY) === '1' } catch { return false }
-}
-function writeSeen() {
-  try { sessionStorage.setItem(SEEN_KEY, '1') } catch { /* private mode: the opening simply replays next visit */ }
-}
 const prefersReducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches
 
 /**
@@ -29,9 +23,10 @@ const prefersReducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)'
  *
  * - Plays muted on arrival; sound is opt-in.
  * - "Skip" (or any scroll) leaves it at once, and when it finishes the page scrolls on by itself.
- * - Once seen in a session it rests on its end card instead of replaying.
+ * - Once it has been watched (or skipped) and scrolled past, `onPassed` fires so the page can
+ *   remove it: scrolling back up then stops at the hero instead of returning to the film.
  */
-export function IntroFilm() {
+export function IntroFilm({ onPassed }: { onPassed?: () => void }) {
   const wrap = useRef<HTMLDivElement>(null)
   const section = useRef<HTMLElement>(null)
   const video = useRef<HTMLVideoElement>(null)
@@ -51,11 +46,23 @@ export function IntroFilm() {
   const layerOpacity = useTransform(dive, [0.38, 0.9], [1, 0])
   const flash = useTransform(dive, [0.25, 0.62, 0.95], [0, 0.6, 0])
   const [gone, setGone] = useState(false)
+  const passed = useRef(false)
+  const ended = useRef(mode === 'ended')
+  useEffect(() => { ended.current = mode === 'ended' }, [mode])
+  const { scrollY } = useScroll()
+  // Fully past the film (its next section reaches the top) and no dive animation still running.
+  const checkPassed = useCallback(() => {
+    const after = wrap.current?.nextElementSibling
+    if (passed.current || !ended.current || isDiving() || !after || after.getBoundingClientRect().top > 1) return
+    passed.current = true
+    onPassed?.()
+  }, [onPassed])
+  useMotionValueEvent(scrollY, 'change', checkPassed)
   const next = () => wrap.current?.nextElementSibling ?? null
   const goOn = useCallback(() => {
     window.clearTimeout(autoScroll.current)
-    diveTo(next(), DIVE_SECONDS, diveEase)
-  }, [])
+    diveTo(next(), DIVE_SECONDS, diveEase, checkPassed)
+  }, [checkPassed])
 
   const finish = useCallback(() => {
     writeSeen()
