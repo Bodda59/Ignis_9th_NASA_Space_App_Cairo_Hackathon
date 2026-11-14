@@ -50,13 +50,13 @@ export function CompareTable({ data, diffOnly, onRemove, onAdd }: Props) {
               <span className="label">Field</span>
             </td>
             {cols.map((c, i) => (
-              <th key={c.id} scope="col" className="sticky top-0 z-20 bg-[var(--color-void)]/90 px-2 pb-4 align-top font-normal backdrop-blur-xl">
+              <th key={c.id} scope="col" className="sticky top-0 z-20 h-px bg-[var(--color-void)]/90 px-2 pb-4 align-top font-normal backdrop-blur-xl">
                 <motion.div
                   layout
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.08, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                  className="group relative h-full min-h-[150px] overflow-hidden rounded-2xl border border-[var(--color-line-strong)] bg-[var(--color-panel)] p-5"
+                  className="group relative flex h-full min-h-[150px] flex-col overflow-hidden rounded-2xl border border-[var(--color-line-strong)] bg-[var(--color-panel)] p-5"
                 >
                   <span className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[radial-gradient(circle,rgba(108,200,255,0.14),transparent_65%)]" />
                   <div className="flex items-start justify-between gap-2">
@@ -71,7 +71,7 @@ export function CompareTable({ data, diffOnly, onRemove, onAdd }: Props) {
                   </div>
                   <p className="mt-1 font-display text-2xl font-medium uppercase tracking-[-0.02em] text-[var(--color-ink)]">{c.acronym}</p>
                   <p className="mt-1 line-clamp-2 text-xs text-[var(--color-ink-dim)]">{c.name}</p>
-                  <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+                  <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-3">
                     <div className="flex flex-wrap gap-1.5">{c.safety_topics.map((t) => <TopicBadge key={t} topic={t} />)}</div>
                     <Link to={`/investigations/${c.id}`} className="inline-flex items-center gap-1 text-[11px] text-[var(--color-ink-faint)] transition-colors hover:text-[var(--color-flame)]">
                       Study <ArrowUpRight className="h-3 w-3" />
@@ -81,7 +81,7 @@ export function CompareTable({ data, diffOnly, onRemove, onAdd }: Props) {
               </th>
             ))}
             {canAdd && (
-              <td className="sticky top-0 z-30 bg-[var(--color-void)]/90 px-2 pb-4 align-top backdrop-blur-xl">
+              <td className="sticky top-0 z-30 h-px bg-[var(--color-void)]/90 px-2 pb-4 align-top backdrop-blur-xl">
                 <StudyPicker exclude={cols.map((c) => c.id)} onPick={onAdd} />
               </td>
             )}
