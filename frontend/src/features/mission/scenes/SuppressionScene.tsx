@@ -62,7 +62,8 @@ function HeldExtinguisher({ spraying, onAim }: { spraying: boolean; onAim: (aime
     const forward = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion)
     const to = FLAME_POS.clone().sub(camera.position)
     const dist = to.length()
-    const onTarget = forward.angleTo(to.normalize()) < 0.2 && dist < 2.6
+    // ~20° cone and 3.2 m reach: forgiving enough after clicking switches nudges the view
+    const onTarget = forward.angleTo(to.normalize()) < 0.35 && dist < 3.2
     if (onTarget !== aimed.current) { aimed.current = onTarget; onAim(onTarget) }
   })
   return (

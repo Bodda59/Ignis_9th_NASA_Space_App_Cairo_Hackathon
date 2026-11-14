@@ -5,6 +5,7 @@ import { useSearchParams } from 'react-router-dom'
 import { RevealText } from '@/components/fx/RevealText'
 import { Button } from '@/components/ui/Button'
 import { LEVELS, loadProgress, saveStars, type LevelId } from '@/features/mission/content'
+import { ControlsGuide } from '@/features/mission/ControlsGuide'
 import { DetectionLevel } from '@/features/mission/DetectionLevel'
 import { PreventionLevel } from '@/features/mission/PreventionLevel'
 import { SuppressionLevel } from '@/features/mission/SuppressionLevel'
@@ -34,6 +35,7 @@ export function MissionPage() {
     return (
       <motion.div key={current.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
         className="mx-auto max-w-[1440px] px-5 pb-24 pt-24 sm:px-6 lg:px-10">
+        <ControlsGuide key={current.id} levelTitle={current.title} />
         {current.id === 'prevention' && <PreventionLevel onDone={onDone.prevention} onNext={() => go('detection')} onHub={() => go()} />}
         {current.id === 'detection' && <DetectionLevel onDone={onDone.detection} onNext={() => go('suppression')} onHub={() => go()} />}
         {current.id === 'suppression' && <SuppressionLevel onDone={onDone.suppression} onHub={() => go()} />}

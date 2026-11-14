@@ -67,10 +67,13 @@ export function SuppressionLevel({ onDone, onHub }: Props) {
     if (spraying) return
     setSpraying(true)
     sfx.hiss()
+    // On target when the spray starts or ends counts as a hit, so a small mouse nudge mid-spray is fine.
+    const aimedAtStart = live.current.aimed
     window.setTimeout(() => {
       setSpraying(false)
-      const { aimed: hit, fansOn: f, powerOn: p } = live.current
-      if (!hit) { push('Missed: put the crosshair on the flame and float closer before spraying.', 'info'); return }
+      const { fansOn: f, powerOn: p } = live.current
+      const hit = aimedAtStart || live.current.aimed
+      if (!hit) { push('Missed! Press R to face the fire (or drag until the crosshair is on the flame), then spray again.', 'bad'); return }
       if (f) { setSize((s) => s * 0.6); sfx.whoosh(); push('The airflow blew most of the CO₂ away. Stop the fans first.', 'info'); return }
       if (p) { setSize(0.18); sfx.ignite(); push('It went out, then relit: the part is still powered and hot. Cut the power.', 'bad'); return }
       push(ACTION_FEEDBACK.co2, 'good')
@@ -156,7 +159,7 @@ export function SuppressionLevel({ onDone, onHub }: Props) {
                 <div className="h-full rounded-full bg-gradient-to-r from-[var(--color-flame)] to-[var(--color-ember)] transition-[width] duration-200" style={{ width: `${size * 100}%` }} />
               </div>
               <Button variant="accent" className="w-full" disabled={spraying} onClick={() => act('co2')} iconLeft={<Crosshair className="size-4" />}>
-                {spraying ? 'Spraying CO₂…' : aimed ? 'Spray CO₂ now (F)' : 'Spray CO₂ (F): aim first'}
+                {spraying ? 'Spraying CO₂…' : aimed ? 'Spray CO₂ now (F)' : 'Spray CO₂ (F): aim first, press R to face the fire'}
               </Button>
               <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
                 {ACTIONS.filter((a) => a.id !== 'co2').map((a) => (
