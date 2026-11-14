@@ -101,8 +101,8 @@ def records():
     return {record['id']: record for record in json.loads(SOURCE.read_text(encoding='utf-8'))}
 
 
-def citation(sid):
-    record = records().get(sid) or {}
+def citation(sid, source=None):
+    record = records().get(sid) or source or {}
     doi = record.get('doi')
     return {'doi': doi, 'doi_url': f'https://doi.org/{doi}' if doi else None, 'psi_url': record.get('source_url')}
 
@@ -112,9 +112,9 @@ def themes_for(sid):
             for theme, quote in TAGS.get(sid, [])]
 
 
-def study_earth(sid):
+def study_earth(sid, source=None):
     """NASA's impact text for one study, or None when the record has none."""
-    record = records().get(sid)
+    record = records().get(sid) or source
     text = ((record or {}).get('research_impacts') or '').replace('\r\n', '\n').strip()
     if not text:
         return None

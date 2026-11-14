@@ -36,6 +36,7 @@ def study_details(catalog, sid, audience):
             ORDER BY d.id,(p.location->>'csv_record')::integer LIMIT 10''', (sid,)).fetchall()
     source_counts = Counter(doc['source_type'] for doc in documents if doc['indexed'])
     study = studies[0]
+    source_metadata = study['metadata'].get('source_metadata')
     rows = grouped[sid]
     facts = summary['facts']
     record_counts = {row['record_kind']: row['count'] for row in counts}
@@ -208,7 +209,7 @@ def study_details(catalog, sid, audience):
                              'measurement_types': [item['text'] for item in measurements],
                              'limitations': facts['limitations'], 'source_ids': [doc['id'] for doc in documents],
                              'hardware': study['metadata'].get('hardware'),
-                             'citation': citation(sid),
+                             'citation': citation(sid, source_metadata),
                              'indexed_source_types': [dict(source_type=label, document_count=count)
                                                       for label, count in sorted(source_counts.items())],
                              **source_details(study)},
@@ -218,7 +219,7 @@ def study_details(catalog, sid, audience):
                                  'measurements': measurements, 'findings': findings,
                                  'limitations': limitations},
             'tests': tests, 'findings': findings, 'equipment_links': equipment_links, 'citations': list(citations.values()),
-            'earth': study_earth(sid),
+            'earth': study_earth(sid, source_metadata),
             'data_availability': {'numeric_test_count': sum(any(test[key] is not None for key in CONDITIONS) for test in tests),
                                   'source_row_count': table_rows,
                                   'reported_test_count': record_counts.get('reported_test', 0),

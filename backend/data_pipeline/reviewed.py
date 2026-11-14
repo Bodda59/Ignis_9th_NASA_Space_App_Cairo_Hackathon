@@ -854,3 +854,307 @@ REPORT_DETAILS['PSI-102'] = {
     'design_connection': 'Use the observed differences to select material and particle-size ranges for comparing detector responses.',
     'design_limit': 'The detector examples apply to the tested materials and apparatus. Operational alarm performance needs separate validation.',
 }
+
+REPORT_DETAILS['PSI-98'] = {
+    'document_id': 'c7dae19e9529ce34937cb8cb5bb5258c',
+    'content_hash': '71d4112904dab8a2e9c7ba1b33311da80960c322a7292ba561ff98c911c57fd6',
+    'supporting_documents': {
+        '76c2927790b6ef3d4eac886e85f9b853': 'c01f29c62455f0a3b512290ab85e5687ecded326733189f002f580368402308d',
+        'fa0e0961a9d17e7ec7748dc77256dba4': '21a28b9f4f7502dec7a4163af6da3441c4c55ed51a19527f2a63de76055bdf80',
+    },
+    'conditions_view': 'source_tables',
+    'record_label': 'Burn and flow visualization records',
+    'record_description': 'The CSV has four rows: two burn records (S1 and S2) and two flow visualization records (F1 and F2).',
+    'reviewed_limitations_only': True,
+    'replace_measurements': True,
+    'overview': [
+        {'text': 'Saffire I used an uncrewed Cygnus cargo vehicle after departure from the ISS to study how a large fabric fire spreads in microgravity. Flight operations took place in June 2016.', 'page': 15},
+    ],
+    'materials': [
+        {'text': 'The SIBAL composite was 75% cotton and 25% fiberglass by mass. The sample card held a fabric specimen about 0.4 m wide by 0.95 m long.', 'page': 13},
+    ],
+    'conditions': [
+        {'text': 'NASA reports 20 cm/s forced airflow. The flame spread with the airflow in the concurrent burn and against it in the opposed burn.', 'page': 19},
+    ],
+    'measurements': [
+        {'text': 'The cameras tracked the flame base and the tip of the charred region. Their positions were used to describe flame spread and the length of the pyrolysis region.', 'page': 19},
+    ],
+    'findings': [
+        {'text': 'The concurrent flame approached a limiting length. The authors expected upward spread on a comparable sample in normal gravity to grow and accelerate.',
+         'source_refs': [{'title': 'Results of Large-Scale Spacecraft Flammability Tests',
+                          'source_url': 'https://ntrs.nasa.gov/citations/20170008805', 'field': 'Abstract'}]},
+        {'text': 'The concurrent flame spread more slowly than in earlier microgravity tests using smaller samples in a more confined duct. The authors identified confinement as a possible contributor.', 'page': 20},
+    ],
+    'limitations': [
+        {'text': 'The CSV lists the thickness as 0.37 cm and gives 40.6 cm as length and 94 cm as width. NASA’s results table instead reports 0.37 mm thickness, 40.6 cm width, and 94 cm length for the concurrent burn. The opposed flame used only a short portion of the specimen.',
+         'source_refs': [{'document_id': '76c2927790b6ef3d4eac886e85f9b853', 'csv_record': 1},
+                         {'title': 'Saffire: A Novel Approach to Study of Spacecraft Fire Safety Using Un-Manned Spacecraft',
+                          'source_url': 'https://ntrs.nasa.gov/citations/20180005168', 'field': 'Table 1'}]},
+        {'text': 'The CSV labels both camera-only rows as pre-test visualization. The shared NASA README calls F1 pre-flow and F2 post-flow.',
+         'source_refs': [{'document_id': '76c2927790b6ef3d4eac886e85f9b853', 'csv_record': 4},
+                         {'document_id': 'fa0e0961a9d17e7ec7748dc77256dba4', 'field': 'Experiment Data records F1 and F2'}]},
+    ],
+    'design_question': 'How do specimen size and duct confinement affect flame spread?',
+    'design_connection': 'Use duct and specimen dimensions when comparing large-scale flight results with small material-screening tests.',
+    'design_limit': 'The observations apply to the tested SIBAL fabric and duct geometry.',
+}
+
+REPORT_DETAILS['PSI-99'] = {
+    'document_id': '625fc6ceee533fbb1e74a17c871c6dd2',
+    'content_hash': '71d4112904dab8a2e9c7ba1b33311da80960c322a7292ba561ff98c911c57fd6',
+    'supporting_documents': {
+        '755851477c5be11d3cf7d4e90263438f': '3c24390b9ef86f3d1ebaab911a1a3cc95a8759aebf42062371370e6d4b31b8ac',
+        'ffe945e0fb26afdf9c840519abf1f0b0': 'ea30d9a92d21158c5a8d2fe478cedad14f5b3e6e85112b0503a967e307365c68',
+        '7edd45474765fbab2ceb1e7af25686fb': '76ef0ceedd5e0d25a21de1b50efe6050fba6f8149c57fb0c7647c21c6f092741',
+    },
+    'conditions_view': 'source_tables',
+    'record_label': 'Sample, imaging and note records',
+    'record_description': 'The CSV has 15 rows: nine flight samples, two imaging records (F1 and F2), and four notes. Some sample exposures produced no sustained spreading flame.',
+    'reviewed_limitations_only': True,
+    'replace_measurements': True,
+    'overview': [
+        {'text': 'Saffire II studied the burning behavior of nine small material samples aboard Cygnus in November 2016. The experiment compared low-gravity results with normal-gravity screening observations.',
+         'source_refs': [{'document_id': '625fc6ceee533fbb1e74a17c871c6dd2', 'page': 12},
+                         {'document_id': '625fc6ceee533fbb1e74a17c871c6dd2', 'page': 15}]},
+    ],
+    'materials': [
+        {'text': 'The nine specimens comprised four silicone sheets, two SIBAL samples, a Nomex sample with a PMMA starter, and two thick PMMA samples with structured and flat surfaces. The flight report identifies sample 2-6 as SIBAL and sample 2-9 as flat PMMA.', 'page': 18},
+    ],
+    'conditions': [
+        {'text': 'The authors analyzed SIBAL samples 2-5 and 2-6 at 20 and 25 cm/s respectively. The CSV lists 20 cm/s for both.',
+         'source_refs': [{'document_id': '625fc6ceee533fbb1e74a17c871c6dd2', 'page': 18},
+                         {'document_id': '755851477c5be11d3cf7d4e90263438f', 'csv_record': 6}]},
+        {'text': 'The CSV’s oxygen note says values were estimated from measured CO₂ production and referenced to the initial oxygen concentration reported by the ISS.',
+         'source_refs': [{'document_id': '755851477c5be11d3cf7d4e90263438f', 'csv_record': 12}]},
+    ],
+    'measurements': [
+        {'text': 'The flight data include images from two cameras. The PMMA follow-up estimated flame-tip position from flight video, where brightness obscured the pyrolysis front.',
+         'source_refs': [{'document_id': '7edd45474765fbab2ceb1e7af25686fb', 'field': 'Camera and image-set overview'},
+                         {'document_id': 'ffe945e0fb26afdf9c840519abf1f0b0', 'page': 7}]},
+    ],
+    'findings': [
+        {'text': 'The four silicone samples ignited without sustained flame spread. Both SIBAL samples burned to completion. The PMMA starter on sample 2-7 burned without spreading into Nomex.', 'page': 18},
+        {'text': 'The two thick PMMA samples kept burning until the airflow stopped. The source’s damaged length records visible damage, and its regression rate describes fuel recession near the anchored flame.',
+         'source_refs': [{'document_id': '625fc6ceee533fbb1e74a17c871c6dd2', 'page': 18},
+                         {'document_id': '755851477c5be11d3cf7d4e90263438f', 'csv_record': 14},
+                         {'document_id': '755851477c5be11d3cf7d4e90263438f', 'csv_record': 15}]},
+    ],
+    'limitations': [
+        {'text': 'The CSV contains blank material cells, thicknesses printed as “037 mm,” and rate entries that refer to notes. The source table preserves these entries as published.',
+         'source_refs': [{'document_id': '755851477c5be11d3cf7d4e90263438f', 'field': 'Material, thickness and rate columns'}]},
+        {'text': 'The CSV labels both imaging rows as pre-test visualization. NASA’s README identifies F1 as pre-flow and F2 as post-flow.',
+         'source_refs': [{'document_id': '755851477c5be11d3cf7d4e90263438f', 'csv_record': 11},
+                         {'document_id': '7edd45474765fbab2ceb1e7af25686fb', 'field': 'Experiment Data records F1 and F2'}]},
+        {'text': 'NASA called for repeat cases to resolve the competing effects that determine material flammability in microgravity.', 'page': 21},
+    ],
+    'design_question': 'How do ignition and sustained spread differ across candidate spacecraft materials?',
+    'design_connection': 'Record both outcomes when comparing low-gravity results with normal-gravity screening. Keep airflow, specimen geometry and material construction in the comparison.',
+    'design_limit': 'The nine specimens do not establish general oxygen flammability limits.',
+}
+
+REPORT_DETAILS['PSI-100'] = {
+    'document_id': '9baf9b01e0ed6d21e70c3c7868c48088',
+    'content_hash': '71d4112904dab8a2e9c7ba1b33311da80960c322a7292ba561ff98c911c57fd6',
+    'supporting_documents': {
+        '72283cfacdad9a6f377183c224eba057': '4d3c717ec20dd0247db670b2784a9fd7d746788bc54a936f80693e48eb8cd117',
+        'e0afeb202752ce124bf76589392deadb': '21a28b9f4f7502dec7a4163af6da3441c4c55ed51a19527f2a63de76055bdf80',
+    },
+    'conditions_view': 'source_tables',
+    'record_label': 'Burn records',
+    'record_description': 'The two CSV rows identify the concurrent and opposed burns. The table preserves the archived airflow and dimensions. NASA’s flight analysis gives different values.',
+    'reviewed_limitations_only': True,
+    'replace_measurements': True,
+    'overview': [
+        {'text': 'Saffire III repeated the large SIBAL fabric experiment aboard Cygnus in June 2017 to study flame spread at a higher forced airflow than Saffire I.',
+         'source_refs': [{'document_id': '9baf9b01e0ed6d21e70c3c7868c48088', 'page': 12},
+                         {'document_id': '9baf9b01e0ed6d21e70c3c7868c48088', 'page': 15}]},
+    ],
+    'materials': [
+        {'text': 'Saffire III used SIBAL, a composite fabric with 75% cotton and 25% fiberglass by mass, on the same large sample-card design as Saffire I.', 'page': 13},
+    ],
+    'conditions': [
+        {'text': 'NASA’s flight results compare Saffire III at 25 cm/s with Saffire I at 20 cm/s. The Saffire III CSV lists 30 cm/s for both burns.',
+         'source_refs': [{'document_id': '9baf9b01e0ed6d21e70c3c7868c48088', 'page': 17},
+                         {'document_id': '72283cfacdad9a6f377183c224eba057', 'field': 'Air Flow column'}]},
+    ],
+    'measurements': [
+        {'text': 'The dataset has camera records for the burns and flow sequences. NASA used time-separated images to compare concurrent flame development across flights and contrasted concurrent and opposed flame shapes.',
+         'source_refs': [{'document_id': '9baf9b01e0ed6d21e70c3c7868c48088', 'page': 17},
+                         {'document_id': 'e0afeb202752ce124bf76589392deadb', 'field': 'Camera and image-set overview'}]},
+    ],
+    'findings': [
+        {'text': 'The concurrent flame spread faster on Saffire III than on Saffire I at the higher airflow. Both concurrent flames approached a limiting length in these tests.', 'page': 20},
+        {'text': 'The flight images show different concurrent and opposed flame shapes. NASA’s analysis identifies possible interaction with the duct walls as a source of uncertainty in transferring the results.',
+         'source_refs': [{'document_id': '9baf9b01e0ed6d21e70c3c7868c48088', 'page': 17},
+                         {'document_id': '9baf9b01e0ed6d21e70c3c7868c48088', 'page': 20}]},
+    ],
+    'limitations': [
+        {'text': 'The CSV lists a thickness of 0.33 cm and the same dimensions on both rows. NASA’s results table lists 0.37 mm thickness and distinguishes the full concurrent length from the shorter portion used for opposed spread.',
+         'source_refs': [{'document_id': '72283cfacdad9a6f377183c224eba057', 'field': 'Sample dimensions columns'},
+                         {'title': 'Saffire: A Novel Approach to Study of Spacecraft Fire Safety Using Un-Manned Spacecraft',
+                          'source_url': 'https://ntrs.nasa.gov/citations/20180005168', 'field': 'Table 1'}]},
+    ],
+    'design_question': 'How does stronger forced airflow change spread over the same fabric?',
+    'design_connection': 'Compare the measured inlet velocities and flame histories from the two flights when evaluating airflow sensitivity in the same duct.',
+    'design_limit': 'The two flight speeds and this duct do not define a safe spacecraft ventilation threshold.',
+}
+
+
+REPORT_DETAILS['PSI-106'] = {
+    'document_id': '0fd0f7e0565a9cb50ec7f793dced9b6d',
+    'content_hash': '89ef980810ca6d9aa8be817b42e36cd2adff23f5e9058361b5a33d18b4363f4d',
+    'conditions_view': 'source_tables',
+    'record_label': 'Dated testing log entries',
+    'record_description': 'The CSV lists 12 dates. Some entries include calibration work, and the final date describes SPICE activity. Individual flames can share a date.',
+    'reviewed_limitations_only': True,
+    'replace_measurements': True,
+    'overview': [
+        {'text': 'SLICE used the ISS Microgravity Science Glovebox to study the structure and stability of gas-jet diffusion flames. Researchers compared flight measurements with tests on a copy of the hardware at Yale.',
+         'source_refs': [{'title': 'An Experimental and Computational Study on Soot Formation in a Coflow Jet Flame Under Microgravity and Normal Gravity',
+                          'source_url': 'https://ntrs.nasa.gov/citations/20140017780', 'field': 'Abstract'}]},
+    ],
+    'materials': [
+        {'text': 'The dated SLICE entries list methane, methane diluted with nitrogen, ethylene diluted with nitrogen, and ethane. The last row identifies propane and ethylene in the SPICE entry.', 'field': 'Test Date and Fuel Type columns'},
+    ],
+    'conditions': [
+        {'text': 'The daily log gives fuel bottle descriptions, including methane blends at 40% and 70% with nitrogen as the balance. Individual fuel flow, coflow speed and burner settings are absent from the CSV.', 'field': 'Fuel Type column'},
+    ],
+    'measurements': [
+        {'text': 'Researchers used a calibrated camera to derive soot temperature, soot volume fraction and emission from electronically excited CH. A companion analysis compared flame shape and lift-off height with simulations.',
+         'source_refs': [{'title': 'Quantitative Measurements of CH* Concentration in Normal Gravity and Microgravity Coflow Laminar Diffusion Flames',
+                          'source_url': 'https://ntrs.nasa.gov/api/citations/20160012298/downloads/20160012298.pdf', 'page': 1},
+                         {'title': 'A Numerical and Experimental Study of Coflow Laminar Diffusion Flames',
+                          'source_url': 'https://ntrs.nasa.gov/citations/20150011070', 'field': 'Abstract'}]},
+    ],
+    'findings': [
+        {'text': 'In the methane-air comparisons, the microgravity flames showed lower soot temperatures and a higher soot volume fraction than the normal-gravity flames.',
+         'source_refs': [{'title': 'An Experimental and Computational Study on Soot Formation in a Coflow Jet Flame Under Microgravity and Normal Gravity',
+                          'source_url': 'https://ntrs.nasa.gov/citations/20140017780', 'field': 'Abstract'}]},
+        {'text': 'In the studied soot-free, nitrogen-diluted methane flames in microgravity, peak CH* concentration increased with coflow speed and depended only weakly on fuel speed.',
+         'source_refs': [{'title': 'Quantitative Measurements of CH* Concentration in Normal Gravity and Microgravity Coflow Laminar Diffusion Flames',
+                          'source_url': 'https://ntrs.nasa.gov/citations/20160012298', 'field': 'Abstract'}]},
+    ],
+    'limitations': [
+        {'text': 'The log includes pyrometry and fan calibrations. The March 23 row identifies SPICE testing, so its fuels should be read in that context.',
+         'source_refs': [{'document_id': '0fd0f7e0565a9cb50ec7f793dced9b6d', 'csv_record': 2},
+                         {'document_id': '0fd0f7e0565a9cb50ec7f793dced9b6d', 'csv_record': 12}]},
+    ],
+    'design_question': 'Which flame conditions should a smoke detector evaluation represent?',
+    'design_connection': 'Use the soot studies to select flame conditions for follow-up work on smoke generation.',
+    'design_limit': 'SLICE characterized burner flames. Smoke transport through a cabin and detector response require separate evidence.',
+}
+
+REPORT_DETAILS['PSI-181'] = {
+    'document_id': 'afe516c8b6c72db8214ecca0b1b0a8f0',
+    'content_hash': '418a9a8e80724dd4a3a6c22aec63e475d72d4458d1145ced0c6088c0e3912c31',
+    'supporting_documents': {
+        '8200f4cad8458365e12eff3a7789d376': '8eeede3bc23213668d4e017cc81d98b273fc6e9291ccc6b7084f108dfbe2a35e',
+    },
+    'conditions_view': 'source_tables',
+    'record_label': 'Solder specimen records',
+    'record_description': 'The CSV lists seven specimens: four made in microgravity and three made on Earth. Each row identifies a specimen, its alloy and its soldering method.',
+    'reviewed_limitations_only': True,
+    'replace_measurements': True,
+    'overview': [
+        {'text': 'The study examined how processing gravity affects solder-joint voids and microstructure, and how elevated and cryogenic temperatures affect joint properties. The microgravity specimens came from the earlier In-Space Soldering Investigation (ISSI).', 'page': 5},
+    ],
+    'materials': [
+        {'text': 'The indexed table lists 40Pb–60Sn and 95.5Sn–3.8Ag–0.7Cu. The final report also covers terrestrial 50Pb–50Sn specimens outside the seven-row table.',
+         'source_refs': [{'document_id': 'afe516c8b6c72db8214ecca0b1b0a8f0', 'page': 5},
+                         {'document_id': '8200f4cad8458365e12eff3a7789d376', 'field': 'Composition column'}]},
+    ],
+    'conditions': [
+        {'text': 'The specimen inventory distinguishes microgravity from terrestrial preparation and lists wire-wrap, wire-feed and reflow spreading methods. Test temperatures and measured outcomes are in the report.',
+         'source_refs': [{'document_id': '8200f4cad8458365e12eff3a7789d376', 'field': 'Sample Type and Sample Method columns'}]},
+    ],
+    'measurements': [
+        {'text': 'The researchers used 3D tomography to quantify voids and used nanoindentation and micropillar compression to probe local mechanical behavior.',
+         'source_refs': [{'document_id': 'afe516c8b6c72db8214ecca0b1b0a8f0', 'page': 5},
+                         {'document_id': 'afe516c8b6c72db8214ecca0b1b0a8f0', 'page': 6}]},
+    ],
+    'findings': [
+        {'text': 'The report observed voids about 1 mm in diameter in the microgravity 40Pb–60Sn specimens. The tested Earth-made comparison specimens had smaller voids.', 'page': 5},
+        {'text': 'Micropillars from the lead-free alloy with a higher fraction of silver–tin intermetallic showed a sharp drop in plastic strain at instability below room temperature.', 'page': 36},
+    ],
+    'limitations': [
+        {'text': 'The table inventories selected specimens. The tested alloys and preparation methods differ across the rows, and the mechanical measurements describe local material response.',
+         'source_refs': [{'document_id': '8200f4cad8458365e12eff3a7789d376', 'field': 'Composition, Sample Type and Sample Method columns'},
+                         {'document_id': 'afe516c8b6c72db8214ecca0b1b0a8f0', 'page': 36}]},
+    ],
+}
+
+
+REPORT_DETAILS['PSI-108'] = {
+    'document_id': '54f24e4c3c1a3873b92b764f1d811732',
+    'content_hash': 'a20c85b5184283184d0e2711860f31ef94d5a95d501e0ebaa39fb1495e3b62d6',
+    'supporting_documents': {
+        'ecf37636ce9d100a4ef1d42593dee27b': 'c883ab3bc89cadf870d97b0f5d9c533119e1827d788deb0f6e28e59317a8535a',
+        '60431b31817fa7d0a53d3d64a83ceacc': '9d403958984512828ade3110691f7bfc5ba1c704ef42b1093edb7fec1e2df9c7',
+    },
+    'conditions_view': 'source_tables',
+    'record_label': 'Flight test summaries',
+    'record_description': 'The archive contains two 38-row versions of the same five-run test summary. Each version repeats the same 38 run-and-test pairs.',
+    'reviewed_limitations_only': True,
+    'replace_measurements': True,
+    'overview': [
+        {'text': 'STDCE-1 studied how temperature differences along a liquid surface drive flow when buoyancy is weak. It flew on the USML-1 Spacelab mission in 1992.', 'page': 35},
+    ],
+    'materials': [
+        {'text': 'The experiment used 10 cSt silicone oil in an open circular container 10 cm in diameter and 5 cm deep.', 'page': 2},
+    ],
+    'conditions': [
+        {'text': 'The team varied heating power and the shape of the oil’s free surface. Tests used a CO₂ laser or a cylindrical heater along the centerline. Laser diameter applies to the laser cases.', 'page': 2},
+    ],
+    'measurements': [
+        {'text': 'Thermistors recorded temperatures in the apparatus, an infrared imager measured the surface temperature, and particle tracking provided velocity fields for comparison with numerical models.', 'page': 2},
+    ],
+    'findings': [
+        {'text': 'The report found reasonable agreement between measured and computed flow and temperature distributions when the model resolved the thin boundary layers near the heated region.', 'page': 36},
+        {'text': 'The flight study observed no oscillatory thermocapillary flow. In many tests the velocity field became nearly steady within minutes, while the bulk fluid took much longer to warm.', 'page': 36},
+    ],
+    'limitations': [
+        {'text': 'The archive labels the laser column in centimeters, but Table 1 uses millimeters for heating-zone diameter. For example, Run 1 CF7 appears as 30 in both CSVs and 30 mm in the report. Use Table 1 to confirm diameters before comparing tests.',
+         'source_refs': [{'document_id': '54f24e4c3c1a3873b92b764f1d811732', 'page': 40},
+                         {'document_id': 'ecf37636ce9d100a4ef1d42593dee27b', 'csv_record': 7},
+                         {'document_id': '60431b31817fa7d0a53d3d64a83ceacc', 'csv_record': 7}]},
+        {'text': 'The contractor report covers the main analyzed flight data. Its conclusions apply to the STDCE-1 geometry and heating conditions.', 'page': 35},
+    ],
+}
+
+REPORT_DETAILS['PSI-115'] = {
+    'document_id': '5da2910dced03bad0a22a32fd20ff20a',
+    'content_hash': '487108f951ba8ec9042464ae7c70a8190fa63c4b1141f8b1dfe19d697bd9752c',
+    'supporting_documents': {
+        '3fa7bf6539460e8ef4ad6c0ff5412797': '754cd3b7e1f1334f7de75abbdc0fac2687bc451c76d36245b66a5315c01d7253',
+    },
+    'conditions_view': 'no_indexed_tables',
+    'record_description': 'The indexed sources are the study metadata, final report and data organization guide. NASA PSI provides the original simulation files under the Data tab.',
+    'reviewed_limitations_only': True,
+    'replace_measurements': True,
+    'overview': [
+        {'text': 'This study simulated smoke formation and growth under Earth gravity and microgravity using a chamber modeled on the earlier Smoke Aerosol Measurement Experiment (SAME).', 'page': 9},
+    ],
+    'materials': [
+        {'text': 'The numerical model released dibutyl phthalate (DBP) vapor from a heated rectangular source into air. DBP served as a surrogate for the materials that generate smoke when heated.', 'page': 9},
+    ],
+    'conditions': [
+        {'text': 'The four base cases combine inlet air speeds of 0.08 and 0.10 m/s with gravity levels of 0 and 9.81 m/s². The study also varied particle settling, thermophoresis and source orientation. The reported outputs are evaluated at seven seconds.',
+         'source_refs': [{'document_id': '5da2910dced03bad0a22a32fd20ff20a', 'page': 9},
+                         {'document_id': '3fa7bf6539460e8ef4ad6c0ff5412797', 'page': 1}]},
+    ],
+    'measurements': [
+        {'text': 'The model outputs include particle nucleation rate, particle number density and size distributions. The data guide groups files by simulated gravity and flow case.',
+         'source_refs': [{'document_id': '5da2910dced03bad0a22a32fd20ff20a', 'page': 21},
+                         {'document_id': '3fa7bf6539460e8ef4ad6c0ff5412797', 'page': 1}]},
+    ],
+    'findings': [
+        {'text': 'In the modeled DBP cases, larger particles persisted downstream in microgravity. In the Earth-gravity simulations, settling removed particles larger than 35 μm downstream of the wake.', 'page': 15},
+        {'text': 'Disabling thermophoresis in the sensitivity case let particles reach the heated source and evaporate. The predicted distribution then contained fewer large particles and more small particles.', 'page': 15},
+    ],
+    'limitations': [
+        {'text': 'The predicted differences depend on the vapor, source geometry, wake and nearby cool surfaces. The simulations provide no direct measurement of detector performance.', 'page': 15},
+    ],
+    'design_question': 'How could gravity affect the particle sizes a smoke detector encounters?',
+    'design_connection': 'Use the predicted distributions to select particle sizes for follow-up detector tests with relevant materials and airflow.',
+    'design_limit': 'The study modeled DBP in a specific chamber. Alarm thresholds and response times require detector measurements.',
+}

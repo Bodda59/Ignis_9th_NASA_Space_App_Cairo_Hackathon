@@ -127,6 +127,52 @@ class InvestigationDetailTest(unittest.TestCase):
                 stale = self.details(rows, sid=sid, report_hash='changed')
                 self.assertIsNone(stale['data_availability']['conditions_view'])
 
+    def test_saffire_uses_the_source_tables_and_cites_conflicting_values(self):
+        cases = [('PSI-98', 0, 4, '0.37 mm'), ('PSI-99', 0, 15, '25 cm/s'), ('PSI-100', 2, 0, '25 cm/s')]
+        for sid, burns, grouped, expected in cases:
+            with self.subTest(study=sid):
+                rows = [source_row(i, 'reported_test') for i in range(burns)]
+                rows += [source_row(i) for i in range(burns, burns + grouped)]
+                detail = self.details(rows, sid=sid, report_hash=REPORT_DETAILS[sid]['content_hash'])
+                availability = detail['data_availability']
+                self.assertEqual(availability['conditions_view'], 'source_tables')
+                self.assertEqual(availability['source_row_count'], burns + grouped)
+                sections = detail['summary_sections']
+                entry = next(item for name in ('conditions', 'limitations') for item in sections[name]
+                             if expected in item['text'])
+                refs = {ref['id']: ref for ref in detail['citations']}
+                self.assertEqual(len(entry['citation_ids']), 2)
+                self.assertTrue(all(refs[key]['url'] for key in entry['citation_ids']))
+                self.assertEqual(len(detail['findings']), 2)
+
+    def test_slice_dates_and_solder_specimens_are_grouped_source_records(self):
+        cases = [('PSI-106', 12, 'Dated testing log entries', 1),
+                 ('PSI-181', 7, 'Solder specimen records', 0)]
+        for sid, count, label, design_count in cases:
+            with self.subTest(study=sid):
+                rows = [source_row(i) for i in range(1, count + 1)]
+                detail = self.details(rows, sid=sid, report_hash=REPORT_DETAILS[sid]['content_hash'])
+                availability = detail['data_availability']
+                self.assertEqual(availability['conditions_view'], 'source_tables')
+                self.assertEqual(availability['source_row_count'], count)
+                self.assertEqual(availability['record_label'], label)
+                self.assertEqual(detail['tests'], [])
+                self.assertEqual(len(detail['equipment_links']), design_count)
+                stale = self.details(rows, sid=sid, report_hash='changed')
+                self.assertEqual(stale['findings'], [])
+
+    def test_stdce_source_rows_and_smoke_model_outputs_use_distinct_views(self):
+        cases = [('PSI-108', 76, 'source_tables', 0), ('PSI-115', 0, 'no_indexed_tables', 1)]
+        for sid, count, view, design_count in cases:
+            with self.subTest(study=sid):
+                detail = self.details([source_row(i) for i in range(count)], sid=sid,
+                                      report_hash=REPORT_DETAILS[sid]['content_hash'])
+                self.assertEqual(detail['data_availability']['source_row_count'], count)
+                self.assertEqual(detail['data_availability']['conditions_view'], view)
+                self.assertEqual(detail['tests'], [])
+                self.assertEqual(len(detail['findings']), 2)
+                self.assertEqual(len(detail['equipment_links']), design_count)
+
     def test_psi62_metadata_release_has_no_experiment_rows(self):
         sid = 'PSI-62'
         detail = self.details([], sid=sid, report_hash=REPORT_DETAILS[sid]['content_hash'])
