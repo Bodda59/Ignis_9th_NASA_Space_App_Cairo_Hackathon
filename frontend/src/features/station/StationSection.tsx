@@ -2,6 +2,7 @@ import { AnimatePresence, motion, useInView, useReducedMotion } from 'framer-mot
 import { ArrowUpRight, Hand, Box } from 'lucide-react'
 import { lazy, Suspense, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useWarmUp } from '@/hooks/useWarmUp'
 import { cn } from '@/lib/cn'
 import { RACKS, type RackId } from './racks'
 
@@ -12,6 +13,8 @@ export function StationSection() {
   const [sel, setSel] = useState<RackId | null>('cir')
   const box = useRef<HTMLDivElement>(null)
   const inView = useInView(box, { once: true, margin: '200px' })
+  const onScreen = useInView(box, { margin: '100px' })
+  const warm = useWarmUp()
   const reduced = !!useReducedMotion()
   const rack = sel ? RACKS[sel] : null
 
@@ -89,9 +92,9 @@ export function StationSection() {
           {/* earth limb glow behind the station */}
           <div className="pointer-events-none absolute inset-x-[-10%] bottom-[-55%] h-[90%] rounded-[50%] bg-[radial-gradient(ellipse_at_50%_0%,rgba(108,200,255,0.35),rgba(47,107,255,0.12)_35%,transparent_65%)] blur-2xl" />
           <div className="relative h-[460px] sm:h-[560px]">
-            {inView && (
+            {(inView || warm) && (
               <Suspense fallback={<SceneFallback />}>
-                <StationScene selected={sel} onSelect={setSel} reduced={reduced} />
+                <StationScene selected={sel} onSelect={setSel} reduced={reduced} active={onScreen} />
               </Suspense>
             )}
           </div>

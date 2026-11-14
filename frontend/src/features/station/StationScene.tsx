@@ -8,7 +8,8 @@ import type { RackId } from './racks'
  * Stylised, ISS-like station built from primitives. Illustrative only —
  * not to scale, and rack positions are schematic.
  */
-type Props = { selected: RackId | null; onSelect: (id: RackId) => void; reduced: boolean }
+/** `active` false draws once then pauses (scene stays built) while it is scrolled off screen. */
+type Props = { selected: RackId | null; onSelect: (id: RackId) => void; reduced: boolean; active?: boolean }
 
 /**
  * Fixed container for the rack labels. Without it, drei's <Html> attaches labels to the
@@ -17,12 +18,12 @@ type Props = { selected: RackId | null; onSelect: (id: RackId) => void; reduced:
  */
 const LabelLayer = createContext<RefObject<HTMLElement> | null>(null)
 
-export default function StationScene({ selected, onSelect, reduced }: Props) {
+export default function StationScene({ selected, onSelect, reduced, active = true }: Props) {
   const labels = useRef<HTMLDivElement>(null!)
   return (
     <div ref={labels} className="relative h-full w-full">
     <LabelLayer.Provider value={labels}>
-    <Canvas camera={{ position: [5.2, 2.6, 6.2], fov: 38 }} dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>
+    <Canvas frameloop={active ? 'always' : 'demand'} camera={{ position: [5.2, 2.6, 6.2], fov: 38 }} dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>
       <ambientLight intensity={0.35} />
       <directionalLight position={[6, 5, 4]} intensity={2.2} color="#fff1dc" />
       <directionalLight position={[-6, -2, -4]} intensity={0.9} color="#6cc8ff" />

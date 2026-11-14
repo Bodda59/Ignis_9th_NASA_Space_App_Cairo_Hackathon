@@ -2,6 +2,7 @@ import { AnimatePresence, motion, useInView } from 'framer-motion'
 import { CircleDashed, FlaskConical, Hourglass, Orbit } from 'lucide-react'
 import { lazy, Suspense, useId, useRef, useState } from 'react'
 import { cn } from '@/lib/cn'
+import { useWarmUp } from '@/hooks/useWarmUp'
 import { Link } from 'react-router-dom'
 
 const GravityModel = lazy(() => import('./GravityModel'))
@@ -36,7 +37,8 @@ export function GravityStrip() {
   const [g, setG] = useState(0.166)
   const id = useId()
   const model = useRef<HTMLDivElement>(null)
-  const visible = useInView(model)
+  const visible = useInView(model, { margin: '100px' })
+  const warm = useWarmUp()
   const body = BODIES.reduce((nearest, item) => Math.abs(item.g - g) < Math.abs(nearest.g - g) ? item : nearest)
   const habitat = body.id === 'mars' ? 'mars_base' : body.id === 'moon' ? 'lunar_base' : body.id === 'ug' ? 'space_station' : null
   const st = status(g)
@@ -164,7 +166,7 @@ export function GravityStrip() {
             </div>
 
             <div ref={model} aria-hidden="true" className="h-40">
-              {visible && <Suspense><GravityModel gravity={body.g} color={body.color} /></Suspense>}
+              {(visible || warm) && <Suspense><GravityModel gravity={body.g} color={body.color} active={visible} /></Suspense>}
             </div>
             <div className="flex flex-wrap gap-4 text-sm text-[var(--color-flame)]">
               <Link to="/gravity" className="font-medium hover:underline">See the partial-gravity evidence</Link>

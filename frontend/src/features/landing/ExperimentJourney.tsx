@@ -1,6 +1,7 @@
 import { Component, lazy, Suspense, useRef, type PointerEvent, type ReactNode } from 'react'
 import { motion, useInView, useMotionTemplate, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { ArrowDown, ArrowUpRight } from 'lucide-react'
+import { useWarmUp } from '@/hooks/useWarmUp'
 
 const JourneyScene = lazy(() => import('./JourneyScene'))
 
@@ -8,6 +9,7 @@ export function ExperimentJourney() {
   const section = useRef<HTMLElement>(null)
   const visual = useRef<HTMLDivElement>(null)
   const nearby = useInView(section, { once: true, margin: '320px' })
+  const warm = useWarmUp()
   const reduced = useReducedMotion()
   const { scrollYProgress } = useScroll({ target: section, offset: ['start start', 'end end'] })
 
@@ -53,7 +55,7 @@ export function ExperimentJourney() {
         <div className="absolute inset-x-0 top-0 h-[70%] lg:h-full">
           <div className="absolute left-1/2 top-1/2 aspect-square w-[min(65vw,33rem)] -translate-1/2 rounded-full border border-[var(--color-flame)]/15 shadow-[inset_0_0_100px_#4b7dd21a,0_0_100px_#4b7dd21a] lg:left-[67%]" />
           <div className="absolute left-1/2 top-1/2 aspect-square w-[min(12vw,6rem)] -translate-1/2 rounded-full bg-[radial-gradient(circle,#bdedff,rgba(71,142,255,.5)_35%,transparent_72%)] opacity-50 lg:left-[67%]" />
-          {nearby && !reduced && (
+          {(nearby || warm) && !reduced && (
             <SceneBoundary>
               <Suspense fallback={null}><JourneyScene progress={scrollYProgress} /></Suspense>
             </SceneBoundary>
