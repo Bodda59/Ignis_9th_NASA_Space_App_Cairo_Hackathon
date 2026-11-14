@@ -47,8 +47,9 @@ function Detail({ data }: { data: InvestigationResponse }) {
   const synthetic = data.citations.some(isSynthetic)
   const s = data.summary_sections
   const inv = data.investigation
-  const nasaSourceUrl = data.citations.find((c) => c.url === `https://psi.nasa.gov/physci/repo/data/investigations/${inv.id}`)?.url
+  const nasaSourceUrl = inv.citation?.psi_url ?? data.citations.find((c) => c.url === `https://psi.nasa.gov/physci/repo/data/investigations/${inv.id}`)?.url
   const availability = data.data_availability
+  const noIndexedTables = availability.conditions_view === 'metadata_only' || availability.conditions_view === 'no_indexed_tables'
   const grouped = !data.tests.length && ((availability.source_record_count ?? 0) + (availability.planned_record_count ?? 0) > 0)
   const sourceConditions = grouped || availability.conditions_view === 'source_tables'
   const citations = useMemo(() => {
@@ -68,20 +69,20 @@ function Detail({ data }: { data: InvestigationResponse }) {
   const idx = useMemo(() => indexCitations(citations), [citations])
   const sourceCount = groupCitations(citations).length
   const conditionCount = sourceConditions ? availability.source_row_count : data.tests.length
-  const conditionTitle = sourceConditions ? 'Reported conditions' : 'Test conditions'
+  const conditionTitle = noIndexedTables ? 'Modeling and benchmark conditions' : sourceConditions ? 'Reported conditions' : 'Test conditions'
 
   const sections: SectionDef[] = useMemo(
     () => [
       { id: 'overview', title: 'Overview' },
-      { id: 'conditions', title: conditionTitle, count: conditionCount, countUnit: sourceConditions ? 'rows' : 'tests' },
+      { id: 'conditions', title: conditionTitle, count: noIndexedTables ? undefined : conditionCount, countUnit: sourceConditions ? 'rows' : 'tests' },
       { id: 'findings', title: 'Reviewed findings', count: data.findings.length },
       { id: 'limitations', title: 'Source notes & limitations', count: s.limitations.length },
       { id: 'equipment', title: 'Safety design links', count: data.equipment_links.length },
       { id: 'earth', title: 'On Earth', count: data.earth?.themes.length ?? 0 },
-      { id: 'data', title: 'Source data & export', count: availability.source_row_count, countUnit: 'rows' },
+      { id: 'data', title: 'Source data & export', count: noIndexedTables ? undefined : availability.source_row_count, countUnit: 'rows' },
       { id: 'sources', title: 'Source references', count: sourceCount },
     ],
-    [data, s.limitations.length, conditionTitle, conditionCount, availability.source_row_count, sourceConditions, sourceCount],
+    [data, s.limitations.length, conditionTitle, conditionCount, availability.source_row_count, noIndexedTables, sourceConditions, sourceCount],
   )
 
   // Links such as /investigations/PSI-25#earth land on the section once the study has loaded.
@@ -107,7 +108,7 @@ function Detail({ data }: { data: InvestigationResponse }) {
                 <p className="label mb-3">{['PSI-10', 'PSI-20', 'PSI-23', 'PSI-159'].includes(inv.id) && s.study_context?.length ? 'Original objectives · includes proposed work' : 'Stated objectives'}</p>
                 <EntryList entries={s.objectives} large />
                 {!!s.study_context?.length && <div className="mt-8">
-                  <p className="label mb-3">Work conducted · from the report</p>
+                  <p className="label mb-3">{noIndexedTables ? 'Research approach' : 'Work conducted · from the report'}</p>
                   <EntryList entries={s.study_context} />
                 </div>}
               </div>
@@ -124,14 +125,14 @@ function Detail({ data }: { data: InvestigationResponse }) {
 
           <DetailSection id="conditions" n={2} title={conditionTitle}>
             <div className="mb-8">
-              <p className="label mb-3">{grouped ? `${availability.record_label ?? 'Source records'} · reported values` : 'Reported across test records'}</p>
+              {!noIndexedTables && <p className="label mb-3">{availability.record_label ?? 'Reported across test records'}</p>}
               <EntryList entries={s.conditions} />
             </div>
             {sourceConditions ? <>
               <p className="mb-4 text-sm leading-relaxed text-[var(--color-ink-dim)]">{availability.record_description}</p>
-              <p className="label mb-3">{grouped ? availability.record_label ?? 'Source records' : availability.source_record_count ? 'Test and activity records' : 'Individual test records'} · source table</p>
+              <p className="label mb-3">{availability.record_label ?? (grouped ? 'Source records' : availability.source_record_count ? 'Test and activity records' : 'Individual test records')} · source table</p>
               <ExperimentTables key={inv.id} id={inv.id} />
-            </> : <>
+            </> : !noIndexedTables && <>
               <p className="label mb-3">Individual test records</p>
               <TestConditions tests={data.tests} unavailableReason={availability.unavailable_reason} />
             </>}
@@ -162,7 +163,7 @@ function Detail({ data }: { data: InvestigationResponse }) {
               </div>
             )}
             <p className="mt-4 text-[11px] text-[var(--color-ink-faint)]">
-              These findings summarize the cited reports. Their meaning depends on the tested fuels and conditions; the design links below explain possible relevance to fire safety.
+              {noIndexedTables ? 'The findings apply to the study configurations described in the cited sources.' : 'These findings summarize the cited reports. Their meaning depends on the tested fuels and conditions; the design links below explain possible relevance to fire safety.'}
             </p>
           </DetailSection>
 
@@ -186,12 +187,13 @@ function Detail({ data }: { data: InvestigationResponse }) {
           </DetailSection>
 
           <DetailSection id="data" n={7} title="Source data & export">
-            {sourceConditions ? <p className="text-sm leading-relaxed text-[var(--color-ink-dim)]">The {availability.source_row_count} source rows are shown with the reported conditions above. CSV and JSON exports use the same stored values as the table. {grouped ? 'Each row summarizes a day or a group of conditions; it does not identify one individual test.' : availability.source_record_count ? 'The table includes test records and other logged activities; its row count is not a count of successful ignitions.' : 'Each row identifies a test attempt; it is not a count of successful ignitions or confirmed cool flames.'} <a href={`#source-table-${inv.id}`} className="text-[var(--color-flame)] underline">View the source table and export controls</a>.</p> :
-              <ExperimentTables key={inv.id} id={inv.id} />}
+            {sourceConditions ? <p className="text-sm leading-relaxed text-[var(--color-ink-dim)]">The {availability.source_row_count} source rows are shown with the reported conditions above. CSV and JSON exports use the same stored values as the table. <a href={`#source-table-${inv.id}`} className="text-[var(--color-flame)] underline">View the source table and export controls</a>.</p> :
+              noIndexedTables ? <p className="text-sm leading-relaxed text-[var(--color-ink-dim)]">{availability.record_description}</p> :
+                <ExperimentTables key={inv.id} id={inv.id} />}
           </DetailSection>
 
           <DetailSection id="sources" n={8} title="Source references">
-            <p className="mb-4 text-sm leading-relaxed text-[var(--color-ink-dim)]">References are grouped into {sourceCount} sources. Expand a source to see its cited pages or rows, or click a citation anywhere on this page to reveal its exact reference.</p>
+            <p className="mb-4 text-sm leading-relaxed text-[var(--color-ink-dim)]">References are grouped into {sourceCount} sources. Expand a source or click a citation anywhere on this page to reveal its exact reference.</p>
             <SourcesList citations={citations} sharedSource={nasaSourceUrl ? inv.id === 'PSI-20' ? {
               url: 'https://psi.nasa.gov/physci/repo/search?q=PSI-20&data_source=psi&data_type=investigation',
               citationUrl: nasaSourceUrl,

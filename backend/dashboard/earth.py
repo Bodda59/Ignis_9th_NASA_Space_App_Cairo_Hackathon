@@ -40,6 +40,8 @@ THEMES = {
 
 # (theme, sentence copied from the study's research-impacts text)
 TAGS = {
+    'PSI-142': [('cleaner_combustion', 'cool flames and warm flames are relevant and important flame regimes for high-pressure near-limit combustion applications.')],
+    'PSI-117': [('cleaner_combustion', 'Advances low-temperature combustion understanding relevant to engine knock, efficiency, and emissions')],
     'PSI-10': [('cleaner_combustion', 'This project has the potential for improving efficiency and reducing pollutant emissions in terrestrial combustors.')],
     'PSI-20': [('test_methods', 'they suggest that NASA may want to increase use of its alternative flammability Test 2')],
     'PSI-21': [('suppression', 'an understanding of those factors that affect flame extinction in diffusion flames is critical in the suppression of fires and in improving engine efficiency.'),
@@ -51,6 +53,7 @@ TAGS = {
                ('test_methods', 'a performance-based material selection process')],
     'PSI-39': [('cleaner_combustion', 'Cool flames play a key role in the development and selection of new fuels and the design of advanced engines')],
     'PSI-47': [('smoke_detection', 'the successful adaptation of the TSI P-Trak for microgravity can inform the design of instruments for use in other challenging Earth environments, such as submarines or underwater laboratories where accurate detection of smoke can save lives.')],
+    'PSI-62': [('fire_modeling', 'On Earth, these advancements could improve combustion modeling by deepening our understanding of coupled thermal, chemical, and flow processes')],
     'PSI-68': [('cleaner_combustion', 'Insights gained from these studies can lead to more efficient and cleaner combustion technologies which are crucial for reducing pollution and greenhouse gas emissions.')],
     'PSI-69': [('confined_spaces', 'On Earth, the insights gained from these experiments have the potential to advance fire safety in confined and reduced-gravity environments, such as submarines or high-altitude aircraft.'),
                ('suppression', 'can lead to the development of more efficient and less harmful fire suppression systems, reducing the risk of toxic byproducts during fire events.'),
@@ -67,6 +70,7 @@ TAGS = {
 }
 
 NOTES = {
+    'PSI-47': 'The PSI record describes potential applications. The DAFT final report identifies no demonstrated Earth spin-off from this experiment.',
     'PSI-100': 'The PSI record for SAFFIRE-III carries the Saffire-I description. It is shown here as published.',
 }
 

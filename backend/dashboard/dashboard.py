@@ -48,14 +48,19 @@ def study_details(catalog, sid, audience):
     def cited(text, refs=()):
         ids = []
         for ref in refs:
-            doc = citations.get(ref.get('document_id'))
+            document_id = ref.get('document_id')
+            if not document_id and ref.get('file_name') and ref.get('source_url'):
+                document_id = next((doc['id'] for doc in documents
+                                    if doc['file_name'] == ref['file_name'] and doc['source_url'] == ref['source_url']), None)
+            doc = citations.get(document_id)
             location = f'CSV row {ref["csv_record"]}' if ref.get('csv_record') is not None else (
                 f'Page {ref["page"]}' if ref.get('page') is not None else ref.get('field', 'Source metadata'))
-            base = ref.get('document_id') or ref.get('source_url') or f'{sid}-metadata'
+            base = document_id or ref.get('source_url') or f'{sid}-metadata'
             ref_id = f'{base}:{location}'
             citations[ref_id] = {'id': ref_id, 'source_id': base, 'title': ref.get('title') or (doc or {}).get('title', 'NASA investigation metadata'),
                                  'file_name': ref.get('file_name') or (doc or {}).get('file_name') or
-                                     ((study.get('metadata', {}).get('source_metadata') or {}).get('source_file') if ref.get('field') else None),
+                                     ((study.get('metadata', {}).get('source_metadata') or {}).get('source_file')
+                                      if ref.get('field') and not ref.get('title') else None),
                                  'url': ref.get('source_url') or (doc or {}).get('url'), 'location': location,
                                  'source_type': ref.get('source_type', 'psi')}
             ids.append(ref_id)
@@ -129,8 +134,11 @@ def study_details(catalog, sid, audience):
     measurements = [cited(f'{m["label"]}' + (f' ({m["unit"]})' if m.get('unit') else ''), m['source_refs'])
                     for m in facts['measurement_types']]
     report = REPORT_DETAILS.get(sid)
-    if report and not any(doc['id'] == report['document_id'] and doc['content_hash'] == report['content_hash'] for doc in documents):
-        report = None
+    if report:
+        revisions = {doc['id']: doc['content_hash'] for doc in documents}
+        required = {report['document_id']: report['content_hash'], **report.get('supporting_documents', {})}
+        if any(revisions.get(document_id) != expected for document_id, expected in required.items()):
+            report = None
     report_limitations = []
     report_overview = []
     report_conditions = []
@@ -145,7 +153,8 @@ def study_details(catalog, sid, audience):
                             ('findings', report_findings), ('materials', report_materials)]:
             for item in report.get(key, []):
                 refs = item.get('source_refs') or [dict(document_id=doc['id'], source_url=doc['source_url'],
-                                                       content_hash=doc['content_hash'], page=item['page'])]
+                                                       content_hash=doc['content_hash'], page=item.get('page'),
+                                                       field=item.get('field', 'Source metadata'))]
                 target.append(cited(item['text'], refs))
     reviewed = REVIEWED.get(sid)
     if reviewed and any(ref.get('content_hash') and not any(
@@ -158,14 +167,15 @@ def study_details(catalog, sid, audience):
         findings = [dict(item, id=f'{sid}-reviewed-finding-{index}', investigation_id=sid)
                     for index, item in enumerate(report_findings, 1)]
     equipment = EQUIPMENT_TOPICS.get(sid)
+    design = report if report and 'design_question' in report else reviewed
     equipment_links = []
     if equipment and objectives and objectives[0]['citation_ids']:
         equipment_links = [{
             'id': f'{sid}-research-topic', 'investigation_id': sid, 'equipment_category': equipment,
-            'design_question': reviewed['design_question'] if reviewed else f'Which test evidence can inform {EQUIPMENT_LABELS[equipment].lower()}?',
-            'explanation': reviewed['design_connection'] if reviewed else 'The study objective is relevant to this equipment topic. Review the source conditions before applying the research.',
+            'design_question': design['design_question'] if design else f'Which test evidence can inform {EQUIPMENT_LABELS[equipment].lower()}?',
+            'explanation': design['design_connection'] if design else 'The study objective is relevant to this equipment topic. Review the source conditions before applying the research.',
             'finding_ids': [item['id'] for item in findings[:2]],
-            'limitations': [reviewed['design_limit']] if reviewed else ['Research relevance alone does not establish equipment performance.'],
+            'limitations': [design['design_limit']] if design else ['Research relevance alone does not establish equipment performance.'],
             'citation_ids': findings[0]['citation_ids'] if findings else objectives[0]['citation_ids'],
         }]
     materials = report_materials or sections('sample_properties')
@@ -177,10 +187,19 @@ def study_details(catalog, sid, audience):
     limitations = [cited(text) for text in facts['limitations']] + source_notes + report_limitations
     if report and report.get('reviewed_limitations_only'):
         limitations = report_limitations
-    grouped_label = 'Daily summaries' if sid in {'PSI-20', 'PSI-21', 'PSI-23'} else ('Source records' if source_rows else 'Planned profiles')
+    grouped_label = None
+    if sid in {'PSI-20', 'PSI-21', 'PSI-23'}:
+        grouped_label = 'Daily summaries'
+    elif source_rows:
+        grouped_label = 'Source records'
+    elif record_counts.get('planned_record'):
+        grouped_label = 'Planned profiles'
+    if report and report.get('record_label'):
+        grouped_label = report['record_label']
     record_description = ('Each row is a daily log entry, not one flame. Year, Month and Date identify the test day; Flames Ignited is the daily ignition count. The log includes a day with zero ignitions. Oxygen entries are approximate daily values, not exact conditions for each flame. The zero-ignition day is retained as reported; chamber pressures are not listed in this table.'
                           if sid == 'PSI-20' else report['record_description'] if report and report.get('record_description') else
-                          'These source rows contain grouped descriptions or planned conditions, rather than individual completed tests.')
+                          'These source rows contain grouped descriptions or planned conditions, rather than individual completed tests.'
+                          if grouped_label else 'The indexed sources contain no individual test records.')
     return {'investigation': {'id': sid, 'name': study['name'], 'acronym': study['metadata'].get('acronym') or sid,
                              'overview': study['description'] or (study['objective'] or '').split('\n')[0][:360],
                              'summary': study['description'], 'safety_topics': study_topics(study),

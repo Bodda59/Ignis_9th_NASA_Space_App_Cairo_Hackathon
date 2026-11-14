@@ -17,7 +17,8 @@ export function DetailHero({ data, synthetic }: { data: InvestigationResponse; s
   const selected = cmp.has(inv.id)
 
   const stats = [
-    { label: 'Source rows', value: data.data_availability.source_row_count ?? data.tests.length },
+    ...(['metadata_only', 'no_indexed_tables'].includes(data.data_availability.conditions_view ?? '') ? [] :
+      [{ label: 'Source rows', value: data.data_availability.source_row_count ?? data.tests.length }]),
     { label: 'Reviewed findings', value: data.findings.length },
     { label: 'Design links', value: data.equipment_links.length },
     { label: 'Indexed documents', value: inv.source_ids.length },

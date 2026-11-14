@@ -48,13 +48,22 @@ class InvestigationDetailTest(unittest.TestCase):
         docs = [{'id': CSV, 'title': 'BRE daily summary', 'file_name': 'bre.csv', 'source_type': 'Experimental table', 'indexed': True,
                  'content_hash': 'csv-hash', 'source_url': 'https://example.org/bre',
                  'catalog_profile': {'source_corrections': list(corrections)}}]
-        if sid == 'PSI-21':
+        if sid in {'PSI-21', 'PSI-62'}:
             docs[0]['id'] = REPORT_DETAILS[sid]['document_id']
             docs[0]['content_hash'] = report_hash or 'unreviewed-csv'
+            if sid == 'PSI-62':
+                docs[0].update(title='NASA PSI metadata', file_name='i_Investigation.txt',
+                               source_type='Investigation Metadata Files',
+                               source_url='https://psi.nasa.gov/physci/repo/data/investigations/PSI-62')
         elif report_hash is not None:
             docs.append({'id': REPORT_DETAILS[sid]['document_id'], 'title': 'BRE final report',
                          'file_name': 'BRE_final_report_20220201.pdf', 'source_type': 'Reports', 'indexed': True, 'content_hash': report_hash,
                          'source_url': 'https://example.org/report'})
+        if report_hash is not None:
+            for doc_id, revision in REPORT_DETAILS[sid].get('supporting_documents', {}).items():
+                docs.append({'id': doc_id, 'title': 'Supporting source', 'file_name': 'source.txt',
+                             'source_type': 'Science Documents', 'indexed': True, 'content_hash': revision,
+                             'source_url': 'https://example.org/supporting'})
         counts = [{'record_kind': kind, 'count': sum(r['record_kind'] == kind for r in rows)}
                   for kind in ('reported_test', 'source_record', 'planned_record')]
         conn = Mock()
@@ -65,6 +74,76 @@ class InvestigationDetailTest(unittest.TestCase):
         with patch('dashboard.dashboard.catalog_data', return_value=(
                 [study], {sid: [r for r in rows if r['record_kind'] != 'planned_record']})):
             return study_details(catalog, sid, 'undergraduate' if hide_source_summary else 'graduate')
+
+    def test_cfi_and_daft_distinguish_test_logs_from_sampling_sessions(self):
+        for sid, kind, label in [('PSI-39', 'reported_test', 'Test log entries'),
+                                 ('PSI-47', 'source_record', 'Sampling sessions')]:
+            with self.subTest(study=sid):
+                rows = [source_row(1, kind)]
+                detail = self.details(rows, sid=sid, report_hash=REPORT_DETAILS[sid]['content_hash'])
+                self.assertEqual(detail['data_availability']['record_label'], label)
+                self.assertEqual(detail['data_availability']['conditions_view'], 'source_tables')
+                self.assertEqual(len(detail['tests']), int(kind == 'reported_test'))
+                self.assertEqual(len(detail['findings']), 3)
+                self.assertEqual(len(detail['equipment_links']), 1)
+                changed = self.details(rows, sid=sid, report_hash='changed')
+                self.assertEqual(changed['findings'], [])
+
+    def test_flex_family_record_coverage_and_source_revision(self):
+        cases = [
+            ('PSI-117', [], 'no_indexed_tables', None, 3),
+            ('PSI-68', [source_row(1, 'planned_record')], 'source_tables', 'Planned fuel profiles', 1),
+            ('PSI-69', [source_row(1, 'reported_test')], 'source_tables', 'Flight test log entries', 1),
+        ]
+        for sid, rows, view, label, findings in cases:
+            with self.subTest(study=sid):
+                detail = self.details(rows, sid=sid, report_hash=REPORT_DETAILS[sid]['content_hash'])
+                self.assertEqual(detail['data_availability']['conditions_view'], view)
+                self.assertEqual(detail['data_availability']['record_label'], label)
+                self.assertEqual(len(detail['tests']), int(sid == 'PSI-69'))
+                self.assertEqual(len(detail['findings']), findings)
+                stale = self.details(rows, sid=sid, report_hash='changed')
+                self.assertIsNone(stale['data_availability']['conditions_view'])
+
+    def test_reviewed_source_rows_do_not_become_individual_tests(self):
+        cases = [('PSI-142', 'Published figure references'), ('PSI-107', 'Flight log rows'),
+                 ('PSI-101', 'Flight and aging log entries'), ('PSI-102', 'Condition summary rows')]
+        for sid, label in cases:
+            with self.subTest(study=sid):
+                rows = [source_row(1), source_row(2)]
+                detail = self.details(rows, sid=sid, report_hash=REPORT_DETAILS[sid]['content_hash'])
+                availability = detail['data_availability']
+                self.assertEqual(availability['conditions_view'], 'source_tables')
+                self.assertEqual(availability['record_label'], label)
+                self.assertEqual(availability['source_row_count'], 2)
+                self.assertEqual(detail['tests'], [])
+                self.assertEqual(len(detail['findings']), 2)
+                self.assertEqual(len(detail['equipment_links']), 1)
+                refs = {ref['id']: ref for ref in detail['citations']}
+                for section in detail['summary_sections'].values():
+                    for item in section:
+                        for ref_id in item['citation_ids']:
+                            self.assertTrue(refs[ref_id]['url'])
+                stale = self.details(rows, sid=sid, report_hash='changed')
+                self.assertIsNone(stale['data_availability']['conditions_view'])
+
+    def test_psi62_metadata_release_has_no_experiment_rows(self):
+        sid = 'PSI-62'
+        detail = self.details([], sid=sid, report_hash=REPORT_DETAILS[sid]['content_hash'])
+        self.assertEqual(detail['data_availability']['conditions_view'], 'metadata_only')
+        self.assertEqual(detail['data_availability']['source_row_count'], 0)
+        self.assertEqual(detail['tests'], [])
+        self.assertEqual(len(detail['findings']), 3)
+        self.assertEqual(detail['equipment_links'][0]['equipment_category'], 'material_controls')
+        self.assertEqual(detail['earth']['themes'][0]['id'], 'fire_modeling')
+        refs = {item['id']: item for item in detail['citations']}
+        context_ref = detail['summary_sections']['study_context'][0]['citation_ids'][0]
+        self.assertEqual(refs[context_ref]['location'], 'Comment[Approach]')
+        finding_ref = detail['findings'][0]['citation_ids'][0]
+        self.assertEqual(refs[finding_ref]['url'], 'https://doi.org/10.1016/j.combustflame.2023.112939')
+        changed = self.details([], sid=sid, report_hash='changed')
+        self.assertIsNone(changed['data_availability']['conditions_view'])
+        self.assertEqual(changed['findings'], [])
 
     def test_grouped_rows_keep_qualified_values_and_provenance_without_becoming_tests(self):
         rows = [source_row(1), source_row(2)]
