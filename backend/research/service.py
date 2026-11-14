@@ -45,7 +45,7 @@ class RAGService:
             rows = self.store.search_collection(vector, query.investigation_ids, self.model_name, source_type)
             semantic = sorted(((evidence.id, similarity) for evidence, similarity in rows if similarity is not None),
                               key=lambda result: (-result[1], result[0]))
-            return hybrid_search(query.question, [evidence for evidence, _ in rows], semantic,
+            return hybrid_search(query.question, getattr(rows, 'corpus', None) or [evidence for evidence, _ in rows], semantic,
                                  min_similarity=self.min_similarity, per_study=True)
 
         with ThreadPoolExecutor(max_workers=min(4, len(active))) as pool:

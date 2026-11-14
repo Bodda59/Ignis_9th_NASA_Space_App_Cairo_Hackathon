@@ -1,17 +1,30 @@
+import atexit
 import hashlib
 import math
+import os
+import threading
+import time
+from contextlib import contextmanager
 from pathlib import Path
 
-import psycopg
 from pgvector import Vector
 from pgvector.psycopg import register_vector
 from psycopg.rows import dict_row
 from psycopg.types.json import Jsonb
+from psycopg_pool import ConnectionPool
 
 from research.models import Evidence
+from research.retrieval import CorpusIndex, IndexedRows
 
 
 MAX_CORPUS_PASSAGES = 25_000
+# How often a search asks the database whether the indexed documents changed.
+CACHE_CHECK_SECONDS = 30
+# Changes whenever a document is added, removed, re-indexed, moved or renamed.
+CORPUS_VERSION = '''SELECT md5(
+    coalesce((SELECT string_agg(concat_ws('|',id,investigation_id,content_hash,index_signature,embedding_model,
+        source_type,title,source_url), ',' ORDER BY id) FROM rag_documents), '') || '#' ||
+    coalesce((SELECT string_agg(id||'|'||name, ',' ORDER BY id) FROM rag_investigations), '')) AS version'''
 
 
 def validate_vector(values):
@@ -29,12 +42,44 @@ class PostgresStore:
         if not database_url:
             raise ValueError('Set DATABASE_URL to a PostgreSQL database with pgvector.')
         self.database_url = database_url
+        self._pool = None
+        self._pool_lock = threading.Lock()
+        self._cache = None
+        self._cache_lock = threading.Lock()
 
-    def connect(self):
-        connection = psycopg.connect(self.database_url, connect_timeout=10, row_factory=dict_row)
+    @staticmethod
+    def _configure(connection):
         connection.execute('SET search_path TO public, extensions')
         connection.execute("SET statement_timeout = '30s'")
-        return connection
+        connection.commit()
+        connection.last_used = time.monotonic()
+
+    @staticmethod
+    def _check(connection):
+        # Only a connection that sat idle is pinged, so busy requests skip the extra round trip.
+        if time.monotonic() - getattr(connection, 'last_used', 0) > 20:
+            ConnectionPool.check_connection(connection)
+
+    def pool(self):
+        with self._pool_lock:
+            if self._pool is None:
+                # Opening a connection costs about a second against a remote database, so keep them open.
+                # prepare_threshold=None keeps this working behind a transaction-mode pooler as well.
+                self._pool = ConnectionPool(
+                    self.database_url, min_size=1, max_size=int(os.getenv('DB_POOL_SIZE', '8')), timeout=15,
+                    max_idle=300, open=True, configure=self._configure, check=self._check,
+                    kwargs={'connect_timeout': 10, 'row_factory': dict_row, 'prepare_threshold': None})
+                atexit.register(self._pool.close)
+            return self._pool
+
+    @contextmanager
+    def connect(self):
+        """One transaction on a pooled connection: commit on success, roll back on error."""
+        with self.pool().connection() as connection:
+            try:
+                yield connection
+            finally:
+                connection.last_used = time.monotonic()
 
     def initialize(self):
         with self.connect() as connection:
@@ -118,22 +163,84 @@ class PostgresStore:
             raise ValueError('The selected corpus uses a different embedding model. Reindex it before searching.')
         return rows
 
+    def passages(self):
+        """Every indexed passage by source type, held in memory and reloaded when the documents change."""
+        with self._cache_lock:
+            cache = self._cache
+            if cache and time.monotonic() - cache['checked'] < CACHE_CHECK_SECONDS:
+                return cache
+            with self.connect() as connection:
+                connection.execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ')
+                version = connection.execute(CORPUS_VERSION).fetchone()['version']
+                if cache and cache['version'] == version:
+                    cache['checked'] = time.monotonic()
+                    return cache
+                connection.execute("SET LOCAL statement_timeout = '120s'")
+                rows = connection.execute('''SELECT p.id,p.document_id,p.text,p.location,p.row_data,
+                    d.investigation_id,i.name AS investigation_name,d.title,d.source_url,d.content_hash,d.source_type,
+                    d.embedding_model
+                    FROM rag_passages p JOIN rag_documents d ON d.id=p.document_id
+                    JOIN rag_investigations i ON i.id=d.investigation_id ORDER BY p.id''').fetchall()
+            by_type = {}
+            for row in rows:
+                model = row.pop('embedding_model')
+                by_type.setdefault(row['source_type'], []).append((Evidence(**row), model))
+            self._cache = {'version': version, 'checked': time.monotonic(), 'by_type': by_type, 'indexes': {}}
+            return self._cache
+
+    def corpus(self, cache, source_type, model, selected):
+        """The passages in scope and their keyword index, built once per scope."""
+        scope = frozenset(selected) if selected else None
+        passages = [evidence for evidence, embedded in cache['by_type'].get(source_type, ())
+                    if embedded == model and (scope is None or evidence.investigation_id in scope)]
+        key = (source_type, model, scope)
+        index = cache['indexes'].get(key)
+        if index is None:
+            index = CorpusIndex(passages)
+            with self._cache_lock:
+                # shortcut: whole-collection indexes stay; the oldest scoped one makes room for a new scope.
+                scoped = [k for k in cache['indexes'] if k[2] is not None]
+                if scope is not None and len(scoped) >= 32:
+                    cache['indexes'].pop(scoped[0], None)
+                cache['indexes'][key] = index
+        return passages, index
+
+    def warm(self, model):
+        """Load the passages and the whole-collection indexes before the first question arrives."""
+        cache = self.passages()
+        for source_type in list(cache['by_type']):
+            self.corpus(cache, source_type, model, None)
+        return sum(len(rows) for rows in cache['by_type'].values())
+
     def search_collection(self, vector, selected, model, source_type):
         literal = vector_literal(vector)
-        with self.connect() as connection:
-            rows = connection.execute('''SELECT p.id,p.document_id,p.text,p.location,p.row_data,
-                d.investigation_id,i.name AS investigation_name,d.title,d.source_url,d.content_hash,d.source_type,
-                1-(p.embedding <=> %s::vector) AS similarity
-                FROM rag_passages p JOIN rag_documents d ON d.id=p.document_id
-                JOIN rag_investigations i ON i.id=d.investigation_id
-                WHERE d.source_type=%s AND d.embedding_model=%s
-                    AND (%s::text[] IS NULL OR d.investigation_id=ANY(%s))
-                ORDER BY p.id LIMIT %s''',
-                (literal, source_type, model, selected or None, selected or None, MAX_CORPUS_PASSAGES+1)).fetchall()
-        if len(rows) > MAX_CORPUS_PASSAGES:
-            raise ValueError(f'Scope this query to fewer studies. The {source_type} collection exceeds '
-                             f'{MAX_CORPUS_PASSAGES:,} passages.')
-        return [(Evidence(**row), row['similarity']) for row in rows]
+        for retry in (True, False):
+            cache = self.passages()
+            # Passage text comes from memory; the database only scores the question against each passage.
+            with self.connect() as connection:
+                rows = connection.execute('''SELECT p.id,1-(p.embedding <=> %s::vector) AS similarity
+                    FROM rag_passages p JOIN rag_documents d ON d.id=p.document_id
+                    WHERE d.source_type=%s AND d.embedding_model=%s
+                        AND (%s::text[] IS NULL OR d.investigation_id=ANY(%s))
+                    LIMIT %s''',
+                    (literal, source_type, model, selected or None, selected or None, MAX_CORPUS_PASSAGES+1)).fetchall()
+            if len(rows) > MAX_CORPUS_PASSAGES:
+                raise ValueError(f'Scope this query to fewer studies. The {source_type} collection exceeds '
+                                 f'{MAX_CORPUS_PASSAGES:,} passages.')
+            similarity = {row['id']: row['similarity'] for row in rows}
+            passages, index = self.corpus(cache, source_type, model, selected)
+            if len(passages) == len(similarity) and all(evidence.id in similarity for evidence in passages):
+                break
+            if retry:
+                # The database and the memory copy disagree about which passages exist: reload and score again.
+                with self._cache_lock:
+                    if self._cache is cache:
+                        self._cache = None
+        else:
+            raise ValueError('The source index changed during this search. Ask the question again.')
+        result = IndexedRows((evidence, similarity[evidence.id]) for evidence in passages)
+        result.corpus = index
+        return result
 
     def objective_evidence(self, ids):
         with self.connect() as conn:
