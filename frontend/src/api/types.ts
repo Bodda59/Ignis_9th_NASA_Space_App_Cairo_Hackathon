@@ -384,7 +384,8 @@ export type InterpretResponse = {
   ranked?: RankedStudy[]
   evidence_only?: boolean
   evidence_message?: string
-  status: 'answered' | 'insufficient_evidence'
+  status: 'answered' | 'insufficient_evidence' | 'clarification_required'
+  clarification?: string
   findings: InterpretItem[]
   interpretations: InterpretItem[]
   /** ASSUMPTION (Q9): strings or {text} — normalized to {text} */

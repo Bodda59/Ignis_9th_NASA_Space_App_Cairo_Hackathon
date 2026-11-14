@@ -11,6 +11,18 @@ from research.retrieval import hybrid_search, rank_investigations
 
 
 NO_CONTEXT_MESSAGE = 'I do not know, there is no context support this question'
+STUDY_REFERENCE = r'(?:this|the|that|selected|current)\s+(?:(?:selected|current)\s+)?(?:study|investigation|experiment)'
+STUDY_OVERVIEW = re.compile(
+    rf'(?:please\s+)?(?:'
+    rf"what(?:\s+(?:is|was)|['’]s)\s+{STUDY_REFERENCE}\s+(?:(?:talking|all)\s+)?about"
+    rf'|what\s+is\s+{STUDY_REFERENCE}\s+(?:studying|investigating|examining)'
+    rf'|what\s+did\s+{STUDY_REFERENCE}\s+(?:study|investigate|examine|aim\s+to\s+find\s+out)'
+    rf'|what\s+(?:is|was)\s+the\s+(?:purpose|objectives?|goal)\s+of\s+{STUDY_REFERENCE}'
+    rf'|(?:can\s+you\s+)?(?:summari[sz]e|explain|describe|tell\s+me\s+about)\s+{STUDY_REFERENCE}'
+    rf'|(?:give\s+me\s+)?(?:an?\s+)?(?:overview|summary)\s+of\s+{STUDY_REFERENCE}'
+    r')(?:\s+please)?[?.!]*', re.IGNORECASE,
+)
+OBJECTIVE_QUESTION = re.compile(r'\b(objectives?|purpose|aimed? to)\b', re.IGNORECASE)
 
 
 def abstain(status, reason, attempts=0):
@@ -91,10 +103,24 @@ class RAGService:
                 'warnings': ['Relevance scores use ranks within each source type and are not probabilities or safety ratings.']}
 
     def interpret(self, query):
+        audience = audience_context(query)
+        overview = STUDY_OVERVIEW.fullmatch(query.question) is not None
+        if overview and len(query.investigation_ids) != 1:
+            message = 'Which study do you mean? Select one study or include its name in your question.'
+            return dict(abstain('clarification_required', message), message=message,
+                        limitations=[], audience_context=audience)
+        metadata_allowed = not query.source_types or 'Investigation Metadata Files' in query.source_types
+        if overview and metadata_allowed:
+            objectives = self.store.objective_evidence(query.investigation_ids)
+            if objectives:
+                question = f'Give a short overview of {objectives[0].investigation_name} using its published objective.'
+                return dict(self._answer(question, objectives, audience_preferences=query), audience_context=audience)
+
         matches, status = self.retrieve(query)
-        if not matches:
+        objective_question = metadata_allowed and not overview and OBJECTIVE_QUESTION.search(query.question)
+        if not matches and not (objective_question and query.investigation_ids):
             return dict(abstain(status, 'No indexed data is available in this scope.' if status == 'no_data'
-                           else 'No sufficiently relevant evidence was retrieved.'), audience_context=audience_context(query))
+                               else 'No sufficiently relevant evidence was retrieved.'), audience_context=audience)
         # Bound context and prevent a long study from crowding out all other evidence.
         selected, counts = [], {}
         for match in matches:
@@ -104,12 +130,13 @@ class RAGService:
                 counts[item.investigation_id] = counts.get(item.investigation_id, 0) + 1
             if len(selected) >= 12:
                 break
-        if (not query.source_types or 'Investigation Metadata Files' in query.source_types) and re.search(
-                r'\b(objectives?|purpose|aimed? to)\b', query.question, re.I):
+        if objective_question:
             scope = query.investigation_ids[:3] or [selected[0].investigation_id]
             objectives = self.store.objective_evidence(scope)
             selected = [*objectives, *selected][:12]
-        return dict(self._answer(query.question, selected, audience_preferences=query), audience_context=audience_context(query))
+        if not selected:
+            return dict(abstain(status, 'No sufficiently relevant evidence was retrieved.'), audience_context=audience)
+        return dict(self._answer(query.question, selected, audience_preferences=query), audience_context=audience)
 
     def _answer(self, question, selected, scenario_context=None, audience_preferences=None):
         schema = Answer.model_json_schema()

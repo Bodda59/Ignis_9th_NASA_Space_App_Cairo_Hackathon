@@ -101,7 +101,7 @@ export function RankPage() {
                 <textarea id="rank-question" rows={2} maxLength={MAX_QUESTION} value={question}
                   placeholder="Which experiments studied flame spread in microgravity?"
                   onChange={(event) => setQuestion(event.target.value)}
-                  className="w-full rounded-xl border border-[var(--color-line)] bg-[var(--color-void)] px-4 py-3 text-sm outline-none focus:border-[var(--color-flame)]" />
+                  className="w-full resize-none rounded-xl border border-[var(--color-line)] bg-[var(--color-void)] px-4 py-3 text-sm outline-none focus:border-[var(--color-flame)]" />
               </div>
               {mode === 'question' && <div className="flex flex-wrap items-center gap-2 px-4 pb-2">
                 <label htmlFor="rank-source-type" className="label">Source type</label>

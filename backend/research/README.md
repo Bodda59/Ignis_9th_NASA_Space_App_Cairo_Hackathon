@@ -26,6 +26,15 @@ Groq is the default and uses `GROQ_API_KEY`. The other providers are
 `openrouter`, `gemini`, and `zai`. OpenRouter also requires `OPENROUTER_MODEL`.
 See [providers.py](providers.py) for the supported model settings.
 
+For Gemini, set `LLM_PROVIDER=gemini`, `GEMINI_MODEL`, and `GEMINI_API_KEY`.
+Add backup keys as `GEMINI_API_KEY_2` through `GEMINI_API_KEY_5`. When Gemini
+returns HTTP 429, the backend tries each configured key once until a request
+succeeds. It starts the next request with the last successful key. If every
+key returns 429, the API reports the rate limit. Gemini assigns quota per
+Google Cloud project, so multiple keys from one project share its quota.
+For Azure, configure the same names as Container App environment variables
+backed by secret references for the keys. See [deployment settings](../../DEPLOY.md).
+
 Send `X-API-Key` on each research request. Crew endpoints also require
 `X-Audience-Type` with a supported value such as `engineer`.
 

@@ -1,6 +1,7 @@
 import os
 from functools import lru_cache
 from pathlib import Path
+from threading import Lock
 
 from dotenv import load_dotenv
 
@@ -38,6 +39,31 @@ def get_embeddings():
     return BGEEmbeddings(os.getenv('EMBEDDING_MODEL', 'BAAI/bge-small-en-v1.5'))
 
 
+class GeminiFallback:
+    def __init__(self, clients, model_name):
+        self.clients = clients
+        self.model_name = model_name
+        self.preferred = 0
+        self.lock = Lock()
+
+    def invoke(self, messages):
+        from openai import RateLimitError
+
+        with self.lock:
+            start = self.preferred
+        for attempt in range(len(self.clients)):
+            index = (start + attempt) % len(self.clients)
+            try:
+                response = self.clients[index].invoke(messages)
+            except RateLimitError:
+                if attempt == len(self.clients) - 1:
+                    raise
+            else:
+                with self.lock:
+                    self.preferred = index
+                return response
+
+
 @lru_cache(maxsize=1)
 def get_llm():
     load_settings()
@@ -53,14 +79,16 @@ def get_llm():
                           use_responses_api=False)
     if provider == 'gemini':
         from langchain_openai import ChatOpenAI
-        key = os.getenv('GEMINI_API_KEY', '').strip()
+        names = ['GEMINI_API_KEY', *(f'GEMINI_API_KEY_{i}' for i in range(2, 6))]
+        keys = list(dict.fromkeys(key for name in names if (key := os.getenv(name, '').strip())))
         model = os.getenv('GEMINI_MODEL', 'gemini-3.8-flash').strip()
-        if not key or not model:
+        if not keys or not model:
             raise ValueError('Set GEMINI_API_KEY and GEMINI_MODEL in .env.')
-        return ChatOpenAI(model=model, api_key=key,
-                          base_url='https://generativelanguage.googleapis.com/v1beta/openai/',
-                          temperature=0, max_tokens=8192, timeout=90, max_retries=0,
-                          reasoning_effort='low', use_responses_api=False)
+        clients = [ChatOpenAI(model=model, api_key=key,
+                              base_url='https://generativelanguage.googleapis.com/v1beta/openai/',
+                              temperature=0, max_tokens=8192, timeout=90, max_retries=0,
+                              reasoning_effort='low', use_responses_api=False) for key in keys]
+        return GeminiFallback(clients, model)
     if provider == 'zai':
         from langchain_openai import ChatOpenAI
         key = (os.getenv('ZAI_API_KEY') or os.getenv('z_ai_key') or '').strip()

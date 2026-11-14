@@ -69,12 +69,13 @@ export function AssistantMessage({ res, turnId, onFollowUp, disabled }: Props) {
 
   const byline = evidenceOnly
     ? 'Research assistant · evidence search, no written answer'
-    : insufficient
+    : res.clarification ? 'Research assistant' : insufficient
       ? 'Research assistant · no supporting passages found'
       : `Research assistant · based on ${n} ${n === 1 ? 'source' : 'sources'}`
 
   let leadIn: ReactNode = null
   if (evidenceOnly) leadIn = res.evidence_message ?? 'Here is the research evidence ranked for your question.'
+  else if (res.clarification) leadIn = res.clarification
   else if (insufficient && !res.findings.length && res.scenario)
     leadIn = 'No written answer was published for this scenario. The tested records below show what the research does cover.'
   else if (insufficient && !res.findings.length)

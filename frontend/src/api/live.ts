@@ -141,10 +141,12 @@ export async function interpret(req: InterpretRequest, signal?: AbortSignal, opt
     answer = { status: 'insufficient_evidence', message: `Answer generation unavailable. ${error.message}`, scenario: ranking }
   }
   const cited = answer.citations ?? []
+  const needsClarification = answer.status === 'clarification_required'
   return {
-    status: answer.status === 'answered' ? 'answered' : 'insufficient_evidence',
+    status: needsClarification ? 'clarification_required' : answer.status === 'answered' ? 'answered' : 'insufficient_evidence',
+    clarification: needsClarification ? answer.message : undefined,
     findings: answer.findings ?? [], interpretations: answer.interpretations ?? [],
-    gaps: [...new Set([...(answer.limitations ?? []), ...(answer.message ? [answer.message] : [])])].map((text) => ({ text })),
+    gaps: [...new Set([...(answer.limitations ?? []), ...(answer.message && !needsClarification ? [answer.message] : [])])].map((text) => ({ text })),
     related_investigation_ids: [...new Set([...((cited as (Source & { investigation_id?: string })[]).flatMap((c) => c.investigation_id ? [c.investigation_id] : [])),
       ...(answer.scenario?.investigations.map((s) => s.investigation_id) ?? [])])],
     citations: cited.map(citation),
