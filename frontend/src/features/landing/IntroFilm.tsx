@@ -21,7 +21,7 @@ const prefersReducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)'
  * no native controls, the video melts into the page background, and the only chrome is
  * the same HUD language used elsewhere on the site.
  *
- * - Plays muted on arrival; sound is opt-in.
+ * - Tries to play with sound and falls back to muted playback if the browser blocks it.
  * - "Skip" (or any scroll) leaves it at once, and when it finishes the page scrolls on by itself.
  * - Once seen in a session it rests on its end card instead of replaying.
  * - Once it has been watched (or skipped) and scrolled past, `onPassed` fires so the page can
@@ -35,7 +35,7 @@ export function IntroFilm({ onPassed }: { onPassed?: () => void }) {
   const autoScroll = useRef<number>(0)
   const [mode, setMode] = useState<Mode>(() => (readSeen() || prefersReducedMotion() ? 'ended' : 'playing'))
   const [filmMounted, setFilmMounted] = useState(() => mode === 'playing')
-  const [muted, setMuted] = useState(true)
+  const [muted, setMuted] = useState(false)
   const [blocked, setBlocked] = useState(false)
   const [clock, setClock] = useState(0)
   const autoplayAllowed = mode === 'playing'
@@ -114,19 +114,34 @@ export function IntroFilm({ onPassed }: { onPassed?: () => void }) {
   useEffect(() => {
     const el = section.current
     if (!el) return
-    let visible = true
-    const modalOpen = () => !!document.querySelector('dialog[open]')
+    let visible = false
+    let observing = true
+    const canPlay = () => observing && visible && !document.querySelector('dialog[open]')
     const sync = () => {
       const v = video.current
       if (!v || !autoplayAllowed || v.ended) return
-      if (visible && !modalOpen()) void v.play().catch(() => setBlocked(true))
-      else v.pause()
+      if (!canPlay()) {
+        v.pause()
+        return
+      }
+      if (!v.paused) return
+      void v.play().catch((error: DOMException) => {
+        if (!canPlay() || error.name === 'AbortError') return
+        if (error.name === 'NotAllowedError' && !v.muted) {
+          v.muted = true
+          void v.play().catch((retryError: DOMException) => {
+            if (canPlay() && retryError.name !== 'AbortError') setBlocked(true)
+          })
+        } else {
+          setBlocked(true)
+        }
+      })
     }
     const io = new IntersectionObserver(([entry]) => { visible = entry.intersectionRatio > 0.35; sync() }, { threshold: [0, 0.35, 0.6] })
     io.observe(el)
     const mo = new MutationObserver(sync)
     mo.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ['open'] })
-    return () => { io.disconnect(); mo.disconnect() }
+    return () => { observing = false; io.disconnect(); mo.disconnect() }
   }, [autoplayAllowed, filmMounted])
 
   useEffect(() => () => window.clearTimeout(autoScroll.current), [])
@@ -143,8 +158,7 @@ export function IntroFilm({ onPassed }: { onPassed?: () => void }) {
     const v = video.current
     if (!v) return
     v.muted = !v.muted
-    if (!v.muted) v.volume = 1
-    setMuted(v.muted)
+    if (!v.muted && v.paused) void v.play().catch(() => setBlocked(true))
   }
 
   const playing = mode === 'playing'
@@ -182,8 +196,6 @@ export function IntroFilm({ onPassed }: { onPassed?: () => void }) {
           }`}
           // first frame (captions included) shows at once instead of a black screen while the film loads
           poster="/video/ignis-intro-poster.jpg"
-          autoPlay
-          muted
           playsInline
           preload="auto"
           disablePictureInPicture
@@ -192,6 +204,7 @@ export function IntroFilm({ onPassed }: { onPassed?: () => void }) {
           aria-hidden
           tabIndex={-1}
           onContextMenu={(e) => e.preventDefault()}
+          onVolumeChange={(e) => setMuted(e.currentTarget.muted)}
           onPlaying={() => setBlocked(false)}
           onEnded={onEnded}
           onError={(e) => { if (e.currentTarget.error) finish() }}
