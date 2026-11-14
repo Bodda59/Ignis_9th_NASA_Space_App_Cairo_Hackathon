@@ -13,8 +13,10 @@ type Settled<T> = { key: string; data?: T; error?: ApiError }
  * Runs `fn` whenever `key` changes, aborting the previous request.
  * "Loading" is derived (settled key ≠ requested key), and the last good data
  * is kept while reloading so content never flashes empty.
+ * `ready` is a response already in hand for this key; it is shown at once,
+ * with no loading state, while `fn` settles.
  */
-export function useAsync<T>(fn: (signal: AbortSignal) => Promise<T>, key: string) {
+export function useAsync<T>(fn: (signal: AbortSignal) => Promise<T>, key: string, ready?: T) {
   const [nonce, setNonce] = useState(0)
   const [settled, setSettled] = useState<Settled<T>>({ key: '' })
   const [lastData, setLastData] = useState<T>()
@@ -46,7 +48,7 @@ export function useAsync<T>(fn: (signal: AbortSignal) => Promise<T>, key: string
   const retry = useCallback(() => setNonce((n) => n + 1), [])
 
   let state: AsyncState<T>
-  if (settled.key !== requestKey) state = { status: 'loading', data: lastData }
+  if (settled.key !== requestKey) state = ready !== undefined ? { status: 'success', data: ready } : { status: 'loading', data: lastData }
   else if (settled.error) state = { status: 'error', data: lastData, error: settled.error }
   else state = { status: 'success', data: settled.data as T }
 

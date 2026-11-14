@@ -5,6 +5,7 @@
  */
 import type { Audience } from '@/features/audience/audience'
 import * as live from './live'
+import { recall, remember } from './memo'
 import { http, post } from './transport'
 import type {
   ApiWarning,
@@ -52,13 +53,32 @@ function normalizeSearch(r: SearchResponse): SearchResponse {
   }
 }
 
+const searchKey = (req: SearchRequest) => `search:${JSON.stringify(req)}`
+const studyKey = (id: string) => `study:${id}`
+
+/** Responses already loaded in the last minute, readable without waiting. */
+export const recent = {
+  filters: () => recall<FiltersResponse>('filters'),
+  search: (req: SearchRequest) => recall<SearchResponse>(searchKey(req)),
+  investigation: (id: string) => recall<InvestigationResponse>(studyKey(id)),
+}
+
+const warmed = new Set<string>()
+/** Loads a study ahead of the click, once, so its page opens from memory. */
+export function warmInvestigation(id: string) {
+  if (warmed.has(id) || recent.investigation(id)) return
+  warmed.add(id)
+  api.investigation(id).catch(() => warmed.delete(id))
+}
+
 export const api = {
   filters(signal?: AbortSignal): Promise<FiltersResponse> {
-    return http<FiltersResponse>('/api/v1/research/filters', { signal })
+    return remember('filters', () => http<FiltersResponse>('/api/v1/research/filters', { signal }))
   },
 
-  async search(req: SearchRequest, signal?: AbortSignal): Promise<SearchResponse> {
-    return normalizeSearch(await http<SearchResponse>('/api/v1/research/relevance', post(req, signal)))
+  search(req: SearchRequest, signal?: AbortSignal): Promise<SearchResponse> {
+    return remember(searchKey(req), async () =>
+      normalizeSearch(await http<SearchResponse>('/api/v1/research/relevance', post(req, signal))))
   },
 
   autocomplete(query: string, limit = 4, signal?: AbortSignal): Promise<{ items: { text: string }[] }> {
@@ -92,7 +112,8 @@ export const api = {
   },
 
   investigation(id: string, signal?: AbortSignal): Promise<InvestigationResponse> {
-    return http<InvestigationResponse>(`/api/v1/investigations/${encodeURIComponent(id)}/detail`, { signal })
+    return remember(studyKey(id), () =>
+      http<InvestigationResponse>(`/api/v1/investigations/${encodeURIComponent(id)}/detail`, { signal }))
   },
 
   /** Earth applications stated in the PSI records, grouped by theme. */

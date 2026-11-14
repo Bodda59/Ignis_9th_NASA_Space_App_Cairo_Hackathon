@@ -13,6 +13,7 @@ from psycopg.types.json import Jsonb
 from data_pipeline.facts import VERSION, compare_facts, digest
 from data_pipeline.reviewed import REVIEWED
 from data_pipeline.source_metadata import source_details
+from research.cache import remember
 from research.catalog_search import query_words, rank_candidates, search_candidates
 from data_pipeline.queue import enqueue_narrative
 
@@ -153,6 +154,11 @@ class Catalog:
         return result
 
     def autocomplete(self, query, audience, limit):
+        # Suggestions repeat as people type and retype; the stored cache below still costs several round trips.
+        return remember(self.store, ('autocomplete', query.casefold(), audience, limit), 300,
+                        lambda: self.find_suggestions(query, audience, limit))
+
+    def find_suggestions(self, query, audience, limit):
         with self.store.connect() as conn:
             conn.execute("SET LOCAL pg_trgm.similarity_threshold=0.2")
             revision = self.revision(conn)
