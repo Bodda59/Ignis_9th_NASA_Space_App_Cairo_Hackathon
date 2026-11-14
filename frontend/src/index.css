@@ -41,6 +41,8 @@
 
 @layer base {
   html {
+    /* Dark native controls: <select> popups, scrollbars, date/number pickers. */
+    color-scheme: dark;
     background: var(--color-void);
     color: var(--color-ink);
     font-family: var(--font-sans);

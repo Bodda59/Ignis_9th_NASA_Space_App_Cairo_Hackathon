@@ -84,7 +84,7 @@ export function RankPage() {
             }}>{label}</Chip>)}
           </div>
           {mode === 'habitat' ? <ContextBar s={search} /> : (
-            <div className="overflow-hidden rounded-2xl border border-[var(--color-line-input)] bg-[var(--color-panel)]/90">
+            <div className="relative z-20 rounded-2xl border border-[var(--color-line-input)] bg-[var(--color-panel)]/90">
               <div className="p-4">
                 <label htmlFor="rank-question" className="label mb-2 block">{mode === 'scenario' ? 'Question (optional)' : 'Question'}</label>
                 <textarea id="rank-question" rows={2} maxLength={MAX_QUESTION} value={question}
