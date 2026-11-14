@@ -29,14 +29,14 @@ Run these in [Azure Cloud Shell](https://shell.azure.com) (Bash). They only need
 
 ### 0. Your names
 
-Set these once at the start of the Cloud Shell session; every command below uses them. `ACR` must be globally unique, lowercase letters and digits only. `LOCATION` must be a region that accepts new customers on your subscription.
+Set these once at the start of the Cloud Shell session; every command below uses them. `ACR` must be globally unique, lowercase letters and digits only. `LOCATION` must be a region that accepts new customers on your subscription. `APP` becomes the first part of the site address (`https://APP.<environment>.<region>.azurecontainerapps.io`): lowercase letters, digits and hyphens.
 
 ```bash
 RG=rg-flame-freefall
 LOCATION=northeurope
 ACR=flamefreefall123
 ENVIRONMENT=cae-flame-freefall
-APP=flame-in-freefall
+APP=ignis-9th
 REPO=Bodda59/Ignis_9th_NASA_Space_App_Cairo_Hackathon
 REPO_IDS=Bodda59@168367452/Ignis_9th_NASA_Space_App_Cairo_Hackathon@1456411804
 ```
