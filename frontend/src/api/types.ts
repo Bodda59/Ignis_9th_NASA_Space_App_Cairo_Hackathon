@@ -140,6 +140,7 @@ export type Investigation = {
   materials: string[]
   fuel_types: string[]
   objectives: string[]
+  source_metadata?: { platform?: string; project_type?: string; start_date?: string | null; end_date?: string | null }
   summary: string
   measurement_types: string[]
   limitations: string[]

@@ -4,8 +4,8 @@
  * or, for studies not yet discovered, the facts printed on its Explore card (job, fuel).
  */
 import type { EarthThemeId, InvestigationResponse, SafetyTopic, SearchItem } from '@/api/types'
-import { EARTH_OXYGEN_PCT, EARTH_THEMES, FUELS, JOBS, plainMaterial, platformWords } from './kidsCopy'
-import { kidStats, type KidStats } from './kidsData'
+import { EARTH_THEMES, FUELS, JOBS, platformWords } from './kidsCopy'
+import { kidStats, oxygenAmount, oxygenVerdict, type KidStats } from './kidsData'
 
 export type StudyFacts = {
   id: string
@@ -58,9 +58,6 @@ function ask(f: StudyFacts, from: Question['from'], step: string, prompt: string
   return { prompt, options, answer: options.indexOf(right), explain, studyId: f.id, acronym: f.acronym, from, step }
 }
 
-export const oxygenVerdict = (min: number, max: number) =>
-  max < EARTH_OXYGEN_PCT ? 'Less oxygen than our air' : min > EARTH_OXYGEN_PCT ? 'More oxygen than our air' : 'Both less and more than our air'
-
 /** Every question a study can support, given the other studies for wrong answers. */
 export function questionsFor(f: StudyFacts, pool: StudyFacts[]): Question[] {
   const from = f.stats ? 'story' : 'card'
@@ -74,36 +71,36 @@ export function questionsFor(f: StudyFacts, pool: StudyFacts[]): Question[] {
   }
   if (f.fuels.length === 1) {
     const fu = f.fuels[0]
-    qs.push(ask(f, from, from === 'story' ? 'What burned?' : 'Explore card', `What kind of fuel did ${f.acronym} burn?`, FUELS[fu].title,
-      Object.values(FUELS).map((x) => x.title), `${f.acronym} burned ${FUELS[fu].title.toLowerCase()} fuel. ${FUELS[fu].explain}`))
+    qs.push(ask(f, from, from === 'story' ? 'What burned?' : 'Explore card', `What kind of fuel is listed for ${f.acronym}?`, FUELS[fu].title,
+      Object.values(FUELS).map((x) => x.title), `The catalog lists ${FUELS[fu].title.toLowerCase()} fuel for ${f.acronym}. ${FUELS[fu].explain}`))
   }
 
   const s = f.stats
   if (s) {
     const top = s.topMaterials[0]
-    if (top) {
-      const mine = new Set(s.topMaterials.map((m) => plainMaterial(m.name).text))
-      const wrong = shuffle(others.flatMap((o) => o.stats?.topMaterials.slice(0, 1).map((m) => plainMaterial(m.name).text) ?? []).filter((m) => !mine.has(m)))
-      qs.push(ask(f, 'story', 'What burned?', `What did ${f.acronym} burn most often?`, plainMaterial(top.name).text, wrong,
-        `${f.acronym} burned ${plainMaterial(top.name).text} in ${top.count} tests, more than anything else.`))
+    if (top && top.count > (s.topMaterials[1]?.count ?? 0)) {
+      const wrong = shuffle(s.topMaterials.slice(1)).map((m) => m.name)
+      qs.push(ask(f, 'story', 'Materials and fuels', `Which material is listed most often in ${f.acronym}’s test records?`, top.name, wrong,
+        `${top.name} is listed in ${top.count} test records.`))
     }
     if (s.oxygen) {
       const right = oxygenVerdict(s.oxygen.min, s.oxygen.max)
-      qs.push(ask(f, 'story', 'The air they used', `Compared with the air we breathe, how much oxygen did ${f.acronym} try?`, right,
-        ['Less oxygen than our air', 'More oxygen than our air', 'Both less and more than our air'],
-        `${f.acronym} tried from ${Math.round(s.oxygen.min)} to ${Math.round(s.oxygen.max)} parts oxygen out of 100. Our air has about 21.`))
+      qs.push(ask(f, 'story', 'The air they used', `How do the listed oxygen numbers for ${f.acronym} compare with Earth air?`, right,
+        shuffle(['Less oxygen than Earth air', 'More oxygen than Earth air', 'About the same as Earth air',
+          'Less oxygen or about the same', 'About the same or more oxygen', 'Both less and more than Earth air']),
+        `The listed values are ${oxygenAmount(s.oxygen.min, s.oxygen.max)} parts oxygen out of 100. Earth air has about 21.`))
     }
     if (s.testCount > 0) {
       const counts = shuffle([...new Set(others.map((o) => o.stats?.testCount ?? 0).filter((c) => c > 0 && c !== s.testCount))])
-      if (counts.length >= 2) {
-        qs.push(ask(f, 'story', 'How many tests?', `How many test results did NASA write down for ${f.acronym}?`, String(s.testCount), counts.map(String),
-          `NASA wrote down ${s.testCount} test results for ${f.acronym}.`))
+      if (counts.length) {
+        qs.push(ask(f, 'story', 'How many tests?', `How many individual test entries does the catalog list for ${f.acronym}?`, String(s.testCount), counts.map(String),
+          `The catalog lists ${s.testCount} individual test entries. Entries can include tests that did not ignite.`))
       }
     }
     const place = platformWords(s.platform)
     if (place) {
       const wrong = [...new Set(others.map((o) => platformWords(o.stats?.platform)?.title).filter((p): p is string => !!p && p !== place.title))]
-      qs.push(ask(f, 'story', 'Meet', `Where did ${f.acronym} light its flames?`, place.title, wrong, `${f.acronym} flew on the ${place.title}. ${place.explain}`))
+      qs.push(ask(f, 'story', 'Meet', `Where did the ${f.acronym} study take place?`, place.title, wrong, `Study location: ${place.title}. ${place.explain}`))
     }
   }
 

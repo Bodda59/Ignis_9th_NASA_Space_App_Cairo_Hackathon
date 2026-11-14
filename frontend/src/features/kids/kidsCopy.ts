@@ -12,30 +12,30 @@ export const JOBS: Record<SafetyTopic, { title: string; short: string; explain: 
   prevention: {
     title: 'Stop fires before they start',
     short: 'Prevent',
-    explain: 'These experiments learn how things catch fire and how flames spread, so spaceships can be built from safer stuff.',
+    explain: 'Research on ignition and flame spread can help people design safer spacecraft.',
     color: '#2fbf7f',
     soft: '#dff7ea',
   },
   detection: {
     title: 'Spot smoke fast',
     short: 'Spot',
-    explain: 'These experiments study smoke, so alarms on a spaceship can notice a fire quickly and not get fooled by dust.',
+    explain: 'Research on smoke and dust can help people design better alarms for spacecraft.',
     color: '#2e8fe6',
     soft: '#dfeefc',
   },
   suppression: {
     title: 'Put flames out',
     short: 'Stop',
-    explain: 'These experiments test what makes a flame go out, so astronauts have the best fire extinguishers.',
+    explain: 'These experiments test what makes a flame go out, which can help researchers design better ways to put fires out.',
     color: '#8a5cf0',
     soft: '#ece5fd',
   },
 }
 
 export const NO_JOB = {
-  title: 'Flame science',
+  title: 'Space science',
   short: 'Science',
-  explain: 'This study helps scientists understand flames better.',
+  explain: 'This study helps scientists understand how things behave in space or in the lab.',
   color: '#e8833a',
   soft: '#fdeedd',
 }
@@ -45,7 +45,7 @@ export const jobOf = (topic?: SafetyTopic) => (topic ? JOBS[topic] : NO_JOB)
 /** Fuel types from the catalog. */
 export const FUELS: Record<string, { title: string; explain: string }> = {
   solid: { title: 'Solid', explain: 'Things you can hold, like plastic or fabric.' },
-  liquid: { title: 'Liquid', explain: 'Runny fuels, burned as tiny drops.' },
+  liquid: { title: 'Liquid', explain: 'Fuels that can flow, like the drops used in some experiments.' },
   gas: { title: 'Gas', explain: 'Invisible fuel gas, like the gas in a kitchen stove.' },
 }
 
@@ -61,11 +61,11 @@ const MATERIAL_WORDS: [RegExp, string][] = [
   [/^methanol$/i, 'methanol, an alcohol fuel'],
   [/^kapton$/i, 'Kapton, a thin plastic film used on spacecraft'],
   [/^lampwick$/i, 'lamp wick cloth'],
-  [/^c2h4$|ethylene/i, 'ethylene gas'],
-  [/^ch4$|methane/i, 'methane gas (like kitchen-stove gas)'],
-  [/^c3h8$|propane/i, 'propane gas (like camping-stove gas)'],
-  [/butane/i, 'butane gas (like lighter gas)'],
-  [/^c12h26$|dodecane/i, 'dodecane, a liquid fuel found in jet fuel'],
+  [/^(c2h4|ethylene)$/i, 'ethylene gas'],
+  [/^(ch4|methane)$/i, 'methane gas (like kitchen-stove gas)'],
+  [/^(c3h8|propane)$/i, 'propane gas (like camping-stove gas)'],
+  [/^butane$/i, 'butane gas (like lighter gas)'],
+  [/^(c12h26|dodecane)$/i, 'dodecane, a liquid fuel found in jet fuel'],
 ]
 
 export function plainMaterial(raw: string): { text: string; plain: boolean } {
@@ -75,19 +75,19 @@ export function plainMaterial(raw: string): { text: string; plain: boolean } {
 
 /** Earth benefit themes (ids from /api/v1/earth) in kid words. */
 export const EARTH_THEMES: Record<EarthThemeId, { title: string; explain: string }> = {
-  confined_spaces: { title: 'Safer closed-in places', explain: 'Submarines, planes and mines are closed in like a spaceship, so they need the same fire safety ideas.' },
+  confined_spaces: { title: 'Safer closed-in places', explain: 'Submarines, planes and mines are closed in like a spaceship, so some of the same fire safety questions apply.' },
   smoke_detection: { title: 'Smarter smoke alarms', explain: 'Knowing how smoke behaves helps alarms tell real smoke from dust.' },
   suppression: { title: 'Better fire extinguishers', explain: 'Knowing what makes a flame go out helps people design better extinguishers.' },
-  fire_modeling: { title: 'Fire on the computer', explain: 'Scientists build computer models of fire. Space flames are simpler, so they are great for checking the models.' },
+  fire_modeling: { title: 'Fire on the computer', explain: 'Scientists build computer models of fire. In microgravity, scientists can test what their models predict when hot air hardly rises.' },
   test_methods: { title: 'Fairer fire tests', explain: 'Space results are compared with the tests used on Earth to pick safe materials.' },
   cleaner_combustion: { title: 'Cleaner engines', explain: 'Understanding flames helps make engines and power plants that waste less fuel and make less pollution.' },
 }
 
 /** Where the experiment flew — from the PSI "platform" field. */
 export function platformWords(platform?: string | null) {
-  if (!platform) return null
+  if (!platform || /^not applicable$|^unknown$/i.test(platform)) return null
   if (/international space station|\bISS\b/i.test(platform)) return { title: 'International Space Station', explain: 'A big science lab that circles Earth about 16 times a day.' }
-  if (/cygnus/i.test(platform)) return { title: 'Cygnus cargo spaceship', explain: 'An empty supply ship. After it left the space station, scientists lit a big fire inside it, safely, with nobody on board.' }
+  if (/cygnus/i.test(platform)) return { title: 'Cygnus cargo spaceship', explain: 'A cargo spaceship. The Saffire experiments ran after it left the space station, with nobody on board.' }
   return { title: platform, explain: '' }
 }
 

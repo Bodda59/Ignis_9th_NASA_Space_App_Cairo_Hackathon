@@ -8,7 +8,7 @@ import { useAsync } from '@/hooks/useAsync'
 import { cn } from '@/lib/cn'
 import { FUEL_ICONS, jobIcon } from '@/features/kids/icons'
 import { EARTH_OXYGEN_PCT, EARTH_PRESSURE_KPA, EARTH_THEMES, FUELS, JOBS, jobOf, plainMaterial, platformWords } from '@/features/kids/kidsCopy'
-import { kidNumber, kidStats, type KidStats } from '@/features/kids/kidsData'
+import { kidNumber, kidStats, oxygenVerdict, type KidStats } from '@/features/kids/kidsData'
 import { KidError, KidLoading } from '@/features/kids/KidState'
 import { Guide } from '@/features/kids/Mascot'
 import { Burst } from '@/features/kids/Burst'
@@ -35,7 +35,10 @@ function Story({ detail }: { detail: InvestigationResponse }) {
   const stats = useMemo(() => kidStats(detail), [detail])
   const steps = useMemo(() => buildSteps(detail, stats), [detail, stats])
   const [params] = useSearchParams()
-  const [i, setI] = useState(() => Math.min(Math.max(Number(params.get('step')) - 1 || 0, 0), steps.length - 1))
+  const [i, setI] = useState(() => {
+    const step = Number(params.get('step'))
+    return Number.isInteger(step) ? Math.min(Math.max(step - 1, 0), steps.length - 1) : 0
+  })
   const { discovered } = useKidsProgress()
   const already = discovered.includes(inv.id)
   const last = i === steps.length - 1
@@ -138,17 +141,18 @@ function buildSteps(detail: InvestigationResponse, s: KidStats): Step[] {
   const inv = detail.investigation
   const steps: Step[] = []
   const place = platformWords(s.platform)
-  const now = new Date().getFullYear()
+  const { materials: reviewedMaterials, study_context: context } = detail.summary_sections
 
   steps.push({
     key: 'meet',
     label: `Meet ${inv.acronym}`,
-    say: `This is ${inv.acronym}. ${inv.safety_topics.length ? `Its job: ${inv.safety_topics.map((t) => JOBS[t].title.toLowerCase()).join(', and ')}.` : 'It studies how flames work.'}`,
+    say: `This is ${inv.acronym}. ${inv.safety_topics.length ? `Its job: ${inv.safety_topics.map((t) => JOBS[t].title.toLowerCase()).join(', and ')}.` : 'Let’s see what the scientists studied.'}`,
     body: (
       <div className="space-y-5">
         <div>
           <p className="text-sm font-bold uppercase tracking-wide text-[#7a5cf0]">NASA’s full name</p>
           <p className="mt-1 font-display text-xl font-bold leading-snug">{inv.name}</p>
+          {context?.[0] && <p className="mt-2">{context[0].text}</p>}
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
           {(inv.safety_topics.length ? inv.safety_topics : [undefined]).map((t) => {
@@ -161,9 +165,10 @@ function buildSteps(detail: InvestigationResponse, s: KidStats): Step[] {
           {place && (
             <Fact icon={<Satellite size={26} />} color="#2e8fe6" soft="#dfeefc" title={`Where: ${place.title}`}>{place.explain}</Fact>
           )}
+          {s.flightYear && <Fact icon={<CalendarDays size={26} />} color="#e8833a" soft="#fdeedd" title={`Flight tests: ${s.flightYear}`}>Year reported for the tests aboard Cygnus.</Fact>}
           {s.startYear && (
-            <Fact icon={<CalendarDays size={26} />} color="#e8833a" soft="#fdeedd" title={`When: ${s.endYear && s.endYear !== s.startYear ? `${s.startYear} to ${s.endYear}` : `started ${s.startYear}`}`}>
-              That’s {now - s.startYear} years ago{now - s.startYear > 9 ? ', maybe before you were born!' : '.'}
+            <Fact icon={<CalendarDays size={26} />} color="#e8833a" soft="#fdeedd" title={`Study dates: ${s.endYear && s.endYear !== s.startYear ? `${s.startYear} to ${s.endYear}` : `started ${s.startYear}`}`}>
+              Dates for the study as a whole.
             </Fact>
           )}
         </div>
@@ -173,10 +178,8 @@ function buildSteps(detail: InvestigationResponse, s: KidStats): Step[] {
 
   steps.push({
     key: 'burn',
-    label: 'What burned?',
-    say: s.topMaterials.length || inv.fuel_types.length
-      ? 'Scientists picked what to burn on purpose. Here is what this experiment used the most.'
-      : 'NASA’s files for this experiment don’t list what was burned. That’s okay, scientists don’t always write everything in one place!',
+    label: 'Materials and fuels',
+    say: 'Here are the materials and fuels listed for this study.',
     body: (
       <div className="space-y-5">
         {inv.fuel_types.filter((f) => FUELS[f]).length > 0 && (
@@ -189,16 +192,15 @@ function buildSteps(detail: InvestigationResponse, s: KidStats): Step[] {
         )}
         {s.topMaterials.length > 0 ? (
           <div>
-            <p className="font-display text-lg font-bold">Burned most often</p>
+            <p className="font-display text-lg font-bold">Most common labels in the test records</p>
             <ul className="mt-3 space-y-3">
               {s.topMaterials.map((m, n) => {
-                const p = plainMaterial(m.name)
                 const width = (m.count / s.topMaterials[0].count) * 100
                 return (
                   <li key={m.name}>
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
-                      <span className="font-bold">{p.text}</span>
-                      <span className="text-[#5b5785]">{m.count} tests</span>
+                      <span className="font-bold">{m.name}</span>
+                      <span className="text-[#5b5785]">{m.count} test entries</span>
                     </div>
                     <div className="mt-1 h-4 overflow-hidden rounded-full bg-[#f1eefc]">
                       <motion.div className="h-full rounded-full" style={{ background: ['#ff8a3d', '#ffcf4a', '#ff8fb1'][n] }} initial={{ width: 0 }} animate={{ width: `${width}%` }} transition={{ duration: 0.8, delay: n * 0.1 }} />
@@ -208,6 +210,8 @@ function buildSteps(detail: InvestigationResponse, s: KidStats): Step[] {
               })}
             </ul>
           </div>
+        ) : reviewedMaterials.length > 0 ? (
+          <ul className="space-y-2">{reviewedMaterials.slice(0, 3).map((m) => <li key={m.text}>{m.text}</li>)}</ul>
         ) : inv.materials.length > 0 ? (
           <div>
             <p className="font-display text-lg font-bold">Things on NASA’s list</p>
@@ -216,7 +220,7 @@ function buildSteps(detail: InvestigationResponse, s: KidStats): Step[] {
             </ul>
           </div>
         ) : (
-          <Missing>NASA’s files don’t list the materials for this one.</Missing>
+          <Missing>This page has no material list for the study.</Missing>
         )}
       </div>
     ),
@@ -225,39 +229,46 @@ function buildSteps(detail: InvestigationResponse, s: KidStats): Step[] {
   steps.push({
     key: 'air',
     label: 'The air they used',
-    say: s.oxygen
-      ? 'Fire needs oxygen, a gas in the air. Scientists changed how much oxygen there was, to find out when a fire can and can’t burn.'
-      : 'Fire needs oxygen from the air. NASA’s tables for this experiment don’t list the oxygen numbers.',
+    say: 'These numbers come from the individual test entries that give a single oxygen or pressure value.',
     body: s.oxygen || s.pressure ? (
       <div className="space-y-6">
         {s.oxygen && <OxygenGrids min={s.oxygen.min} max={s.oxygen.max} />}
         {s.pressure && <PressureBalloons min={s.pressure.min} max={s.pressure.max} />}
       </div>
-    ) : <Missing>No oxygen or air-pressure numbers were shared for this experiment.</Missing>,
+    ) : <Missing>There are no single oxygen or pressure values in the individual test entries shown here.</Missing>,
   })
 
   steps.push({
     key: 'tests',
     label: 'How many tests?',
     say: s.testCount
-      ? `NASA wrote down ${s.testCount} test results for ${inv.acronym}. Scientists repeat tests many times to be sure!`
-      : 'The test numbers for this experiment aren’t in NASA’s tables yet.',
-    body: s.testCount ? <TestDots count={s.testCount} /> : <Missing>No test numbers to count here, yet.</Missing>,
+      ? `The catalog lists ${s.testCount} individual test entries. Some entries may describe tests that did not ignite.`
+      : 'This study’s sources are summarized here.',
+    body: (
+      <div className="space-y-4">
+        {s.testCount > 0 && <TestDots count={s.testCount} />}
+        {s.recordDescription ? <p>{s.recordDescription}</p> : s.sourceRowCount > 0
+          ? <p>The source tables have {s.sourceRowCount} rows.</p> : !s.testCount && <Missing>There is no individual test table here.</Missing>}
+      </div>
+    ),
   })
 
   if (detail.findings.length) {
     steps.push({
       key: 'noticed',
       label: 'What NASA noticed',
-      say: 'Here is something the scientists wrote about what they saw. It uses grown-up words, so you can ask someone to read it with you.',
+      say: 'Here are findings from the reviewed sources. Ask someone to read along if a science word is new.',
       body: (
         <div className="space-y-4">
           <p className="inline-flex items-center gap-2 rounded-full bg-[#ece8ff] px-3 py-1 text-sm font-bold text-[#4b3bb5]">
-            <FlaskConical size={16} aria-hidden="true" /> In NASA’s own words
+            <FlaskConical size={16} aria-hidden="true" /> What the sources tell us
           </p>
           {detail.findings.slice(0, 2).map((f) => (
-            <blockquote key={f.id} className="border-l-4 border-[#7a5cf0] pl-4 text-lg leading-relaxed">{f.text}</blockquote>
+            <p key={f.id} className="border-l-4 border-[#7a5cf0] pl-4 text-lg leading-relaxed">{f.text}</p>
           ))}
+          <Link to={`/investigations/${encodeURIComponent(inv.id)}#findings`} className="inline-block font-bold text-[#4b3bb5] underline">
+            See the findings and sources
+          </Link>
         </div>
       ),
     })
@@ -354,12 +365,8 @@ function AirGrid({ pct, label, highlight }: { pct: number; label: string; highli
 }
 
 function OxygenGrids({ min, max }: { min: number; max: number }) {
-  const same = Math.round(min * 10) === Math.round(max * 10)
-  const verdict = max < EARTH_OXYGEN_PCT
-    ? 'Every test had less oxygen than the air you breathe.'
-    : min > EARTH_OXYGEN_PCT
-      ? 'Every test had more oxygen than the air you breathe.'
-      : 'They tried air with less oxygen and air with more oxygen than ours.'
+  const same = kidNumber(min) === kidNumber(max)
+  const verdict = oxygenVerdict(min, max)
   return (
     <div>
       <p className="font-display text-lg font-bold">Oxygen: out of 100 bits of air</p>
@@ -367,8 +374,8 @@ function OxygenGrids({ min, max }: { min: number; max: number }) {
         <AirGrid pct={EARTH_OXYGEN_PCT} label="Earth’s air" highlight />
         {same ? <AirGrid pct={min} label="In the tests" /> : (
           <>
-            <AirGrid pct={min} label="Least they tried" />
-            <AirGrid pct={max} label="Most they tried" />
+            <AirGrid pct={min} label="Lowest listed value" />
+            <AirGrid pct={max} label="Highest listed value" />
           </>
         )}
       </div>
@@ -388,7 +395,7 @@ function PressureBalloons({ min, max }: { min: number; max: number }) {
   return (
     <div>
       <p className="font-display text-lg font-bold">Air squeeze (pressure)</p>
-      <p className="mt-1 text-[#3e3a66]">Pressure is how hard the air is squeezed together. More squeeze means more air packed in.</p>
+      <p className="mt-1 text-[#3e3a66]">Pressure is how hard the air is squeezed together. At the same temperature, more pressure means more air is packed into the same space.</p>
       <div className="mt-4 flex items-end justify-around gap-2">
         {items.map((b) => {
           const size = 36 + 84 * Math.sqrt(b.kpa / biggest)
@@ -423,8 +430,8 @@ function TestDots({ count }: { count: number }) {
   return (
     <div>
       <p className="font-display text-5xl font-bold text-[#7a5cf0]">{count}</p>
-      <p className="font-semibold text-[#3e3a66]">test results written down by NASA</p>
-      <div className="mt-4 flex flex-wrap gap-1.5" role="img" aria-label={`${count} dots, one for each test result`}>
+      <p className="font-semibold text-[#3e3a66]">individual test entries in the catalog</p>
+      <div className="mt-4 flex flex-wrap gap-1.5" role="img" aria-label={`${count} test entries shown with ${dots} dots`}>
         {Array.from({ length: dots }, (_, n) => (
           <motion.span
             key={n}
@@ -436,7 +443,7 @@ function TestDots({ count }: { count: number }) {
           />
         ))}
       </div>
-      <p className="mt-3 text-sm text-[#5b5785]">{per === 1 ? 'Each dot is one test result.' : `Each dot is ${per} test results.`}</p>
+      <p className="mt-3 text-sm text-[#5b5785]">{per === 1 ? 'Each dot is one test entry.' : `Each dot stands for up to ${per} test entries.`}</p>
     </div>
   )
 }

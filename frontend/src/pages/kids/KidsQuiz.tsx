@@ -23,7 +23,7 @@ export function KidsQuiz() {
   const data = useAsync(async (signal) => {
     const studies = await loadStudies(signal)
     const named = studies.items.filter(hasMissionName)
-    const details = await Promise.all(recent.map((id) => api.investigation(id, signal).catch(() => null)))
+    const details = await Promise.all(recent.filter((id) => named.some((study) => study.id === id)).map((id) => api.investigation(id, signal).catch(() => null)))
     const stories = details.filter((d) => d !== null).map(factsFromDetail)
     const storyIds = new Set(stories.map((s) => s.id))
     return { stories, cards: named.filter((s) => !storyIds.has(s.id)).map(factsFromSearch) }
@@ -79,6 +79,8 @@ function Round({ stories, cards, onAgain }: { stories: StudyFacts[]; cards: Stud
     if (score === questions.length) badges.push('quiz-perfect')
     if (badges.length) reward({ badges })
   }
+
+  if (!questions.length) return <p>There are no quiz questions for these study records yet.</p>
 
   // Intro: say where the questions come from.
   if (!started) {

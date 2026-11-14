@@ -31,7 +31,7 @@ export function KidsHome() {
           </motion.h1>
           <Guide
             className="mt-6"
-            say="Hi, space cadet! I'm Orbi. NASA lit real, tiny fires in space to learn how to keep astronauts safe. Move the slider to see a space flame!"
+            say="Hi, space cadet! I'm Orbi. NASA studies flames in space to learn how to keep astronauts safe. Move the slider to see how a candle flame can change."
           />
         </div>
         <FlameToy />
@@ -40,7 +40,7 @@ export function KidsHome() {
       <aside className="toon flex items-start gap-4 rounded-3xl bg-[#ffcf4a] p-5 text-[#2a1650]">
         <TriangleExclamationPoint size={30} className="mt-0.5 shrink-0" aria-hidden="true" />
         <p className="text-[17px] font-semibold leading-snug">
-          Fire is not a toy! NASA scientists only light flames inside special sealed boxes, with lots of safety rules. Never try this at home.
+          Fire is not a toy! NASA uses carefully controlled equipment for fire experiments. Never try this at home.
         </p>
       </aside>
 
@@ -64,7 +64,7 @@ export function KidsHome() {
                   <h3 className="mt-4 font-display text-xl font-bold">{JOBS[t].title}</h3>
                   <p className="mt-2 flex-1 leading-snug text-[#3e3a66]">{JOBS[t].explain}</p>
                   <span className="mt-4 inline-flex items-center gap-2 font-bold" style={{ color: JOBS[t].color }}>
-                    {studies.status === 'loading' && !studies.data ? 'Counting…' : `${count} experiment${count === 1 ? '' : 's'}`}
+                    {studies.data ? `${count} experiment${count === 1 ? '' : 's'}` : studies.status === 'error' ? 'Explore experiments' : 'Counting…'}
                     <ArrowRight size={18} className="transition group-hover:translate-x-1" aria-hidden="true" />
                   </span>
                 </Link>
@@ -78,7 +78,7 @@ export function KidsHome() {
         <h2 id="missions-title" className="font-display text-3xl font-bold">Pick a mission</h2>
         <div className="mt-5 grid gap-4 md:grid-cols-2">
           <Mission to="/kids/explore" icon={Telescope} color="#6ee7ff" title="Explore experiments"
-            text={named.length ? `Meet ${named.length} real NASA fire experiments.` : 'Meet real NASA fire experiments.'} />
+            text={named.length ? `Meet ${named.length} NASA studies.` : 'Meet NASA studies.'} />
           <Mission to="/kids/game" icon={Gamepad2} color="#ff8a3d" title="Game zone" text="Be an Experiment Detective, or join the Fire Patrol!" />
           <Mission to="/kids/quiz" icon={Puzzle} color="#ff8fb1" title="Take the quiz" text="Answer questions about real experiments and win stars." />
           <Mission to="/kids/earth" icon={Earth} color="#7ee2a8" title="Space helps Earth" text="See how space fire science helps people at home." />

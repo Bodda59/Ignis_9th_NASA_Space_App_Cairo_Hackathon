@@ -1212,3 +1212,45 @@ REPORT_DETAILS['PSI-60'] = {
         {'text': 'The stated fire-safety and cleaner-combustion benefits are potential applications. This collection does not demonstrate detector response, suppression effectiveness or a certified operating limit.', 'source_refs': [dict(SPICE_ANALYSIS_META, field='Comment[Research Impacts]')]},
     ],
 }
+
+
+REPORT_DETAILS['PSI-22'] = {
+    'document_id': '5b77c0fdbb551ddc380631e7a72f0286',
+    'content_hash': '9be4013278966e85d99dc0ce05db9f3376d37724bf5ea9072ce7b2c48bc8e5a1',
+    'supporting_documents': {
+        '1bd90c0f36c0852830989b2a6603e97a': '69090c357b83ae38d161d29001d1d32b40fd77b13324ca6585ee990cdceef524',
+    },
+    'conditions_view': 'source_tables',
+    'record_label': 'Daily ignition log and concentration entries',
+    'record_description': 'The archive has 32 rows, including concentration continuations and a repeated November 15 block. The final report records 219 ignitions across 20 test days: 120 with the coflow burner and 99 with the gas-jet burner.',
+    'reviewed_limitations_only': True,
+    'replace_measurements': True,
+    'overview': [
+        {'text': 'E-FIELD Flames studied how an electric field acts on ions in gas diffusion flames aboard the ISS. The 2018 tests used a coflow burner in March–May and a gas-jet burner in September–November.', 'page': 61},
+    ],
+    'materials': [
+        {'text': 'The tests used methane and ethylene, either pure or diluted with nitrogen. The apparatus could add nitrogen on orbit, so the concentration at the burner could differ from the supplied bottle concentration.', 'page': 61},
+    ],
+    'conditions': [
+        {'text': 'Table 1 lists electrode polarity relative to the burner and fuel concentration for tests that ignited. Several concentrations can share one daily ignition count. The log does not give a separate count at each concentration.', 'page': 22},
+    ],
+    'measurements': [
+        {'text': 'The diagnostics recorded applied voltage, ion current, flame luminosity, and chemiluminescence. Color camera images show changes in flame shape as the field varied.',
+         'source_refs': [{'document_id': '5b77c0fdbb551ddc380631e7a72f0286', 'page': 4},
+                         {'document_id': '5b77c0fdbb551ddc380631e7a72f0286', 'page': 27}]},
+    ],
+    'findings': [
+        {'text': 'In the illustrated methane cases, the ion current peaked near the most compact flame. Beyond the peak, the flame expanded and the current fell.', 'page': 27},
+        {'text': 'In some tests with 30% ethylene, visible soot disappeared at stronger fields. The flame appearance changed with electric field strength.', 'page': 79},
+    ],
+    'limitations': [
+        {'text': 'CSV rows 29–32 repeat rows 25–28, including the same 11 ignitions on November 15. Summing the archived rows gives 230. The final report lists the day once and reports 219.',
+         'source_refs': [{'document_id': '1bd90c0f36c0852830989b2a6603e97a', 'csv_record': 25},
+                         {'document_id': '1bd90c0f36c0852830989b2a6603e97a', 'csv_record': 29},
+                         {'document_id': '5b77c0fdbb551ddc380631e7a72f0286', 'page': 22},
+                         {'document_id': '5b77c0fdbb551ddc380631e7a72f0286', 'page': 61}]},
+        {'text': 'The ignition log covers flames that ignited. The experiment recorded optical and electrical data and collected no physical soot samples.',
+         'source_refs': [{'document_id': '5b77c0fdbb551ddc380631e7a72f0286', 'page': 22},
+                         {'document_id': '5b77c0fdbb551ddc380631e7a72f0286', 'page': 61}]},
+    ],
+}

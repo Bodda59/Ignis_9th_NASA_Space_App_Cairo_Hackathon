@@ -19,7 +19,7 @@ const GAMES = [
   {
     to: '/kids/game/patrol',
     title: 'Fire Patrol',
-    text: 'Space flames float as round balls. Tap them before they grow too big!',
+    text: 'Tap the game’s round flames before they grow too big!',
     tag: 'Action game',
     icon: Flame,
     color: '#ff8a3d',

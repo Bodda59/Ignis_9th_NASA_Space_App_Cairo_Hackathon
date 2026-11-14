@@ -117,7 +117,7 @@ export function KidsGame() {
           size={70}
           say={phase === 'over'
             ? 'Great patrol! Real astronauts train for fires too. Experiments like FLEX tested how to put flames out in space.'
-            : 'In space, flames are round balls, not pointy! Tap each flame to spray it before it grows too big. Small flames give bonus points!'}
+            : 'In this game, tap the round flames before they grow too big. Small flames give bonus points!'}
         />
       </div>
 

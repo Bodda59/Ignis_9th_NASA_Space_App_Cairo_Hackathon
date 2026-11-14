@@ -36,7 +36,7 @@ export function KidsExplore() {
 
   const say = job
     ? `${JOBS[job].title}! ${JOBS[job].explain}`
-    : 'These are real NASA experiments. Each one lit tiny fires in space. Pick a job or a fuel to sort them, then tap a card!'
+    : 'Explore NASA studies about flames, smoke, and how liquids move in space. Pick a job or fuel to filter the cards.'
 
   return (
     <div className="space-y-8">
@@ -133,7 +133,7 @@ export function KidsExplore() {
           {grownUp.length > 0 && (
             <details className="toon rounded-[2rem] bg-[#1b2260] p-5">
               <summary className="cursor-pointer font-display text-lg font-bold">More studies for grown-ups ({grownUp.length})</summary>
-              <p className="mt-3 text-[#c9cdf5]">These studies use NASA’s results on Earth computers and in labs. They use lots of big science words, so they live on the grown-up site.</p>
+              <p className="mt-3 text-[#c9cdf5]">Open these studies on the grown-up site for their findings and sources.</p>
               <ul className="mt-3 space-y-2">
                 {grownUp.map((s) => (
                   <li key={s.id}>

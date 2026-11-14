@@ -24,9 +24,9 @@ function flamePath(g: number, cx = 100, cy = 150, r = 46) {
 const mix = (a: number[], b: number[], t: number) => `rgb(${a.map((v, i) => Math.round(v + (b[i] - v) * t)).join(' ')})`
 
 const SAY = {
-  earth: 'On Earth, hot air rises and pulls the flame up into a pointy shape. It glows yellow because of tiny bits of soot.',
-  middle: 'Less gravity, less rising air. The flame gets shorter and rounder.',
-  space: 'In space nothing pulls hot air up, so the flame grows into a round ball. It often glows blue and burns more slowly.',
+  earth: 'On Earth, hot gases rise and stretch a candle flame upward. Tiny soot particles make it glow yellow.',
+  middle: 'With less buoyancy, rising hot gases stretch the candle flame less. It can become shorter and rounder.',
+  space: 'In microgravity and still air, a candle flame can become round, dim and blue. Air from a fan can change its shape.',
 }
 
 export function FlameToy({ className }: { className?: string }) {
@@ -87,7 +87,7 @@ export function FlameToy({ className }: { className?: string }) {
         </div>
 
         <div>
-          <h3 className="font-display text-2xl font-bold">Light a flame… in space!</h3>
+          <h3 className="font-display text-2xl font-bold">A candle flame in microgravity</h3>
           <p className="mt-3 min-h-[5.5rem] text-[17px] leading-relaxed text-[#dfe3ff]" aria-live="polite">{say}</p>
 
           <label htmlFor={`${id}-g`} className="mt-4 block font-bold">Gravity</label>
@@ -100,7 +100,7 @@ export function FlameToy({ className }: { className?: string }) {
               max={100}
               value={Math.round(g * 100)}
               onChange={(e) => setG(Number(e.target.value) / 100)}
-              aria-valuetext={g > 0.7 ? 'Earth gravity' : g < 0.2 ? 'No gravity, like in space' : 'A little gravity'}
+              aria-valuetext={g > 0.7 ? 'Earth gravity' : g < 0.2 ? 'Low effective gravity, like on the space station' : 'A little gravity'}
               className="h-3 flex-1 cursor-pointer"
             />
             <Earth size={26} className="text-[#7ee2a8]" aria-hidden="true" />

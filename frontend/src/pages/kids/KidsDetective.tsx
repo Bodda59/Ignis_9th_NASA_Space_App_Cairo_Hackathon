@@ -9,8 +9,8 @@ import { cn } from '@/lib/cn'
 import { DetectiveArt } from '@/features/kids/Art'
 import { Burst } from '@/features/kids/Burst'
 import { FUEL_ICONS, jobIcon } from '@/features/kids/icons'
-import { EARTH_THEMES, FUELS, JOBS, plainMaterial, platformWords } from '@/features/kids/kidsCopy'
-import { hasMissionName, kidNumber, kidStats, loadStudies } from '@/features/kids/kidsData'
+import { EARTH_THEMES, FUELS, JOBS, platformWords } from '@/features/kids/kidsCopy'
+import { hasMissionName, kidStats, oxygenAmount, loadStudies } from '@/features/kids/kidsData'
 import { KidError, KidLoading } from '@/features/kids/KidState'
 import { Guide } from '@/features/kids/Mascot'
 import { reward } from '@/features/kids/progress'
@@ -28,20 +28,21 @@ function cluesFor(d: InvestigationResponse): Clue[] {
   const inv = d.investigation
   const s = kidStats(d)
   const hard: Clue[] = []
-  if (s.startYear) hard.push({ key: 'when', icon: <CalendarDays size={22} />, color: '#e8833a', text: `It started in ${s.startYear}${s.endYear && s.endYear !== s.startYear ? ` and ran until ${s.endYear}` : ''}.` })
-  if (s.testCount) hard.push({ key: 'tests', icon: <Hash size={22} />, color: '#8a5cf0', text: `NASA wrote down ${s.testCount} test results for it.` })
-  if (s.oxygen) hard.push({ key: 'oxygen', icon: <Wind size={22} />, color: '#2e8fe6', text: `It tried air with ${kidNumber(s.oxygen.min)} to ${kidNumber(s.oxygen.max)} parts oxygen out of 100.` })
-  if (s.topMaterials[0]) hard.push({ key: 'material', icon: <FlaskConical size={22} />, color: '#ff8a3d', text: `It burned ${plainMaterial(s.topMaterials[0].name).text} most often.` })
+  if (s.flightYear) hard.push({ key: 'when', icon: <CalendarDays size={22} />, color: '#e8833a', text: `Its flight tests took place in ${s.flightYear}.` })
+  else if (s.startYear) hard.push({ key: 'when', icon: <CalendarDays size={22} />, color: '#e8833a', text: `It has a listed start year of ${s.startYear}.` })
+  if (s.testCount) hard.push({ key: 'tests', icon: <Hash size={22} />, color: '#8a5cf0', text: `The catalog lists ${s.testCount} individual test entries.` })
+  if (s.oxygen) hard.push({ key: 'oxygen', icon: <Wind size={22} />, color: '#2e8fe6', text: `Its listed oxygen values are ${oxygenAmount(s.oxygen.min, s.oxygen.max)} parts out of 100.` })
+  if (s.topMaterials[0] && s.topMaterials[0].count > (s.topMaterials[1]?.count ?? 0)) hard.push({ key: 'material', icon: <FlaskConical size={22} />, color: '#ff8a3d', text: `Its most common material label is ${s.topMaterials[0].name}.` })
   const theme = d.earth?.themes[0]
   if (theme) hard.push({ key: 'earth', icon: <Earth size={22} />, color: '#2fbf7f', text: `NASA says it could help with: ${EARTH_THEMES[theme.id]?.title ?? theme.label}.` })
   const place = platformWords(s.platform)
-  if (place && !/International Space Station/.test(place.title)) hard.push({ key: 'where', icon: <Satellite size={22} />, color: '#2e8fe6', text: `Its flames were lit on the ${place.title}.` })
+  if (place && !/International Space Station/.test(place.title)) hard.push({ key: 'where', icon: <Satellite size={22} />, color: '#2e8fe6', text: `Its study location was ${place.title}.` })
 
   const easy: Clue[] = []
   const fuel = inv.fuel_types.find((f) => FUELS[f])
   if (fuel) {
     const F = FUEL_ICONS[fuel]
-    easy.push({ key: 'fuel', icon: <F size={22} />, color: '#e8833a', text: `It burned ${FUELS[fuel].title.toLowerCase()} fuel.` })
+    easy.push({ key: 'fuel', icon: <F size={22} />, color: '#e8833a', text: `It has ${FUELS[fuel].title.toLowerCase()} fuel listed.` })
   }
   if (inv.safety_topics.length) {
     const Icon = jobIcon(inv.safety_topics[0])
@@ -52,7 +53,7 @@ function cluesFor(d: InvestigationResponse): Clue[] {
 
 async function loadCase(named: SearchItem[], signal: AbortSignal): Promise<Case> {
   // Try a few studies until one has enough clues to be a fair case.
-  for (const answer of shuffle(named).slice(0, 5)) {
+  for (const answer of shuffle(named)) {
     const detail = await api.investigation(answer.id, signal)
     const clues = cluesFor(detail)
     if (clues.length >= 3) {
