@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Info, TriangleAlert, X } from 'lucide-react'
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { api } from '@/api/client'
+import { api, recent } from '@/api/client'
 import type { SearchRequest } from '@/api/types'
 import { CountUp } from '@/components/fx/CountUp'
 import { RevealText } from '@/components/fx/RevealText'
@@ -28,8 +28,8 @@ export function ExplorePage() {
   )
   const reqKey = JSON.stringify(req)
 
-  const filters = useAsync((sig) => api.filters(sig), 'filters')
-  const search = useAsync((sig) => api.search(req, sig), reqKey)
+  const filters = useAsync((sig) => api.filters(sig), 'filters', recent.filters())
+  const search = useAsync((sig) => api.search(req, sig), reqKey, recent.search(req))
 
   const ranked = !!s.query.trim() || Object.keys(s.context).length > 0
   const data = search.data

@@ -8,6 +8,7 @@ from weakref import WeakKeyDictionary
 from pydantic import BaseModel, ConfigDict, Field, FiniteFloat, model_validator
 
 from dashboard.gravity import EARTH_COMPARISON_IDS
+from research.cache import remember
 from research.catalog_search import rank_candidates, search_candidates, query_words
 
 Topic = Literal['prevention', 'detection', 'suppression']
@@ -250,15 +251,23 @@ def habitat_relevance(study, rows, context):
 
 
 def find_research(store, body):
-    with store.connect() as conn:
-        conn.execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ')
-        matches = {}
-        if body.query:
+    """Search results for one request, reused for CATALOG_SECONDS so repeats never reach the database."""
+    return remember(store, ('relevance', body.model_dump_json()), CATALOG_SECONDS, lambda: search_research(store, body))
+
+
+def search_research(store, body):
+    matches = {}
+    if body.query:
+        with store.connect() as conn:
+            conn.execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ')
             conn.execute("SET LOCAL pg_trgm.similarity_threshold=0.2")
             words = query_words(body.query)
             rows = search_candidates(conn, body.query, words, None, None, None)
             matches = {item['id']: item for item in rank_candidates(rows, body.query, words)}
-        studies, rows = cached_catalog(store, list(matches) if body.query else None, conn)
+            studies, rows = cached_catalog(store, list(matches), conn)
+    else:
+        # Browsing and filtering read the catalog held in memory.
+        studies, rows = cached_catalog(store)
     selected = []
     filters = body.filters
     bounds = {key: value for key in CONDITIONS if (value := getattr(filters, key)) is not None}
