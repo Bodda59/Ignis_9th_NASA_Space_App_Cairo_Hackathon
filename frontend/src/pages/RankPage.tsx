@@ -11,6 +11,7 @@ import { StudyPicker } from '@/features/compare/StudyPicker'
 import { ContextBar } from '@/features/habitat/ContextBar'
 import { ScenarioEvidenceMap } from '@/features/interpret/ScenarioEvidenceMap'
 import { ScenarioControls } from '@/features/interpret/ScenarioControls'
+import { PlanetLineup } from '@/features/rank/PlanetLineup'
 import { RankResults, type Ranking } from '@/features/rank/RankResults'
 import { useSearchState } from '@/features/search/useSearchState'
 import { useAsync } from '@/hooks/useAsync'
@@ -58,7 +59,7 @@ export function RankPage() {
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
       className="mx-auto min-h-[80svh] max-w-[1440px] px-6 pb-40 pt-28 lg:px-10">
-      <header className="mb-10 flex flex-wrap items-end justify-between gap-6">
+      <header className="mb-10 grid items-center gap-6 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)]">
         <div>
           <p className="label mb-4">Question · Scenario · Crew environment</p>
           <RevealText
@@ -68,15 +69,25 @@ export function RankPage() {
           <p className="mt-6 max-w-2xl text-[15px] leading-relaxed text-[var(--color-ink-dim)]">
             See which investigations rank highest and review the source material behind each match.
           </p>
+          <p className="mt-3 max-w-xl text-sm text-[var(--color-ink-faint)]">
+            Crews will live in very different gravity. Pick a station, spacecraft, base or rover to rank research for that environment.
+          </p>
         </div>
+        <PlanetLineup
+          className="h-[340px] sm:h-[430px]"
+          onPick={(habitat) => {
+            setSubmission(undefined)
+            search.update({ mode: 'habitat', habitat, example: null })
+          }}
+        />
       </header>
 
       {bassExample && <p className="mb-5 rounded-xl border border-[var(--color-flame)]/25 bg-[var(--color-flame)]/5 p-3 text-sm text-[var(--color-ink-dim)]">
         The BASS-II example is prefilled. Select <strong className="text-[var(--color-ink)]">Rank investigations</strong>, then look for the Evidence Map and open a source.
       </p>}
       <>
-        <div className="max-w-5xl space-y-4" role="group" aria-label="Rank research">
-          <div className="flex flex-wrap gap-2" role="group" aria-label="Ranking input">
+        <div className="mx-auto max-w-5xl space-y-4" role="group" aria-label="Rank research">
+          <div className="flex flex-wrap justify-center gap-2" role="group" aria-label="Ranking input">
             {Object.entries(MODES).map(([value, label]) => <Chip key={value} selected={mode === value} onToggle={() => {
               if (mode === value) return
               setSubmission(undefined)
@@ -114,12 +125,14 @@ export function RankPage() {
               </div>
             </div>
           )}
+          <div className="flex flex-wrap items-center justify-center gap-3">
           <Button data-guide-action={mode === 'habitat' ? 'habitat' : undefined} data-guide-highlight={mode === 'scenario' ? 'rank' : undefined} onClick={submit} variant="accent" disabled={!ready || pending}
             iconLeft={pending ? <Loader2 className="size-4 animate-spin" /> : <ListOrdered className="size-4" />}>
             {pending ? 'Ranking…' : 'Rank investigations'}
           </Button>
           {mode === 'habitat' && !ready && <span className="ml-3 text-xs text-[var(--color-ink-dim)]">Choose a habitat to start.</span>}
           {mode === 'scenario' && !ready && <span className="ml-3 text-xs text-[var(--color-ink-dim)]">Add a reported test condition to start.</span>}
+          </div>
         </div>
         {pending && <p role="status" className="mt-6 text-sm text-[var(--color-ink-dim)]">Finding matching investigations and sources…</p>}
         {submitted && result.status === 'error' && <p role="alert" className="mt-6 text-sm text-[var(--color-ember)]">
@@ -130,7 +143,9 @@ export function RankPage() {
             <ScenarioEvidenceMap evidence={result.data.data.evidence_map} />}
           <RankResults result={result.data} />
         </>}
-        <ButtonLink to="/ask" size="sm" variant="ghost" className="mt-8" icon={<ArrowUpRight className="size-3.5" />}>Ask for an interpretation</ButtonLink>
+        <div className="mt-8 flex justify-center">
+          <ButtonLink to="/ask" size="sm" variant="ghost" icon={<ArrowUpRight className="size-3.5" />}>Ask for an interpretation</ButtonLink>
+        </div>
       </>
     </motion.div>
   )

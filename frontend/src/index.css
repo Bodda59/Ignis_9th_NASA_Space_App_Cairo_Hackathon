@@ -166,3 +166,25 @@ html[data-guide-step="ask"] [data-guide-action="ask"] {
   75% { transform: rotate(6deg); }
 }
 .kids .wiggle-hover:hover svg { animation: kids-wiggle 0.4s ease-in-out; }
+
+/* Star field used behind hero visuals (Rank planet lineup) */
+.space-stars {
+  background-image:
+    radial-gradient(1px 1px at 12px 24px, rgb(255 255 255 / 0.9), transparent),
+    radial-gradient(1px 1px at 90px 140px, rgb(200 214 255 / 0.8), transparent),
+    radial-gradient(1.5px 1.5px at 170px 60px, rgb(255 255 255 / 0.95), transparent),
+    radial-gradient(1px 1px at 230px 190px, rgb(255 236 200 / 0.8), transparent),
+    radial-gradient(1px 1px at 60px 210px, rgb(255 255 255 / 0.7), transparent),
+    radial-gradient(1.5px 1.5px at 280px 110px, rgb(180 200 255 / 0.9), transparent);
+  background-size: 300px 240px;
+  opacity: 0.55;
+}
+.space-stars--twinkle {
+  background-size: 410px 330px;
+  background-position: 70px 40px;
+  animation: space-twinkle 5s ease-in-out infinite alternate;
+}
+@keyframes space-twinkle {
+  from { opacity: 0.12; }
+  to { opacity: 0.7; }
+}
