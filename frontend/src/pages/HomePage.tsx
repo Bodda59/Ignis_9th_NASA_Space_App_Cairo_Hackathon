@@ -10,7 +10,6 @@ import { IntroFilm } from '@/features/landing/IntroFilm'
 import { ExperimentJourney } from '@/features/landing/ExperimentJourney'
 import { SafetyDomains } from '@/features/landing/SafetyDomains'
 import { SearchCommand } from '@/features/search/SearchCommand'
-import { readSeen } from '@/features/landing/introSeen'
 import { jumpBy } from '@/lib/scroll'
 
 /**
@@ -26,9 +25,9 @@ function HeroGate({ intro, gate }: { intro: boolean; gate: RefObject<HTMLDivElem
 }
 
 export function HomePage() {
-  // The film is shown once per session; after it is watched and scrolled past it is removed,
-  // so scrolling up stops at the hero.
-  const [intro, setIntro] = useState(() => !readSeen())
+  // The film opens Home every time; once it is scrolled past it is removed, so scrolling
+  // back up stops at the hero.
+  const [intro, setIntro] = useState(true)
   const gate = useRef<HTMLDivElement>(null)
   const heroTop = useRef<number | null>(null)
   const passIntro = useCallback(() => {

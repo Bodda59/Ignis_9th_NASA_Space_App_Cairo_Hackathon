@@ -23,6 +23,7 @@ const prefersReducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)'
  *
  * - Plays muted on arrival; sound is opt-in.
  * - "Skip" (or any scroll) leaves it at once, and when it finishes the page scrolls on by itself.
+ * - Once seen in a session it rests on its end card instead of replaying.
  * - Once it has been watched (or skipped) and scrolled past, `onPassed` fires so the page can
  *   remove it: scrolling back up then stops at the hero instead of returning to the film.
  */
