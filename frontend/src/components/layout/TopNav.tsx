@@ -8,21 +8,21 @@ import { AudiencePicker } from '@/features/audience/AudiencePicker'
 
 // Research tools sit in the bar; the story pages share one "Learn" menu; Kids Lab gets its own button.
 const LINKS = [
-  { to: '/explore', label: 'Explore' },
+  { to: '/explore', label: 'Studies' },
   { to: '/compare', label: 'Compare' },
-  { to: '/rank', label: 'Rank' },
-  { to: '/ask', label: 'Ask' },
+  { to: '/rank', label: 'Rank studies' },
+  { to: '/ask', label: 'Ask AI' },
 ]
 
 const LEARN = [
-  { to: '/article', label: 'Article', note: 'The long read on fire in microgravity' },
-  { to: '/earth', label: 'Earth', note: 'What the studies mean back on the ground' },
-  { to: '/gravity', label: 'Gravity', note: 'How flames change from orbit to Mars' },
-  { to: '/moonwalk', label: 'Moon', note: 'Fire safety on a lunar mission' },
+  { to: '/article', label: 'Articles', note: 'Articles and resources on fire in space' },
+  { to: '/earth', label: 'Uses on Earth', note: 'What the studies mean back on the ground' },
+  { to: '/gravity', label: 'Moon & Mars gravity', note: 'How flames change from orbit to Mars' },
+  { to: '/moonwalk', label: 'Moonwalk prep', note: 'Fire safety on a lunar mission' },
 ]
 
 const linkClass = (isActive: boolean) =>
-  `relative shrink-0 px-1 py-2 font-mono min-[360px]:px-1.5 sm:px-3 text-[10px] uppercase tracking-[0.035em] transition-colors min-[360px]:text-[11px] min-[360px]:tracking-[0.12em] ${
+  `relative shrink-0 whitespace-nowrap px-1 py-2 font-mono min-[360px]:px-1.5 sm:px-3 text-[10px] uppercase tracking-[0.035em] transition-colors min-[360px]:text-[11px] min-[360px]:tracking-[0.12em] ${
     isActive ? 'text-[var(--color-ink)]' : 'text-[var(--color-ink-faint)] hover:text-[var(--color-ink)]'
   }`
 
@@ -61,7 +61,7 @@ export function TopNav({ tourOpen }: { tourOpen: boolean }) {
         <div className="flex min-w-0 items-center gap-0 min-[360px]:gap-1 sm:gap-2">
           {/* On phones the links scroll sideways so the row never overflows the screen. */}
           <div className="flex min-w-0 items-center gap-0 overflow-x-auto py-1 [scrollbar-width:none] min-[360px]:gap-1 sm:gap-2 [&::-webkit-scrollbar]:hidden">
-          {[...LINKS, { to: '/mission', label: 'Mission' }].map((l) => (
+          {[...LINKS, { to: '/mission', label: 'Game' }].map((l) => (
             <NavLink key={l.to} to={l.to} className={({ isActive }) => linkClass(isActive)}>
               {({ isActive }) => (
                 <>
@@ -129,7 +129,7 @@ function KidsButton() {
       className="ml-1 flex h-8 shrink-0 items-center gap-1 rounded-full bg-gradient-to-br from-[#ffcf4a] to-[#ff8a3d] px-2 text-[13px] font-semibold text-[#1b1740] shadow-[0_2px_0_#0d0a26] transition-transform hover:-translate-y-0.5 min-[360px]:px-3"
       style={{ fontFamily: '"Fredoka Variable", "Segoe UI", sans-serif' }}>
       <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />
-      <span className="hidden sm:inline">Kids</span>
+      <span>Kids</span>
     </Link>
   )
 }
