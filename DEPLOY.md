@@ -38,7 +38,10 @@ ACR=flamefreefall123
 ENVIRONMENT=cae-flame-freefall
 APP=flame-in-freefall
 REPO=Bodda59/Ignis_9th_NASA_Space_App_Cairo_Hackathon
+REPO_IDS=Bodda59@168367452/Ignis_9th_NASA_Space_App_Cairo_Hackathon@1456411804
 ```
+
+`REPO_IDS` is the repository as GitHub names it when it logs in to Azure: `OWNER@OWNER_ID/REPO@REPO_ID`. GitHub now includes the numeric IDs, and Azure only accepts a login whose name matches exactly. For another repository, copy the value from the error of a failed **Azure login** step (`presented assertion subject 'repo:…:ref:refs/heads/main'`), or read the two IDs from `https://api.github.com/repos/OWNER/REPO` (`owner.id` and `id`; a private repository needs a signed-in request).
 
 ### 1. Resource group, registry and Container Apps environment
 
@@ -79,7 +82,10 @@ az containerapp registry set --name "$APP" --resource-group "$RG" --server "$ACR
 ```bash
 app_id=$(az ad app create --display-name "github-$APP" --query appId --output tsv)
 az ad sp create --id "$app_id"
-az ad app federated-credential create --id "$app_id" --parameters "{\"name\":\"github-main\",\"issuer\":\"https://token.actions.githubusercontent.com\",\"subject\":\"repo:$REPO:ref:refs/heads/main\",\"audiences\":[\"api://AzureADTokenExchange\"]}"
+for subject in "repo:$REPO_IDS:ref:refs/heads/main" "repo:$REPO:ref:refs/heads/main"; do
+  name=github-main-$(echo "$subject" | md5sum | cut -c1-8)
+  az ad app federated-credential create --id "$app_id" --parameters "{\"name\":\"$name\",\"issuer\":\"https://token.actions.githubusercontent.com\",\"subject\":\"$subject\",\"audiences\":[\"api://AzureADTokenExchange\"]}"
+done
 rg_id=$(az group show --name "$RG" --query id --output tsv)
 acr_id=$(az acr show --name "$ACR" --query id --output tsv)
 az role assignment create --assignee "$app_id" --role Contributor --scope "$rg_id"
@@ -88,7 +94,9 @@ echo "Secrets:   AZURE_CLIENT_ID=$app_id  AZURE_TENANT_ID=$(az account show --qu
 echo "Variables: AZURE_REGISTRY=$ACR.azurecr.io  AZURE_RESOURCE_GROUP=$RG  AZURE_CONTAINER_APP=$APP  IMAGE_NAME=$APP"
 ```
 
-The last two lines print everything GitHub needs.
+The loop trusts both forms of the repository name, so the login keeps working if GitHub changes which one it sends. The last two lines print everything GitHub needs.
+
+A new trusted login can take a few minutes to reach all of Microsoft's servers. If the first run fails at **Azure login** or **Push image** with `AADSTS700213`, wait two minutes and re-run the failed job.
 
 ### 5. GitHub repository settings
 
