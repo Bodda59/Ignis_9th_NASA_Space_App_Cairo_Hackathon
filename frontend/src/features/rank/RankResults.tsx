@@ -1,8 +1,10 @@
 import { ArrowUpRight, Circle, GitFork, Minus } from 'lucide-react'
 import './rank-map.css'
-import { useLayoutEffect, useRef, useState, type ReactNode } from 'react'
+import { useId, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
+import { useReducedMotion } from 'framer-motion'
 import { citation } from '@/api/citation'
+import { RankBoard, type BoardItem } from './RankBoard'
 import type { RankResponse, ScenarioRanking, SourceRelevance } from '@/api/types'
 import type { ResearchSourceRef, SearchResponse } from '@/api/types'
 
@@ -26,23 +28,31 @@ function CatalogSource({ source }: { source: ResearchSourceRef }) {
   return <SourceLink url={source.source_url} label={label} />
 }
 
-function StudyCard({ id, rank, name, children }: { id: string; rank: number; name: string; children: ReactNode }) {
-  return <li className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-panel)]/60 p-4 sm:p-7 lg:p-9">
-    <h3 className="mb-3 flex items-baseline gap-3 text-base font-medium sm:text-lg">
-      <span className="font-mono text-[var(--color-flame)]">{rank}.</span>
-      <Link to={'/investigations/' + encodeURIComponent(id)} className="text-[var(--color-nebula)] hover:underline">{name}</Link>
-    </h3>
-    <div className="space-y-3 text-sm leading-relaxed text-[var(--color-ink-dim)]">{children}</div>
-  </li>
-}
+type CollectionArm = { key: string; path: string; travel: string; x: number; y: number; jx: number; matched: boolean; order: number }
+/** The spine is lit down to the last matched branch; below that it is a dim line to empty collections. */
+type Spine = { x: number; top: number; lit: number; bottom: number } | null
 
-type CollectionArm = { key: string; path: string; x: number; y: number; matched: boolean }
+/** A small meteor (glowing head, fading tail) that streaks along `path`, turning with it. */
+function Meteor({ id, path, begin }: { id: string; path: string; begin: number }) {
+  const timing = { dur: '2.4s', repeatCount: 'indefinite', begin: `${begin}s` }
+  return <g opacity={0}>
+    <path d="M -26 0 L 0 0" stroke={`url(#${id}-tail)`} strokeWidth={3} strokeLinecap="round" />
+    <path d="M -14 0 L 0 0" stroke="#ffffff" strokeOpacity={0.6} strokeWidth={1.2} strokeLinecap="round" />
+    <circle r={5} fill="#6cc8ff" opacity={0.6} filter={`url(#${id}-glow)`} />
+    <circle r={2.4} fill="#ffffff" />
+    <animateMotion {...timing} path={path} rotate="auto" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines="0.45 0 0.2 1" />
+    <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.85;1" {...timing} />
+  </g>
+}
 
 function SourceBreakdown({ sources, rank }: { sources: SourceRelevance[]; rank?: number }) {
   const graph = useRef<HTMLDivElement>(null)
   const hub = useRef<HTMLDivElement>(null)
   const [arms, setArms] = useState<CollectionArm[]>([])
+  const [spine, setSpine] = useState<Spine>(null)
   const [revealed, setRevealed] = useState<Set<string>>(() => new Set())
+  const flow = useId().replace(/:/g, '')
+  const still = !!useReducedMotion()
 
   useLayoutEffect(() => {
     const container = graph.current
@@ -54,55 +64,84 @@ function SourceBreakdown({ sources, rank }: { sources: SourceRelevance[]; rank?:
       const bounds = container.getBoundingClientRect()
       const root = origin.getBoundingClientRect()
       const stacked = root.left === bounds.left
-      const startX = root.left - bounds.left + (stacked ? 12 : root.width / 2)
-      const startY = root.bottom - bounds.top - 1
+      // One spine runs down from the hub; each branch leaves it at its card's height.
+      const sx = root.left - bounds.left + (stacked ? 12 : root.width / 2)
+      const sy = root.bottom - bounds.top
+      const radius = 16
 
-      setArms(cards.map((card, index) => {
+      const raw = cards.map((card, index) => {
         const rect = card.getBoundingClientRect()
         const toLeft = !stacked && rect.right <= root.left + root.width / 2
-        const direction = toLeft ? -1 : 1
         const x = (toLeft ? rect.right : rect.left) - bounds.left
-        const y = rect.top - bounds.top + 26
-        const distance = Math.abs(x - startX)
-        const laneIndex = Math.floor(index / (stacked ? 1 : 2))
-        const lanes = Math.ceil(cards.length / (stacked ? 1 : 2))
-        const lane = startX + direction * distance * (0.2 + (laneIndex / Math.max(lanes - 1, 1)) * 0.55)
-        const bend = Math.min(24, (y - startY) / 3)
+        const y = rect.top - bounds.top + 30
+        const dir = toLeft ? -1 : 1
+        const r = Math.min(radius, Math.abs(x - sx) / 2)
         return {
-          key: sources[index].source_type, x, y, matched: sources[index].status === 'matched',
-          path: `M ${startX} ${startY} C ${lane} ${startY + bend}, ${lane} ${startY + bend}, ${lane} ${startY + 2 * bend}
-            L ${lane} ${y - bend} Q ${lane} ${y}, ${x} ${y}`,
+          key: sources[index].source_type, x, y, jx: sx, matched: sources[index].status === 'matched',
+          path: `M ${sx} ${y - r} Q ${sx} ${y}, ${sx + dir * r} ${y} L ${x} ${y}`,
+          // Whole route from the hub, for the comet that travels to this source.
+          travel: `M ${sx} ${sy} L ${sx} ${y - r} Q ${sx} ${y}, ${sx + dir * r} ${y} L ${x} ${y}`,
         }
-      }))
+      })
+      // Branches draw in order down the spine.
+      const order = [...raw].sort((a, b) => a.y - b.y).map((a) => a.key)
+      setArms(raw.map((a) => ({ ...a, order: order.indexOf(a.key) })))
+      const bottom = Math.max(sy, ...raw.map((a) => a.y - radius))
+      const lit = Math.max(sy, ...raw.filter((a) => a.matched).map((a) => a.y - radius))
+      setSpine(raw.length ? { x: sx, top: sy, lit, bottom } : null)
     }
 
     draw()
     const observer = new ResizeObserver(draw)
     for (const element of [container, origin, ...cards]) observer.observe(element)
-    const visibility = new IntersectionObserver((entries) => {
-      const visible = entries.filter((entry) => entry.isIntersecting)
-      if (!visible.length) return
-      setRevealed((previous) => {
-        const next = new Set(previous)
-        for (const entry of visible) next.add((entry.target as HTMLElement).dataset.collection!)
-        return next
-      })
-      for (const entry of visible) visibility.unobserve(entry.target)
-    }, { rootMargin: '0px 0px -24px 0px' })
-    for (const card of cards) visibility.observe(card)
+    // The map mounts when its result card is opened: start drawing on the next frames.
+    // CSS delays (--i) draw the branches one by one, then fade in each source card.
+    const timer = window.setTimeout(() => setRevealed(new Set(sources.map((source) => source.source_type))), 60)
     return () => {
       observer.disconnect()
-      visibility.disconnect()
+      window.clearTimeout(timer)
     }
   }, [sources])
 
   return <div ref={graph} className="rank-map relative isolate mt-5 py-3 sm:mt-7">
     <svg aria-hidden="true" className="pointer-events-none absolute inset-0 size-full overflow-visible">
-      {arms.map((arm) => <g key={arm.key} data-revealed={revealed.has(arm.key)} className={arm.matched ? 'text-[var(--color-flame)]' : 'text-[var(--color-ink-faint)]'}>
-        <path className="rank-arm" pathLength={1} d={arm.path} fill="none" stroke="currentColor" strokeWidth={arm.matched ? 7 : 2}
-          strokeOpacity={arm.matched ? 0.18 : 0.35} strokeLinecap="round" />
-        {arm.matched && <path className="rank-arm" pathLength={1} d={arm.path} fill="none" stroke="currentColor" strokeWidth={2} strokeOpacity={0.85} strokeLinecap="round" />}
-        <circle className="rank-arm-tip" cx={arm.x} cy={arm.y} r={arm.matched ? 3.5 : 2} fill="currentColor" />
+      <defs>
+        <linearGradient id={`${flow}-spine`} gradientUnits="userSpaceOnUse" x1="0" y1={spine?.top ?? 0} x2="0" y2={spine ? Math.max(spine.lit, spine.top + 1) : 1}>
+          <stop offset="0%" stopColor="#6cc8ff" stopOpacity="0.95" />
+          <stop offset="100%" stopColor="#9d8cff" stopOpacity="0.35" />
+        </linearGradient>
+        <filter id={`${flow}-glow`} x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="3" />
+        </filter>
+        {/* Meteor tail, drawn in the meteor's own coordinates (it points backwards along the path). */}
+        <linearGradient id={`${flow}-tail`} gradientUnits="userSpaceOnUse" x1="-26" y1="0" x2="0" y2="0">
+          <stop offset="0%" stopColor="#6cc8ff" stopOpacity="0" />
+          <stop offset="70%" stopColor="#9fdcff" stopOpacity="0.55" />
+          <stop offset="100%" stopColor="#ffffff" stopOpacity="1" />
+        </linearGradient>
+      </defs>
+      {spine && spine.lit > spine.top && <g data-revealed={revealed.size > 0} className="rank-spine">
+        <path d={`M ${spine.x} ${spine.top} L ${spine.x} ${spine.lit}`} stroke="#6cc8ff" strokeOpacity={0.35} strokeWidth={6} filter={`url(#${flow}-glow)`} fill="none" className="rank-arm" pathLength={1} />
+        <path d={`M ${spine.x} ${spine.top} L ${spine.x} ${spine.lit}`} stroke={`url(#${flow}-spine)`} strokeWidth={2} fill="none" strokeLinecap="round" className="rank-arm" pathLength={1} />
+        <path d={`M ${spine.x} ${spine.top} L ${spine.x} ${spine.lit}`} stroke="#e8f6ff" strokeWidth={2} fill="none" strokeLinecap="round" className="rank-flow" strokeDasharray="2 14" />
+      </g>}
+      {spine && spine.bottom > spine.lit && <g data-revealed={revealed.size > 0} className="rank-spine rank-spine--dim">
+        <path d={`M ${spine.x} ${spine.lit} L ${spine.x} ${spine.bottom}`} stroke="rgba(167,174,192,0.35)" strokeWidth={1.25} fill="none" strokeLinecap="round" className="rank-arm" pathLength={1} />
+      </g>}
+      {arms.map((arm) => <g key={arm.key} data-revealed={revealed.has(arm.key)} style={{ '--i': arm.order } as CSSProperties}>
+        {arm.matched ? <>
+          <path className="rank-arm" pathLength={1} d={arm.path} fill="none" stroke="#6cc8ff" strokeOpacity={0.4} strokeWidth={6} filter={`url(#${flow}-glow)`} />
+          <path className="rank-arm" pathLength={1} d={arm.path} fill="none" stroke="#6cc8ff" strokeWidth={2} strokeLinecap="round" />
+          <path className="rank-flow" d={arm.path} fill="none" stroke="#ffffff" strokeWidth={2} strokeLinecap="round" strokeDasharray="2 12" />
+          <circle className="rank-arm-tip" cx={arm.jx} cy={arm.y - 16} r={3} fill="#6cc8ff" />
+          <circle className="rank-arm-tip" cx={arm.x} cy={arm.y} r={4.5} fill="#6cc8ff" />
+          <circle className="rank-arm-tip rank-pulse" cx={arm.x} cy={arm.y} r={4.5} fill="none" stroke="#6cc8ff" strokeWidth={1.5} />
+          {!still && revealed.has(arm.key) && <Meteor id={flow} path={arm.travel} begin={1.3 + arm.order * 0.45} />}
+        </> : <>
+          <path className="rank-arm" pathLength={1} d={arm.path} fill="none" stroke="rgba(167,174,192,0.45)" strokeWidth={1.25} strokeLinecap="round" />
+          <circle className="rank-arm-tip" cx={arm.jx} cy={arm.y - 16} r={2} fill="rgba(167,174,192,0.6)" />
+          <circle className="rank-arm-tip" cx={arm.x} cy={arm.y} r={3} fill="var(--color-void)" stroke="rgba(167,174,192,0.6)" strokeWidth={1.25} />
+        </>}
       </g>)}
     </svg>
     <div className="relative flex md:justify-center">
@@ -112,7 +151,7 @@ function SourceBreakdown({ sources, rank }: { sources: SourceRelevance[]; rank?:
       </div>
     </div>
     <ul aria-label="Evidence by source collection" className="mt-9 grid items-start gap-y-4 pl-8 md:grid-cols-2 md:gap-x-[clamp(6rem,13vw,14rem)] md:pl-0">
-      {sources.map((source) => {
+      {sources.map((source, i) => {
         const matched = source.status === 'matched'
         const unavailable = source.status === 'unavailable'
         const evidence = source.evidence
@@ -120,7 +159,7 @@ function SourceBreakdown({ sources, rank }: { sources: SourceRelevance[]; rank?:
         const location = evidence?.location.page != null ? `Page ${evidence.location.page}` :
           evidence?.location.csv_record != null ? `CSV row ${evidence.location.csv_record}` : 'Source document'
 
-        return <li key={source.source_type} data-collection={source.source_type} data-revealed={revealed.has(source.source_type)} className={`rank-collection min-w-0 rounded-xl border px-4 py-3 lg:px-6 lg:py-4
+        return <li key={source.source_type} data-collection={source.source_type} data-revealed={revealed.has(source.source_type)} style={{ '--i': arms.find((a) => a.key === source.source_type)?.order ?? i } as CSSProperties} className={`rank-collection min-w-0 rounded-xl border px-4 py-3 lg:px-6 lg:py-4
           ${matched ? 'border-[var(--color-flame)]/35 bg-[var(--color-panel)]' : 'border-[var(--color-line)] bg-[var(--color-void)]/50'}`}>
           <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1">
             <span className="text-sm font-medium leading-snug sm:text-base text-[var(--color-ink)]">{source.source_type}</span>
@@ -144,6 +183,16 @@ function SourceBreakdown({ sources, rank }: { sources: SourceRelevance[]; rank?:
   </div>
 }
 
+/**
+ * Place each value between the weakest (0.15) and strongest (1) result in this list, so close
+ * scores still read as different. The real value is always shown next to the meter.
+ */
+function relative(values: number[]) {
+  const top = Math.max(...values)
+  const low = Math.min(...values)
+  return values.map((v) => (top === low ? 1 : 0.15 + 0.85 * ((v - low) / (top - low))))
+}
+
 export function RankResults({ result }: { result: Ranking }) {
   const count = result.mode === 'habitat' ? result.data.items.length : result.data.investigations.length
   const remainingCoverage = result.mode === 'question' ? (result.data.source_coverage ?? []).filter(
@@ -159,34 +208,12 @@ export function RankResults({ result }: { result: Ranking }) {
         {warning.message}
         {warning.code === 'GRAVITY_GAP' && <> <Link to="/gravity" className="text-[var(--color-flame)] hover:underline">See the partial-gravity evidence</Link></>}
       </p>)}
-      <ol className="space-y-3">{result.data.items.map((study, index) => <StudyCard key={study.id} id={study.id} rank={index + 1} name={study.name}>
-        {study.relevance.reasons.length > 0 && <ul className="list-disc space-y-1 pl-4">{study.relevance.reasons.map((reason) =>
-          <li key={reason.text}>{reason.text}{reason.source && <> · <CatalogSource source={reason.source} /></>}</li>)}</ul>}
-        {!study.relevance.reasons.length && <p>Background study with no matching habitat evidence found.</p>}
-        {study.relevance.mismatches.map((gap) => <p key={gap.text} className="text-xs text-[var(--color-ember)]">{gap.text}</p>)}
-        {study.summary_snippet && <div className="border-t border-[var(--color-line)] pt-3">
-          <p className="label mb-1">Investigation excerpt</p>
-          <p>{study.summary_snippet}</p>
-          {study.snippet_sources?.map((source, i) => <p key={i} className="mt-1 text-xs"><CatalogSource source={source} /></p>)}
-        </div>}
-      </StudyCard>)}</ol>
+      <HabitatBoard data={result.data} />
     </div> : <>
       {result.data.message && <p className="mb-3 text-sm text-[var(--color-ink-dim)]">{result.data.message}</p>}
       {result.mode === 'question' ? <>
         {result.data.source_coverage && <p className="mb-3 text-xs text-[var(--color-ink-dim)]">Each arm connects a collection to its strongest matching passage and relevance score.</p>}
-        <ol className="space-y-6">{result.data.investigations.map((study) =>
-        <StudyCard key={study.investigation_id} id={study.investigation_id} rank={study.rank} name={study.name}>
-          <ul className="list-disc space-y-1 pl-4">{study.match_reasons.map((reason) => <li key={reason}>{reason}</li>)}</ul>
-          {study.source_relevance && <SourceBreakdown sources={study.source_relevance} rank={study.rank} />}
-          {study.evidence.map((evidence) => {
-            const source = citation(evidence)
-            return <details key={source.id} className="border-t border-[var(--color-line)] pt-2">
-              <summary className="cursor-pointer text-[var(--color-ink)]">{source.title} · {source.location}</summary>
-              <blockquote className="my-2 whitespace-pre-wrap break-words border-l border-[var(--color-line-strong)] pl-3">{evidence.text}</blockquote>
-              {source.url && <SourceLink url={source.url} label="Open source" />}
-            </details>
-          })}
-        </StudyCard>)}</ol>
+        <QuestionBoard data={result.data} />
         {remainingCoverage.length > 0 && <details className="mt-4 rounded-xl border border-[var(--color-line)] p-4" open={!count}>
           <summary className="cursor-pointer text-sm">Source coverage for {remainingCoverage.length} {remainingCoverage.length === 1 ? 'investigation' : 'investigations'} outside the ranking</summary>
           {remainingCoverage.map((study) => <div key={study.investigation_id} className="mt-4">
@@ -194,21 +221,94 @@ export function RankResults({ result }: { result: Ranking }) {
             <SourceBreakdown sources={study.source_relevance} />
           </div>)}
         </details>}
-      </> : <ol className="space-y-3">{result.data.investigations.map((study) =>
-        <StudyCard key={study.investigation_id} id={study.investigation_id} rank={study.rank} name={study.name}>
-          {study.records.map((record) => {
-            const source = citation(record.source)
-            return <details key={record.record_id} className="border-t border-[var(--color-line)] pt-2">
-              <summary className="cursor-pointer text-[var(--color-ink)]">
-                {record.record_kind === 'reported_test' ? 'Test' : 'Source record'} {record.test_id} · {record.category.replaceAll('_', ' ')}
-              </summary>
-              <ul className="my-2 list-disc space-y-1 pl-4">{record.comparisons.map((comparison) =>
-                <li key={comparison.key}>{comparison.key.replaceAll('_', ' ')} · {comparison.reason}</li>)}</ul>
-              {record.source.text && <blockquote className="my-2 whitespace-pre-wrap break-words border-l border-[var(--color-line-strong)] pl-3">{record.source.text}</blockquote>}
-              <SourceLink url={source.url} label={source.title + ' · ' + source.location} />
-            </details>
-          })}
-        </StudyCard>)}</ol>}
+      </> : <ScenarioBoard data={result.data} />}
     </>}
   </section>
+}
+
+function QuestionBoard({ data }: { data: RankResponse }) {
+  const best = data.investigations.map((s) => Math.max(0, ...(s.source_relevance ?? []).map((r) => (r.status === 'matched' ? r.relevance_score ?? 0 : 0))))
+  const hasScores = best.some((b) => b > 0)
+  const count = data.investigations.length
+  const signal = hasScores ? relative(best) : data.investigations.map((s) => 1 - (s.rank - 1) / Math.max(count, 1))
+  const items: BoardItem[] = data.investigations.map((study, i) => {
+    const sources = study.source_relevance ?? []
+    const matched = sources.filter((s) => s.status === 'matched').length
+    return {
+      id: study.investigation_id, rank: study.rank, name: study.name, signal: signal[i],
+      value: hasScores ? best[i].toFixed(4) : `#${study.rank}`,
+      signalLabel: hasScores ? `Top source relevance ${best[i].toFixed(4)}` : `Rank ${study.rank} of ${count}`,
+      tags: [
+        ...(sources.length ? [`${matched}/${sources.length} collections`] : []),
+        `${study.evidence.length} passage${study.evidence.length === 1 ? '' : 's'}`,
+      ],
+      detail: <>
+        {study.match_reasons.length > 0 && <div>
+          <p className="label mb-2">Why it matched</p>
+          <ul className="flex flex-wrap gap-2">{study.match_reasons.map((reason) =>
+            <li key={reason} className="rounded-lg border border-[var(--color-flame)]/25 bg-[var(--color-flame)]/[0.05] px-3 py-1.5 text-xs text-[var(--color-ink)]">{reason}</li>)}</ul>
+        </div>}
+        {study.source_relevance && <SourceBreakdown sources={study.source_relevance} rank={study.rank} />}
+        {study.evidence.map((evidence) => {
+          const source = citation(evidence)
+          return <details key={source.id} className="border-t border-[var(--color-line)] pt-2">
+            <summary className="cursor-pointer text-[var(--color-ink)]">{source.title} · {source.location}</summary>
+            <blockquote className="my-2 whitespace-pre-wrap break-words border-l border-[var(--color-line-strong)] pl-3">{evidence.text}</blockquote>
+            {source.url && <SourceLink url={source.url} label="Open source" />}
+          </details>
+        })}
+      </>,
+    }
+  })
+  return <RankBoard items={items} meterNote={hasScores
+    ? 'Each meter places a study’s strongest source relevance between the lowest and highest in this list; the score is shown on the right.'
+    : 'Meters show rank position.'} />
+}
+
+function ScenarioBoard({ data }: { data: ScenarioRanking }) {
+  const signal = relative(data.investigations.map((s) => s.records.length))
+  const items: BoardItem[] = data.investigations.map((study, i) => ({
+    id: study.investigation_id, rank: study.rank, name: study.name, signal: signal[i],
+    value: `${study.records.length} rec`,
+    signalLabel: `${study.records.length} matching record${study.records.length === 1 ? '' : 's'}`,
+    tags: [`${study.records.length} record${study.records.length === 1 ? '' : 's'}`],
+    detail: <>{study.records.map((record) => {
+      const source = citation(record.source)
+      return <details key={record.record_id} className="border-t border-[var(--color-line)] pt-2">
+        <summary className="cursor-pointer text-[var(--color-ink)]">
+          {record.record_kind === 'reported_test' ? 'Test' : 'Source record'} {record.test_id} · {record.category.replaceAll('_', ' ')}
+        </summary>
+        <ul className="my-2 list-disc space-y-1 pl-4">{record.comparisons.map((comparison) =>
+          <li key={comparison.key}>{comparison.key.replaceAll('_', ' ')} · {comparison.reason}</li>)}</ul>
+        {record.source.text && <blockquote className="my-2 whitespace-pre-wrap break-words border-l border-[var(--color-line-strong)] pl-3">{record.source.text}</blockquote>}
+        <SourceLink url={source.url} label={source.title + ' · ' + source.location} />
+      </details>
+    })}</>,
+  }))
+  return <RankBoard items={items} meterNote="Each meter places a study’s matching test records between the fewest and most in this list." />
+}
+
+function HabitatBoard({ data }: { data: SearchResponse }) {
+  const signal = relative(data.items.map((s) => s.relevance.reasons.length))
+  const items: BoardItem[] = data.items.map((study, index) => ({
+    id: study.id, rank: index + 1, name: study.name, signal: signal[index],
+    value: `${study.relevance.reasons.length} match${study.relevance.reasons.length === 1 ? '' : 'es'}`,
+    signalLabel: `${study.relevance.reasons.length} habitat match${study.relevance.reasons.length === 1 ? '' : 'es'}`,
+    tags: [
+      `${study.relevance.reasons.length} match${study.relevance.reasons.length === 1 ? '' : 'es'}`,
+      ...(study.relevance.mismatches.length ? [`${study.relevance.mismatches.length} gap${study.relevance.mismatches.length === 1 ? '' : 's'}`] : []),
+    ],
+    detail: <>
+      {study.relevance.reasons.length > 0 && <ul className="list-disc space-y-1 pl-4">{study.relevance.reasons.map((reason) =>
+        <li key={reason.text}>{reason.text}{reason.source && <> · <CatalogSource source={reason.source} /></>}</li>)}</ul>}
+      {!study.relevance.reasons.length && <p>Background study with no matching habitat evidence found.</p>}
+      {study.relevance.mismatches.map((gap) => <p key={gap.text} className="text-xs text-[var(--color-ember)]">{gap.text}</p>)}
+      {study.summary_snippet && <div className="border-t border-[var(--color-line)] pt-3">
+        <p className="label mb-1">Investigation excerpt</p>
+        <p>{study.summary_snippet}</p>
+        {study.snippet_sources?.map((source, i) => <p key={i} className="mt-1 text-xs"><CatalogSource source={source} /></p>)}
+      </div>}
+    </>,
+  }))
+  return <RankBoard items={items} meterNote="Each meter places a study’s habitat matches between the fewest and most in this list." />
 }

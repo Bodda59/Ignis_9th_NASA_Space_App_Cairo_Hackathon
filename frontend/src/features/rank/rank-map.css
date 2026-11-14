@@ -1,29 +1,91 @@
 @media (prefers-reduced-motion: no-preference) {
+  /* The spine draws first… */
   .rank-arm {
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
-    transition: stroke-dashoffset 760ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: stroke-dashoffset 640ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: calc(var(--i, 0) * 120ms + 420ms);
   }
 
-  .rank-arm-tip {
-    opacity: 0;
-    transition: opacity 180ms ease 480ms;
+  .rank-spine > .rank-arm {
+    transition-duration: 700ms;
+    transition-delay: 80ms;
   }
 
   [data-revealed='true'] > .rank-arm {
     stroke-dashoffset: 0;
   }
 
+  /* …then each branch and its end nodes… */
+  .rank-arm-tip {
+    opacity: 0;
+    transition: opacity 220ms ease;
+    transition-delay: calc(var(--i, 0) * 120ms + 900ms);
+  }
+
   [data-revealed='true'] > .rank-arm-tip {
     opacity: 1;
   }
 
+  /* …light keeps flowing from the hub toward each matched source… */
+  .rank-flow {
+    opacity: 0;
+    transition: opacity 400ms ease;
+    transition-delay: calc(var(--i, 0) * 120ms + 1100ms);
+    animation: rank-flow 1.6s linear infinite;
+  }
+
+  [data-revealed='true'] > .rank-flow {
+    opacity: 0.75;
+  }
+
+  @keyframes rank-flow {
+    to { stroke-dashoffset: -28; }
+  }
+
+  /* …and matched end nodes pulse. */
+  .rank-pulse {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: rank-pulse 2.2s ease-out infinite;
+  }
+
+  @keyframes rank-pulse {
+    from { transform: scale(1); stroke-opacity: 0.8; }
+    to { transform: scale(3); stroke-opacity: 0; }
+  }
+
+  /* Each source card appears as its branch arrives (keyframes, so it always completes). */
   .rank-collection {
+    opacity: 0;
     transition: box-shadow 220ms ease;
+  }
+
+  .rank-collection[data-revealed='true'] {
+    animation: rank-card-in 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--i, 0) * 120ms + 820ms);
+  }
+
+  @keyframes rank-card-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
   }
 
   .rank-collection[data-revealed='true']:hover,
   .rank-collection:focus-within {
     box-shadow: 0 0 24px rgb(108 200 255 / 12%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rank-flow {
+    display: none;
+  }
+}
+
+/* The dim tail of the spine draws after the lit part. */
+@media (prefers-reduced-motion: no-preference) {
+  .rank-spine--dim > .rank-arm {
+    transition-delay: 700ms;
   }
 }
