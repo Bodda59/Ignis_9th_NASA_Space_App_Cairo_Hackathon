@@ -1,4 +1,5 @@
 import re
+import sys
 from collections import defaultdict
 
 from rank_bm25 import BM25Okapi
@@ -17,31 +18,47 @@ def tokens(text):
     return [x for x in re.findall(r'[a-z0-9]+(?:[-_][a-z0-9]+)*', text.casefold()) if x not in STOPWORDS]
 
 
+class CorpusIndex:
+    """Deduplicated passages and their keyword index. Build once, reuse for every question."""
+
+    def __init__(self, corpus):
+        # Repeated exports must not gain extra votes in either ranking branch.
+        unique, seen, self.aliases = [], {}, {}
+        for item in sorted(corpus, key=lambda x: x.id):
+            key = (item.investigation_id, ' '.join(item.text.casefold().split()))
+            if key not in seen:
+                seen[key] = item.id
+                unique.append(item)
+            self.aliases[item.id] = seen[key]
+        self.by_id = {x.id: x for x in unique}
+        self.texts = {x.id: f'{x.investigation_name} {x.investigation_id} {x.title} {x.text}'.casefold() for x in unique}
+        # Interned terms are shared between passages, which keeps a cached index small.
+        self.bm25 = BM25Okapi([[sys.intern(term) for term in tokens(text)] or [''] for text in self.texts.values()]) if unique else None
+
+    def __len__(self):
+        return len(self.by_id)
+
+
+class IndexedRows(list):
+    """(evidence, similarity) rows that carry the prepared index for their passages."""
+    corpus = None
+
+
 def hybrid_search(question, corpus, semantic_results, min_similarity=.5, limit=30, per_study=False):
     if not corpus:
         return []
-    # Repeated exports must not gain extra votes in either ranking branch.
-    unique, seen, aliases = [], {}, {}
-    for item in sorted(corpus, key=lambda x: x.id):
-        key = (item.investigation_id, ' '.join(item.text.casefold().split()))
-        if key not in seen:
-            seen[key] = item.id
-            unique.append(item)
-        aliases[item.id] = seen[key]
-    by_id = {x.id: x for x in unique}
+    index = corpus if isinstance(corpus, CorpusIndex) else CorpusIndex(corpus)
+    by_id, aliases, texts = index.by_id, index.aliases, index.texts
     query = set(tokens(question))
     # A shared year or measurement by itself is weak evidence for a question.
     query = {term for term in query if not term.isdecimal()} or query
     if not query:
         return []
-    texts = {x.id: f'{x.investigation_name} {x.investigation_id} {x.title} {x.text}' for x in unique}
-    tokenized = {id: tokens(text) for id, text in texts.items()}
-    bm25 = BM25Okapi([value or [''] for value in tokenized.values()])
-    scores = dict(zip(tokenized, bm25.get_scores(sorted(query))))
+    scores = dict(zip(texts, index.bm25.get_scores(sorted(query))))
     phrase = re.escape(question.casefold().strip())
     exact_pattern = re.compile(rf'(?<![\w-]){phrase}(?![\w-])')
-    exact = {id: bool(exact_pattern.search(text.casefold())) for id, text in texts.items()}
-    matched_terms = {id: query.intersection(words) for id, words in tokenized.items()}
+    exact = {id: bool(exact_pattern.search(text)) for id, text in texts.items()}
+    matched_terms = {id: {term for term in query if term in words} for id, words in zip(texts, index.bm25.doc_freqs)}
     required_terms = (2 * len(query) + 2) // 3
     lexical = [id for id in by_id if exact[id] or len(matched_terms[id]) >= required_terms]
     lexical_ids = set(lexical)

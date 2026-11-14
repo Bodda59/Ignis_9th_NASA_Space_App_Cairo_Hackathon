@@ -1,6 +1,9 @@
 """Crew environment relevance from published investigation and test records."""
+import threading
+import time
 from collections import defaultdict
 from typing import Literal
+from weakref import WeakKeyDictionary
 
 from pydantic import BaseModel, ConfigDict, Field, FiniteFloat, model_validator
 
@@ -152,6 +155,30 @@ def catalog_data(conn, ids=None):
     return studies, by_study
 
 
+# shortcut: one process holds the catalog; a metadata edit reaches search and filters within CATALOG_SECONDS.
+CATALOG_SECONDS = 60
+_catalogs, _catalog_lock = WeakKeyDictionary(), threading.Lock()
+
+
+def cached_catalog(store, ids=None, conn=None):
+    """The whole catalog from memory, narrowed to `ids`. It is re-read once it is CATALOG_SECONDS old."""
+    with _catalog_lock:
+        entry = _catalogs.get(store)
+        if not entry or time.monotonic() - entry[0] >= CATALOG_SECONDS:
+            if conn is not None:
+                data = catalog_data(conn)
+            else:
+                with store.connect() as connection:
+                    data = catalog_data(connection)
+            entry = _catalogs[store] = (time.monotonic(), data)
+    studies, by_study = entry[1]
+    if ids is None:
+        return studies, by_study
+    wanted = set(ids)
+    return ([study for study in studies if study['id'] in wanted],
+            defaultdict(list, {sid: rows for sid, rows in by_study.items() if sid in wanted}))
+
+
 def material_labels(rows):
     return sorted({value for row in rows for key in ('material', 'fuel')
                    if (value := usable(row['parameters'], key).get('category'))})
@@ -225,7 +252,7 @@ def find_research(store, body):
             words = query_words(body.query)
             rows = search_candidates(conn, body.query, words, None, None, None)
             matches = {item['id']: item for item in rank_candidates(rows, body.query, words)}
-        studies, rows = catalog_data(conn, list(matches) if body.query else None)
+        studies, rows = cached_catalog(store, list(matches) if body.query else None, conn)
     selected = []
     filters = body.filters
     bounds = {key: value for key in CONDITIONS if (value := getattr(filters, key)) is not None}
@@ -267,8 +294,7 @@ def find_research(store, body):
 
 
 def discover_filters(store):
-    with store.connect() as conn:
-        studies, groups = catalog_data(conn)
+    studies, groups = cached_catalog(store)
     rows = [row for group in groups.values() for row in group]
     conditions = {}
     for key, (_, unit, _) in CONDITIONS.items():

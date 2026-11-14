@@ -40,6 +40,8 @@ def run(app):
     try:
         if args.command == 'serve':
             import uvicorn
+            from research.dependencies import warm_up
+            warm_up()
             uvicorn.run(app, host=args.host, port=args.port)
             return
         service = get_service()
