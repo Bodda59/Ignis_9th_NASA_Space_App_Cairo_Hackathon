@@ -1,6 +1,7 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import type { HabitatId } from '@/api/types'
 import { Starfield } from '@/components/fx/Starfield'
+import { useTheme } from '@/lib/theme'
 
 /**
  * Fixed space wallpaper behind the chat that adapts to the habitat context:
@@ -36,6 +37,34 @@ const PLANETS: Record<PlanetId, { label: string; surface: string; glow: string; 
   },
 }
 
+/** Light theme: the same worlds seen in daylight; edges fade into the light page instead of black. */
+const PLANETS_LIGHT: typeof PLANETS = {
+  moon: {
+    label: 'Moon',
+    surface: 'radial-gradient(circle at 50% 6%, #f7f8fb 0%, #c3c7d2 14%, #9ea4b4 32%, #b2bbcd 52%, #c5cedd 66%)',
+    glow: 'rgba(255,255,255,0.75)',
+    nebulaA: 'rgba(91,63,208,0.10)',
+    nebulaB: 'rgba(26,86,196,0.08)',
+    rim: 'rgba(255,255,255,0.85)',
+  },
+  mars: {
+    label: 'Mars',
+    surface: 'radial-gradient(circle at 50% 6%, #f6c3a2 0%, #d58258 14%, #b4603f 32%, #bf9a8e 52%, #c5cedd 66%)',
+    glow: 'rgba(232,140,100,0.45)',
+    nebulaA: 'rgba(184,68,14,0.10)',
+    nebulaB: 'rgba(91,63,208,0.07)',
+    rim: 'rgba(255,214,190,0.85)',
+  },
+  earth: {
+    label: 'Earth',
+    surface: 'radial-gradient(circle at 50% 6%, #c4e8fb 0%, #5d9fe0 13%, #2f6dbf 30%, #93acd3 50%, #c5cedd 66%)',
+    glow: 'rgba(90,160,230,0.5)',
+    nebulaA: 'rgba(26,86,196,0.10)',
+    nebulaB: 'rgba(91,63,208,0.08)',
+    rim: 'rgba(225,242,255,0.9)',
+  },
+}
+
 function planetFor(habitat?: HabitatId): PlanetId {
   if (habitat === 'mars_base') return 'mars'
   if (habitat === 'spacecraft' || habitat === 'space_station') return 'earth'
@@ -45,11 +74,12 @@ function planetFor(habitat?: HabitatId): PlanetId {
 export function ChatBackdrop({ habitat, raised = false }: { habitat?: HabitatId; raised?: boolean }) {
   const reduced = useReducedMotion()
   const id = planetFor(habitat)
-  const p = PLANETS[id]
+  const light = useTheme() === 'light'
+  const p = (light ? PLANETS_LIGHT : PLANETS)[id]
 
   return (
     <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
-      <div className="absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_0%,#11142b_0%,#08090e_60%)]" />
+      <div className={`absolute inset-0 ${light ? 'bg-[radial-gradient(120%_80%_at_50%_0%,#a9b8d6_0%,#c5cedd_60%)]' : 'bg-[radial-gradient(120%_80%_at_50%_0%,#11142b_0%,#08090e_60%)]'}`} />
 
       {/* nebula clouds tinted by the planet */}
       <motion.div

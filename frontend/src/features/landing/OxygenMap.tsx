@@ -113,13 +113,13 @@ export function OxygenMap() {
                 {/* grid + axes */}
                 {[0, 20, 40, 60, 80, 100].map((v) => (
                   <g key={`y${v}`}>
-                    <line x1={M.l} x2={W - M.r} y1={y(v)} y2={y(v)} stroke="white" strokeOpacity="0.06" />
+                    <line x1={M.l} x2={W - M.r} y1={y(v)} y2={y(v)} className="stroke-white" strokeOpacity="0.06" />
                     <text x={M.l - 10} y={y(v) + 4} textAnchor="end" className="fill-[var(--color-ink-faint)] font-mono text-[11px]">{v}%</text>
                   </g>
                 ))}
                 {[0, 4, 8, 12, 16].map((v) => (
                   <g key={`x${v}`}>
-                    <line x1={x(v)} x2={x(v)} y1={M.t} y2={H - M.b} stroke="white" strokeOpacity="0.06" />
+                    <line x1={x(v)} x2={x(v)} y1={M.t} y2={H - M.b} className="stroke-white" strokeOpacity="0.06" />
                     <text x={x(v)} y={H - M.b + 20} textAnchor="middle" className="fill-[var(--color-ink-faint)] font-mono text-[11px]">
                       {unit === 'psi' ? v : (v * PSI_TO_KPA).toFixed(0)}
                     </text>
@@ -143,7 +143,7 @@ export function OxygenMap() {
                 <motion.path
                   d={curve}
                   fill="none"
-                  stroke="#6cc8ff"
+                  className="stroke-[var(--color-flame)]"
                   strokeWidth="1.5"
                   strokeDasharray="5 5"
                   initial={{ pathLength: 0 }}
@@ -175,7 +175,7 @@ export function OxygenMap() {
                         cx={x(p.psi)}
                         cy={y(p.o2)}
                         fill={p.color}
-                        stroke="#08090e"
+                        className="stroke-[var(--color-void)]"
                         strokeWidth="2"
                         initial={{ r: 0 }}
                         whileInView={{ r: on ? 7 : 5.5 }}

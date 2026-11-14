@@ -17,6 +17,7 @@ import { StudyPicker } from '@/features/compare/StudyPicker'
 import { SourcesList } from '@/features/summarize/SourcesList'
 import { useAsync } from '@/hooks/useAsync'
 import { cn } from '@/lib/cn'
+import { useTheme } from '@/lib/theme'
 
 export function ComparePage() {
   const [params, setParams] = useSearchParams()
@@ -145,6 +146,8 @@ function SelectionStart({ ids, labels, onAdd, onRemove }: { ids: string[]; label
 }
 
 function DiffToggle({ on, onChange, count }: { on: boolean; onChange: (v: boolean) => void; count: number }) {
+  // knob: page color on the accent track when on, a mid tone when off
+  const knob = useTheme() === 'light' ? { on: '#c5cedd', off: '#435275' } : { on: '#08090e', off: '#a7aec0' }
   return (
     <button
       role="switch"
@@ -156,7 +159,7 @@ function DiffToggle({ on, onChange, count }: { on: boolean; onChange: (v: boolea
       <span className={cn('relative h-6 w-10 rounded-full transition-colors duration-300', on ? 'bg-[var(--color-flame)]' : 'bg-white/10')}>
         <motion.span
           className="absolute top-1 h-4 w-4 rounded-full bg-[var(--color-void)]"
-          animate={{ left: on ? 20 : 4, backgroundColor: on ? '#08090e' : '#a7aec0' }}
+          animate={{ left: on ? 20 : 4, backgroundColor: on ? knob.on : knob.off }}
           transition={{ type: 'spring', stiffness: 500, damping: 30 }}
         />
       </span>

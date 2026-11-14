@@ -86,6 +86,12 @@ export function IntroFilm() {
     setGone(v > 0.6)
     if (v > 0.9 && mode === 'playing') finish()
   })
+  // Tell the top nav the dark film fills the screen, so in light mode it keeps its dark look over it.
+  useEffect(() => {
+    const root = document.documentElement
+    root.dataset.film = gone ? 'off' : 'on'
+    return () => { delete root.dataset.film }
+  }, [gone])
   // Smooth progress hairline without re-rendering React every frame.
   useEffect(() => {
     if (mode !== 'playing') return
@@ -152,7 +158,7 @@ export function IntroFilm() {
       style={{ pointerEvents: gone ? 'none' : undefined }}
     >
       <motion.div
-        className="grain absolute inset-0 bg-[var(--color-void)] will-change-transform"
+        className="space-window grain absolute inset-0 bg-[var(--color-void)] will-change-transform"
         style={{ scale, opacity: layerOpacity, transformOrigin: '50% 44%' }}
       >
       {/* end card still: shown once the film has finished or was skipped */}

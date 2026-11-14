@@ -69,7 +69,7 @@ export function Hero() {
             lineClassNames={[
               undefined,
               undefined,
-              'bg-gradient-to-r from-[var(--color-flame)] via-[#a99bff] to-[var(--color-nebula)] bg-clip-text text-transparent',
+              'bg-gradient-to-r from-[var(--color-flame)] via-[var(--hero-via)] to-[var(--color-nebula)] bg-clip-text text-transparent',
             ]}
           />
 

@@ -5,6 +5,12 @@ import { RevealText } from '@/components/fx/RevealText'
 import { articleGroups, challengeResources, resources } from '@/features/articles/resources'
 
 const ease = [0.16, 1, 0.3, 1] as const
+/** Scans with a white scanner margin on the left: widen and anchor right so the margin falls outside the frame. */
+const SCAN_TRIM: Record<string, string> = {
+  'air-tanks': 'inset-y-0 right-0 h-full w-[110%] max-w-none', // 45px margin on a 522px-wide scan
+  'fire-attire': 'inset-y-0 right-0 h-full w-[101.5%] max-w-none', // 4px margin on a 675px-wide scan
+}
+
 const photoMotion = {
   waiting: { scale: 1.12, opacity: 0.72 },
   visible: { scale: 1, opacity: 1, transition: { duration: 1.05, ease } },
@@ -37,7 +43,7 @@ export function ArticlePage() {
         </div>
         <motion.div initial={reduced ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: reduced ? 0 : 0.65, ease }}
-          className="overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-panel)]">
+          className="space-window overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-panel)]">
           <motion.img style={reduced ? undefined : { scale: heroScale }} src="/articles/combustion-rack.jpg" width={1200} height={800} fetchPriority="high"
             alt="NASA astronaut Jessica Meir working at the International Space Station’s Combustion Integrated Rack"
             className="aspect-[16/10] w-full object-cover object-center" />
@@ -64,11 +70,12 @@ export function ArticlePage() {
                 viewport={{ once: true, amount: 0.12 }}
                 className="min-w-0">
                 <article aria-labelledby={resource.id} className="flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-panel)]/55 transition-colors hover:border-[var(--color-line-strong)]">
-                  <div className="relative aspect-[16/10] overflow-hidden border-b border-[var(--color-line)] bg-[var(--color-void)]">
+                  {/* photos sit on a deep-space mat in both themes, so letterboxed covers and scans look framed */}
+                  <div className="space-window relative aspect-[16/10] overflow-hidden border-b border-[var(--color-line)] bg-[var(--color-void)]">
                     <motion.img
                       src={`/articles/${resource.id}.webp`} alt={resource.imageAlt} loading="lazy" decoding="async"
                       variants={reduced ? undefined : photoMotion}
-                      className={`absolute inset-0 size-full ${resource.id === 'researchers-guide' ? 'object-contain py-3' : 'object-cover'}`} />
+                      className={`absolute ${SCAN_TRIM[resource.id] ?? 'inset-0 size-full'} ${resource.id === 'researchers-guide' ? 'object-contain py-3' : 'object-cover'}`} />
                   </div>
                   <div className="flex flex-1 flex-col p-5 sm:p-6">
                     <p className="label mb-3 text-[var(--color-flame)]">{resource.kind}</p>

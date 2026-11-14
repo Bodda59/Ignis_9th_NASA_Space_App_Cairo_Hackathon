@@ -44,7 +44,7 @@ export function MissionScene({ step, n2, breathing, cabinSpec, findings }: {
 
   return (
     <figure>
-    <div className="grain relative h-[380px] overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[radial-gradient(ellipse_at_50%_0%,#141a33_0%,#08090e_70%)] sm:h-[460px]">
+    <div className="space-window grain relative h-[380px] overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[radial-gradient(ellipse_at_50%_0%,#141a33_0%,#08090e_70%)] sm:h-[460px]">
       {/* sky */}
       <div className="absolute inset-0" aria-hidden="true">
         {STARS.map((s, i) => (

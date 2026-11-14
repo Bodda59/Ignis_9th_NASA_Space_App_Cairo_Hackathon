@@ -45,7 +45,7 @@ export function MissionPage() {
 
   return (
     <div className="pb-24">
-      <section className="relative">
+      <section className="space-window relative">
         <SceneFrame bare label="The International Space Station orbiting above Earth" className="h-[72svh] min-h-[460px] border-b border-[var(--color-line)]">
           <BriefingScene reduced={reduced} />
         </SceneFrame>

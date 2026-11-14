@@ -7,6 +7,16 @@
     <title>Flame in Freefall</title>
     <meta name="description" content="Fire-safety insights from NASA microgravity combustion research." />
     <meta name="theme-color" content="#08090e" />
+    <script>
+      // Apply the saved light/dark theme before first paint (see src/lib/theme.ts).
+      // Kids Lab is always dark, so it is skipped.
+      try {
+        if (localStorage.getItem('flame-in-freefall:theme') === 'light' && !/^\/kids(\/|$)/.test(location.pathname)) {
+          document.documentElement.dataset.theme = 'light'
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#c5cedd')
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -30,6 +30,80 @@
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* ───────────────────────── Light theme ─────────────────────────
+   "Lunar twilight": a steel-blue base (deliberately not white), raised cards a
+   step lighter, NASA navy ink and NASA blue accent. Every text color is ≥ 4.5:1
+   on both page and cards, and each accent also works as a fill behind light
+   text, so `bg-flame text-void` patterns keep working. Translucent white
+   overlays (hover tints, skeletons) become navy tints.                        */
+:root[data-theme="light"] {
+  --color-void: #c5cedd;
+  --color-panel: #d3dae6;
+  --color-line: rgb(10 26 58 / 0.14);
+  --color-line-strong: rgb(10 26 58 / 0.26);
+  --color-line-input: rgb(10 26 58 / 0.55);  /* ≥ 3:1 on page and cards */
+  --color-ink: #0a1a3a;                       /* NASA navy (10.8:1) */
+  --color-ink-dim: #2c3d62;                   /* 6.8:1 */
+  --color-ink-faint: #435275;                 /* 4.9:1 */
+
+  --color-flame: #1144a6;                     /* NASA blue (5.5:1) */
+  --color-flame-deep: #0b3d91;
+  --color-nebula: #5135c4;                    /* 5.0:1 */
+  --color-ember: #92330a;                     /* deep NASA red-orange (4.9:1) */
+
+  --color-prevention: #0c5e3d;
+  --color-detection: #1144a6;
+  --color-suppression: #6a32b0;
+
+  --color-white: #0a1a3a;
+  --color-black: #0a1a3a;
+  --hero-via: #3a3fc6;                        /* middle of the hero "FALL" gradient */
+}
+:root { --hero-via: #a99bff; }
+/* Atmosphere: faint NASA-blue dawn and violet nebula glow behind the light pages. */
+/* A fixed layer rather than `background-attachment: fixed`, which glitches and scrolls badly. */
+html[data-theme="light"] body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -50;
+  pointer-events: none;
+  background:
+    radial-gradient(1100px 620px at 88% -8%, rgb(19 73 173 / 0.16), transparent 62%),
+    radial-gradient(900px 560px at -6% 4%, rgb(81 53 196 / 0.10), transparent 60%),
+    radial-gradient(1000px 700px at 50% 112%, rgb(19 73 173 / 0.10), transparent 60%);
+}
+
+/* Areas that are pictures of space (film, game screens) keep the dark
+   palette in both themes so their text stays readable on the imagery. */
+.space-window {
+  --color-void: #08090e;
+  --color-panel: #0f1219;
+  --color-line: rgb(255 255 255 / 0.09);
+  --color-line-strong: rgb(255 255 255 / 0.18);
+  --color-line-input: rgb(255 255 255 / 0.38);
+  --color-ink: #e2e5ed;
+  --color-ink-dim: #a7aec0;
+  --color-ink-faint: #7c849c;
+  --color-flame: #6cc8ff;
+  --color-flame-deep: #2f6bff;
+  --color-nebula: #9d8cff;
+  --color-ember: #f5a54a;
+  --color-prevention: #7dd3a7;
+  --color-detection: #6cc8ff;
+  --color-suppression: #c79bff;
+  --color-white: #fff;
+  --color-black: #000;
+  color-scheme: dark;
+  color: var(--color-ink);
+}
+/* Physical paper (sticky notes): tape and hover tints stay true white/black in both themes. */
+.paper { --color-white: #fff; --color-black: #000; }
+/* Light theme: soft page-colored halo for text that overlaps dark artwork (e.g. a globe). */
+:root[data-theme="light"] .light-halo {
+  text-shadow: 0 0 3px var(--color-void), 0 0 14px var(--color-void), 0 0 24px var(--color-void);
+}
+
 @keyframes shimmer {
   to { transform: translateX(100%); }
 }
@@ -49,7 +123,9 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
+  html[data-theme="light"] { color-scheme: light; }
   ::selection { background: rgb(108 200 255 / 0.3); }
+  html[data-theme="light"] ::selection { background: rgb(19 73 173 / 0.25); }
   :focus-visible {
     outline: 1.5px solid var(--color-flame);
     outline-offset: 3px;

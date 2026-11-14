@@ -3,6 +3,8 @@ import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 
 import { AudiencePicker } from '@/features/audience/AudiencePicker'
+import { useFilmCover, useTheme } from '@/lib/theme'
+import { ThemeToggle } from './ThemeToggle'
 
 const LINKS = [
   { to: '/', label: 'Home' },
@@ -23,6 +25,9 @@ export function TopNav({ tourOpen }: { tourOpen: boolean }) {
   const { scrollY } = useScroll()
   const [hidden, setHidden] = useState(false)
   const [solid, setSolid] = useState(false)
+  const light = useTheme() === 'light'
+  // over the home page's dark opening film the bar keeps its dark look in both themes
+  const overFilm = useFilmCover()
 
   useMotionValueEvent(scrollY, 'change', (y) => {
     const prev = scrollY.getPrevious() ?? 0
@@ -32,8 +37,10 @@ export function TopNav({ tourOpen }: { tourOpen: boolean }) {
 
   return (
     <motion.header
-      className={`fixed left-0 top-0 z-50 w-screen transition-colors duration-500 ${
-        solid ? 'border-b border-[var(--color-line)] bg-[var(--color-void)]/70 backdrop-blur-xl' : ''
+      className={`fixed left-0 top-0 z-50 w-screen transition-colors duration-500 ${overFilm ? 'space-window' : ''} ${
+        solid ? 'border-b border-[var(--color-line)] bg-[var(--color-void)]/70 backdrop-blur-xl'
+          // light theme: keep a backing so the links stay readable over dark space heroes
+          : light && !overFilm ? 'bg-[var(--color-void)]/70 backdrop-blur-xl' : ''
       }`}
       animate={{ y: hidden && !tourOpen ? '-100%' : '0%' }}
       transition={{ duration: tourOpen ? 0 : 0.5, ease: [0.16, 1, 0.3, 1] }}
@@ -72,6 +79,7 @@ export function TopNav({ tourOpen }: { tourOpen: boolean }) {
           ))}
           </div>
           <AudiencePicker />
+          <ThemeToggle />
         </div>
       </nav>
     </motion.header>

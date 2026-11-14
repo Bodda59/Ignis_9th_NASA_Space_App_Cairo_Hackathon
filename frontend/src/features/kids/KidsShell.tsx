@@ -4,6 +4,7 @@ import { Earth, Gamepad2, House, Puzzle, Rocket, Star, Telescope, UserRound, Vol
 import { useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { cn } from '@/lib/cn'
+import { useForceDarkTheme } from '@/lib/theme'
 import { Medal3D } from './Art'
 import { BADGE_ART, RANK_ART } from './badgeArt'
 import { Burst } from './Burst'
@@ -27,6 +28,7 @@ export function KidsShell() {
   const [popped, setPopped] = useState<BadgeId[]>([])
   const [levelUp, setLevelUp] = useState<number | null>(null)
 
+  useForceDarkTheme()
   useEffect(() => { window.scrollTo(0, 0) }, [pathname])
 
   useEffect(() => {

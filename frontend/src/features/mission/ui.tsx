@@ -13,7 +13,7 @@ export function SceneFrame({ children, className, label, bare = false, overlay }
 }) {
   return (
     <div role="group" aria-label={label}
-      className={cn('relative overflow-hidden bg-[#0b0e16]', !bare && 'rounded-2xl border border-[var(--color-line)]', className)}>
+      className={cn('space-window relative overflow-hidden bg-[#0b0e16]', !bare && 'rounded-2xl border border-[var(--color-line)]', className)}>
       <SceneBoundary>
         <Suspense fallback={<SceneLoading />}>{children}</Suspense>
       </SceneBoundary>

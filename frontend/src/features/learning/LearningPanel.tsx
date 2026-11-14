@@ -302,7 +302,7 @@ function StickyNote({ note, tilt, onChange, onRemove }: { note: Note; tilt: stri
       initial={{ opacity: 0, y: -24, scale: 0.9 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, x: 60, transition: { duration: 0.2 } }}
-      className={cn('group relative rounded-sm p-4 pt-5 text-[#1c1f27] shadow-[0_12px_24px_-12px_rgba(0,0,0,0.9)]', PAPER[note.color], tilt)}
+      className={cn('paper group relative rounded-sm p-4 pt-5 text-[#1c1f27] shadow-[0_12px_24px_-12px_rgba(0,0,0,0.9)]', PAPER[note.color], tilt)}
     >
       <span aria-hidden="true" className="absolute -top-2 left-1/2 h-4 w-14 -translate-x-1/2 rotate-[-3deg] bg-white/45" />
       <button

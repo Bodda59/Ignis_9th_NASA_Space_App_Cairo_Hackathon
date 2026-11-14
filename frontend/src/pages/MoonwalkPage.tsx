@@ -37,7 +37,7 @@ export function MoonwalkPage() {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-      <section className="relative">
+      <section className="space-window relative">
         <SceneFrame bare label="The Moon seen from space, with Earth in the distance"
           className="h-[72svh] min-h-[460px] border-b border-[var(--color-line)]">
           <MoonHeroScene reduced={reduced} />

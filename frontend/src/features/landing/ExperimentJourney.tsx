@@ -31,7 +31,7 @@ export function ExperimentJourney() {
       onPointerMove={moveBackdrop}
       onPointerLeave={() => { cursorX.set(50); cursorY.set(46) }}
       aria-labelledby="journey-title"
-      className="relative isolate grid border-y border-[var(--color-line)] bg-[#070b14]"
+      className="space-window relative isolate grid border-y border-[var(--color-line)] bg-[#070b14]"
     >
       <div
         ref={visual}

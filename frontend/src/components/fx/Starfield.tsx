@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { getTheme } from '@/lib/theme'
 
 /** Sparse, slowly drifting starfield with depth parallax on pointer move. */
 export function Starfield({ density = 0.00012, className = '' }: { density?: number; className?: string }) {
@@ -40,13 +41,15 @@ export function Starfield({ density = 0.00012, className = '' }: { density?: num
       m.x += (m.tx - m.x) * 0.04
       m.y += (m.ty - m.y) * 0.04
       ctx.clearRect(0, 0, w, h)
+      // Light theme: faint navy dots, like a printed star chart (white stars would vanish).
+      const light = canvas.closest('.space-window') === null && getTheme() === 'light'
       for (const s of stars) {
         if (!reduced) s.y -= 0.02 + s.z * 0.06
         if (s.y < -2) s.y = h + 2
         const px = s.x - m.x * 30 * s.z
         const py = s.y - m.y * 30 * s.z
         const a = 0.25 + s.z * 0.6 + Math.sin(time / 900 + s.tw) * 0.15
-        ctx.fillStyle = `rgba(220,228,255,${a})`
+        ctx.fillStyle = light ? `rgba(10,26,58,${a * 0.6})` : `rgba(220,228,255,${a})`
         ctx.fillRect(px, py, 0.6 + s.z * 1.1, 0.6 + s.z * 1.1)
       }
       raf = requestAnimationFrame(draw)

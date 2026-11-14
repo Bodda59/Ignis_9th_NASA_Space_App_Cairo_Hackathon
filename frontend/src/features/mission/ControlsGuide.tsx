@@ -85,7 +85,7 @@ export function ControlsGuide({ levelTitle }: { levelTitle: string }) {
       <AnimatePresence>
         {open && (
           <motion.div
-            className="fixed inset-0 z-[80] grid place-items-center bg-[#04050a]/80 p-4 backdrop-blur-sm"
+            className="space-window fixed inset-0 z-[80] grid place-items-center bg-[#04050a]/80 p-4 backdrop-blur-sm"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
           >
             <motion.div

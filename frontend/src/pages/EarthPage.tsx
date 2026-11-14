@@ -112,7 +112,7 @@ function Content({ data }: { data: EarthResponse }) {
 
 function Stat({ label, value }: { label: string; value: number }) {
   return (
-    <div className="flex flex-col-reverse">
+    <div className="light-halo flex flex-col-reverse">
       <dt className="label mt-2">{label}</dt>
       <dd className="font-display text-4xl font-light tabular-nums tracking-tight"><CountUp value={value} /></dd>
     </div>

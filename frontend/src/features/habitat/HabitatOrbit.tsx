@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, ArrowUpRight, Info } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { CountUp } from '@/components/fx/CountUp'
+import { useTheme } from '@/lib/theme'
 import { HABITATS } from './habitats'
 
 /** degrees between labels on the arc — wider on small screens where the arc is tighter */
@@ -22,6 +23,9 @@ const EASE = [0.16, 1, 0.3, 1] as const
 /** Planet-overview-style selector: habitats sit on an arc above a rising orb. */
 export function HabitatOrbit() {
   const [active, setActive] = useState(2)
+  const dot = useTheme() === 'light'
+    ? { on: '#1144a6', off: 'rgba(10,26,58,0.3)' }
+    : { on: '#6cc8ff', off: 'rgba(255,255,255,0.25)' }
   const STEP = useStep()
   const h = HABITATS[active]
   const go = (i: number) => setActive((i + HABITATS.length) % HABITATS.length)
@@ -177,8 +181,8 @@ export function HabitatOrbit() {
                     <motion.span
                       className="block h-1.5 w-1.5 rounded-full"
                       animate={{
-                        backgroundColor: isActive ? '#6cc8ff' : 'rgba(255,255,255,0.25)',
-                        boxShadow: isActive ? '0 0 14px #6cc8ff' : '0 0 0 transparent',
+                        backgroundColor: isActive ? dot.on : dot.off,
+                        boxShadow: isActive ? `0 0 14px ${dot.on}` : '0 0 0 transparent',
                         scale: isActive ? 1.4 : 1,
                       }}
                     />

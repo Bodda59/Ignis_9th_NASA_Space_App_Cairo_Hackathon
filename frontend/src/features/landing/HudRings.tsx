@@ -21,7 +21,7 @@ export function HudRings({ microgravity }: { microgravity: boolean }) {
               y1={-238}
               x2={0}
               y2={long ? -224 : -231}
-              stroke="white"
+              className="stroke-white"
               strokeOpacity={long ? 0.35 : 0.12}
               strokeWidth={long ? 1 : 0.75}
               transform={`rotate(${i * 3})`}
@@ -31,7 +31,7 @@ export function HudRings({ microgravity }: { microgravity: boolean }) {
       </motion.g>
 
       {/* thin full circle */}
-      <circle r={210} fill="none" stroke="white" strokeOpacity={0.08} />
+      <circle r={210} fill="none" className="stroke-white" strokeOpacity={0.08} />
 
       {/* accent arc segments, counter-rotating */}
       <motion.g
@@ -59,14 +59,14 @@ export function HudRings({ microgravity }: { microgravity: boolean }) {
           animate={{ stroke: accent }}
           transition={{ duration: 1.2 }}
         />
-        <circle cx={0} cy={-196} r={3} fill="var(--color-void)" stroke="white" strokeOpacity={0.6} />
+        <circle cx={0} cy={-196} r={3} fill="var(--color-void)" className="stroke-white" strokeOpacity={0.6} />
       </motion.g>
 
       {/* inner dashed ring */}
       <motion.circle
         r={150}
         fill="none"
-        stroke="white"
+        className="stroke-white"
         strokeOpacity={0.1}
         strokeDasharray="2 6"
         animate={{ rotate: 360 }}
@@ -75,7 +75,7 @@ export function HudRings({ microgravity }: { microgravity: boolean }) {
 
       {/* crosshair */}
       {[0, 90, 180, 270].map((a) => (
-        <line key={a} x1={0} y1={-252} x2={0} y2={-244} stroke="white" strokeOpacity={0.5} transform={`rotate(${a})`} />
+        <line key={a} x1={0} y1={-252} x2={0} y2={-244} className="stroke-white" strokeOpacity={0.5} transform={`rotate(${a})`} />
       ))}
     </svg>
   )
