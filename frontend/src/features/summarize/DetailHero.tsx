@@ -70,7 +70,11 @@ export function DetailHero({ data, synthetic }: { data: InvestigationResponse; s
             </div>
             <RevealText
               lines={[inv.acronym]}
-              className="break-words font-display text-[clamp(3.4rem,10vw,9rem)] font-semibold uppercase leading-[0.88] tracking-[-0.04em]"
+              className={cn(
+                'break-words font-display font-semibold uppercase leading-[0.9] tracking-[-0.04em]',
+                // Long names (e.g. "ACME CLD Flame") get a smaller size so words wrap whole, never mid-word.
+                inv.acronym.length > 10 ? 'text-[clamp(2.6rem,6.5vw,6.5rem)]' : 'text-[clamp(3.4rem,10vw,9rem)]',
+              )}
             />
             <motion.p
               initial={{ opacity: 0, y: 10 }}
@@ -115,7 +119,7 @@ export function DetailHero({ data, synthetic }: { data: InvestigationResponse; s
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-wrap gap-3 lg:justify-end"
+            className="flex flex-wrap gap-3 lg:max-w-md lg:justify-end"
           >
             <button
               onClick={() => cmp.toggle({ id: inv.id, acronym: inv.acronym, name: inv.name })}
